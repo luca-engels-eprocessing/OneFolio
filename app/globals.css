@@ -2,6 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components{
+  .border-def{
+    @apply border-2 hover:border-accentBorderLight border-borderLight hover:dark:border-accentBorderDark dark:border-borderDark transition-colors;
+  };
+  .bg-sec{
+    @apply transition-colors bg-secLight dark:bg-secDark
+  }
+  .btn-nav{
+    @apply border-def transition-colors hover:bg-accentLight hover:text-accentTextLight text-textLight bg-primLight hover:dark:bg-accentDark hover:dark:text-accentTextDark dark:text-textDark dark:bg-primDark focus:bg-accentLight dark:focus:bg-accentDark;
+  };
+  .h1{
+    @apply text-5xl font-bold text-primLight dark:text-primDark hover:text-accentLight dark:hover:text-accentDark;
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0);
+  border-radius: 5px;
+}
+
+/* Handle */
+.scroll-light::-webkit-scrollbar-thumb {
+  background: #1a4ab0;
+  border-radius: 5px;
+}
+/* Handle on hover */
+.scroll-light::-webkit-scrollbar-thumb:hover {
+  background: #ffaa00;
+}
+
+/* Handle */
+.scroll-dark::-webkit-scrollbar-thumb {
+  background: #1a4ab0;
+  border-radius: 5px;
+}
+/* Handle on hover */
+.scroll-dark::-webkit-scrollbar-thumb:hover {
+  background: #cc8800;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
@@ -15,6 +61,7 @@
     --background-end-rgb: 3, 9, 26;
   }
 }
+
 
 body {
   color: rgb(var(--foreground-rgb));

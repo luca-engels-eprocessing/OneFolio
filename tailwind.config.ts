@@ -21,7 +21,7 @@ const config: Config = {
         "accentBorderLight":"#ffdd99",
         "accentTextLight":"#fff",
         "textLight":"#FFFFFF",
-        "primDark":"#1a4ab0",
+        "primDark":"#1B4BB0",
         "secDark":"#03091a",
         "borderDark":"#081d4d",
         "accentDark":"#cc8800",
