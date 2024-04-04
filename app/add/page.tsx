@@ -34,9 +34,10 @@ export default function page() {
             </div>
             <div className={"flex flex-row overflow-clip gap-32"}>
                 <form className={"border-def bg-sec w-fit h-fit p-8 flex gap-1 flex-col items-start"}>
-                    <button type={"button"} onClick={categoryClick} className={"btn-nav flex flex-row px-4 py-2 rounded-lg gap-4 justify-center items-center"}>
+                    <button type={"button"} onClick={categoryClick}
+                            className={"btn-nav flex flex-row px-4 py-2 rounded-lg gap-4 justify-center items-center"}>
                         <p className={"rounded-l-lg"}>Test</p>
-                        <div className={"h-8 border-r-2 border-accentLight dark:border-accentDark"} />
+                        <div className={"h-8 border-r-2 border-accentLight dark:border-accentDark"}/>
                         <p className={"rounded-l-lg"}>Hinzufügen</p>
                     </button>
                     <button type={"button"} onClick={categoryClick}
@@ -58,9 +59,12 @@ export default function page() {
                         <p className={"rounded-l-lg"}>Hinzufügen</p>
                     </button>
                     <div className={"mt-3"}>
-                    <button  onClick={categoryClick} className={"btn-nav border-r-[1px] rounded-l-lg p-2 px-4"}>Hinzufügen</button>
-                        <button  onClick={categoryClick} className={"btn-nav border-x-[1px] p-2 px-4"}>Speichern</button>
-                        <button  onClick={categoryClick} className={"btn-nav border-l-[1px] rounded-r-lg p-2 px-4"}>Layout sichern</button>
+                        <button onClick={categoryClick} className={"btn-nav border-r-[1px] rounded-l-lg p-2 px-4"}>Hinzufügen
+                        </button>
+                        <button onClick={categoryClick} className={"btn-nav border-x-[1px] p-2 px-4"}>Speichern</button>
+                        <button onClick={categoryClick}
+                                className={"btn-nav border-l-[1px] rounded-r-lg p-2 px-4"}>Layout sichern
+                        </button>
                     </div>
                 </form>
                 {showForm &&
