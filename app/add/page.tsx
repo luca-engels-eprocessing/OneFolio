@@ -62,11 +62,11 @@ export default function Page() {
     setCategoryFormButtonList([...categoryFormButtonList, buttonCode]);
   };
 
-  const handleAddInputChange = (e) => {
+  const handleAddInputChange = (e: { target: { value: any; }; }) => {
     setcategoryInput(e.target.value);
   };
 
-  const handleInputKeyPress = (e) => {
+  const handleInputKeyPress = (e: { key: string; }) => {
     if (e.key === "Enter") {
       createCategoryButton();
     }
@@ -84,7 +84,7 @@ export default function Page() {
           }
         >
             
-            {categoryFormButtonList.map((item, index) => (
+            {categoryFormButtonList.map((item: any, index: any) => (
             <div key={index}>{item}</div>
             ))}
           {categoryDisplayAddButton ? (

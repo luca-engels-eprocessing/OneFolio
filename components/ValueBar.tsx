@@ -57,11 +57,11 @@ function ValueBar(props: Props) {
     setValueFormButtonList([...valueFormButtonList, buttonCode]);
   };
   
-  const handleAddInputChange = (e) => {
+  const handleAddInputChange = (e: { target: { value: any; }; }) => {
     setValueInput(e.target.value);
   };
 
-  const handleInputKeyPress = (e) => {
+  const handleInputKeyPress = (e: { key: string; }) => {
     if (e.key === "Enter") {
         createValueButton();
     }
