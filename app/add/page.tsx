@@ -1,7 +1,7 @@
 "use client"
 import {useState} from "react";
 
-export default function page() {
+export default function Page() {
     const [showForm, setShowForm] = useState(false);
     const selectionAddClick = (text: string) => {
         addButtonToForm(text);
