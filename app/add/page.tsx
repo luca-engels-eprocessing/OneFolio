@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, ReactNode } from "react";
 export default function Page() {
   const [displayValue, setDisplayValue] = useState(false); // Displayes the side Panel for selection or not
   const [returns, setReturns] = useState(""); // Returns of the investment
+  const [sends, setSend] = useState<ReactNode>(null); // Returns of the investment
   const [categoryDisplayAddButton, setCategoryDisplayAddButton] =
     useState(false); // Switch for add button or input field
   const [categoryFormButtonList, setCategoryFormButtonList] = useState<
@@ -24,18 +25,51 @@ export default function Page() {
     }
   }, [categoryDisplayAddButton]);
 
+  useEffect(() => {
+    if(categoryFormButtonList.length > 0){  
+      var newList:ReactNode[] = []
+      categoryFormButtonList.map((item: any, index: any) => {
+        if(item.props.children && item.props.children[0].props.children == sends){
+          const buttonCode = (
+            <button
+              type={"button"}
+              onClick={() => {
+                categoryClick(sends as string)
+              }}
+              ref={categoryNewestButtonRef}
+              className={
+                "btn-nav flex flex-row px-4 py-2 rounded-lg gap-4 justify-center items-center"
+              }
+            >
+              <p className={"rounded-l-lg"}>{sends}</p>
+              <div
+                className={"h-8 border-r-2 border-accentLight dark:border-accentDark"}
+              />
+              <p className={"rounded-l-lg"}>{returns}</p>
+            </button>
+          );
+          newList=[...newList,buttonCode];
+        }
+        else {
+          newList=[...newList,item];
+        }
+      })
+      
+      setCategoryFormButtonList(newList);
+    }
+  
+  },[returns])
+
   // Displayes the side Panel
   /* TODO  Remove and put in the buttons created / use data of button to create a specific table*/
   const categoryClick = (text: string) => {
-    console.log(text);
+    setSend(text)
     setDisplayValue(true);
   };
 
   /* TODO use the text and send it back to the Category button */
 
   const createCategoryButton = () => {
-    console.log(returns);
-    
     const text = categroyInput;
     setcategoryInput("");
     if (text == "") {
@@ -44,7 +78,9 @@ export default function Page() {
     const buttonCode = (
       <button
         type={"button"}
-        onClick={() => categoryClick(text)}
+        onClick={() => {
+          categoryClick(text)
+        }}
         ref={categoryNewestButtonRef}
         className={
           "btn-nav flex flex-row px-4 py-2 rounded-lg gap-4 justify-center items-center"
@@ -57,8 +93,6 @@ export default function Page() {
         <p className={"rounded-l-lg"}>...</p>
       </button>
     );
-    console.log(buttonCode);
-    console.log(categoryFormButtonList);
     setCategoryDisplayAddButton(false);
     setCategoryFormButtonList([...categoryFormButtonList, buttonCode]);
   };
@@ -135,7 +169,8 @@ export default function Page() {
             </button>
           </div>
         </form>
-        {displayValue && <ValueBar displayList={categoryFormButtonList} setDisplayList={setCategoryFormButtonList} state={setReturns} setDisplayed={setDisplayValue} />}
+        {/* //TODO Add a list to be displayed */}
+        {displayValue && <ValueBar state={setReturns} setDisplayed={setDisplayValue} />}
       </div>
     </main>
   );

@@ -2,8 +2,6 @@ import React, { Dispatch,SetStateAction, ReactNode, useEffect, useRef, useState 
 
 type Props = {
   state: (val: string) => void;
-  displayList: ReactNode[];
-  setDisplayList: (val: ReactNode[]) => void;
   setDisplayed: (val: boolean) => void;
 }
 
@@ -30,7 +28,6 @@ function ValueBar(props: Props) {
       }, [valueDisplayAddButton]);
 
     const selectionClick = (clickedButton: string) => {
-        console.log(clickedButton);
         props.state(clickedButton);
         setDisplayed(false);
       };
