@@ -1,6 +1,7 @@
 "use client";
 import ValueBar from "@/components/ValueBar";
-import { useState, useRef, useEffect, ReactNode } from "react";
+import React from "react"
+import { useEffect, useRef, useState, ReactNode } from "react";
 
 export default function Page() {
   const [displayValue, setDisplayValue] = useState(false); // Displayes the side Panel for selection or not
