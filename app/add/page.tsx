@@ -7,17 +7,18 @@ export default function Page() {
   const [displayValue, setDisplayValue] = useState(false); // Displayes the side Panel for selection or not
   const [userValueChoice, setUserValueChoice] = useState(""); // Returns of the investment
   const [lastButtonClicked, setLastButtonClicked] = useState<ReactNode>(null); // Returns of the investment
-  const [lastButtonClickedOptions, setLastButtonClickedOptions] = useState([]); // Returns of the investment
+  const [lastButtonClickedOptions, setLastButtonClickedOptions] = useState<string[]>(); // Returns of the investment
   const [categoryDisplayAddButton, setCategoryDisplayAddButton] =
     useState(false); // Switch for add button or input field
   const [categoryFormButtonList, setCategoryFormButtonList] = useState<
     ReactNode[]
   >([]); // List of buttons in the form
+  const [startList,setStartList] = useState({}); // List of buttons in the form
   const [categroyInput, setcategoryInput] = useState(""); // Saves the input field ==> No use of Form needed and no page relaod
   const categoryAddTextFieldRef = useRef<HTMLInputElement>(null);
   const categoryNewestButtonRef = useRef<HTMLButtonElement>(null);
 
-  
+
   const buttonGet = (text:string, onClick:MouseEventHandler<HTMLButtonElement> ,value:string) => {
     return(
       <button
@@ -36,29 +37,29 @@ export default function Page() {
       </button>
     )
   }
-
-
-  const startList = {
-    "Aktien": ["Dax", "TecDax", "MDax", "SDax", "Nasdaq", "Dow Jones", "S&P 500"],
-    "Anleihen": ["Staatsanleihen", "Unternehmensanleihen", "Hochzinsanleihen", "Mischfonds", "Rentenfonds", "Geldmarktfonds", "Immobilienfonds", "Aktienfonds"],
-    "Rohstoffe": ["Edelmetalle", "Rohstoffe", "Immobilien", "Kryptowährungen", "Fonds", "ETFs", "Sparpläne", "Zertifikate", "Optionen", "Kredit", "Konto"],
-    "Immobilien": ["Familienhaus", "Mehrfamilienhaus", "Gewerbeimmobilie", "Immobilienfonds"],
-    "Kryptowährungen": ["Bitcoin","Etherium","Doge Coin"],
-    "Fonds": ["Mischfonds", "Rentenfonds", "Geldmarktfonds", "Immobilienfonds", "Aktienfonds"],
-    "ETFs": ["ETFs"],
-    "Sparpläne": ["Sparpläne"],
-    "Zertifikate": ["Zertifikate"],
-    "Optionen": ["Optionen"],
-    "Kredit": ["Kredit"],
-    "Konto": ["Konto"],
-  }
-
+  
+// TODO edit the list with newly added options 
   useEffect(() => {
+    const sList = {
+      "Aktien": ["Dax", "TecDax", "MDax", "SDax", "Nasdaq", "Dow Jones", "S&P 500"],
+      "Anleihen": ["Staatsanleihen", "Unternehmensanleihen", "Hochzinsanleihen", "Mischfonds", "Rentenfonds", "Geldmarktfonds", "Immobilienfonds", "Aktienfonds"],
+      "Rohstoffe": ["Edelmetalle", "Rohstoffe", "Immobilien", "Kryptowährungen", "Fonds", "ETFs", "Sparpläne", "Zertifikate", "Optionen", "Kredit", "Konto"],
+      "Immobilien": ["Familienhaus", "Mehrfamilienhaus", "Gewerbeimmobilie", "Immobilienfonds"],
+      "Kryptowährungen": ["Bitcoin","Etherium","Doge Coin"],
+      "Fonds": ["Mischfonds", "Rentenfonds", "Geldmarktfonds", "Immobilienfonds", "Aktienfonds"],
+      "ETFs": ["ETFs"],
+      "Sparpläne": ["Sparpläne"],
+      "Zertifikate": ["Zertifikate"],
+      "Optionen": ["Optionen"],
+      "Kredit": ["Kredit"],
+      "Konto": ["Konto"],
+    }
+    setStartList(sList)
     const newList: ReactNode[] = [];
-    Object.keys(startList).map((item: any, index: any) => {
-      const buttonCode = (buttonGet(item,() => {categoryClick(item,startList[item])},'...'))
+    for (const item in sList) {
+      const buttonCode = (buttonGet(item,() => {categoryClick(item,sList[item as keyof typeof sList])},'...'))
       newList.push(buttonCode);
-    });
+    }
     setCategoryFormButtonList(newList);
   }, []);
 
@@ -75,7 +76,7 @@ export default function Page() {
       var newList:ReactNode[] = []
       categoryFormButtonList.map((item: any, index: any) => {
         if(item.props.children && item.props.children[0].props.children == lastButtonClicked){
-          const buttonCode = (buttonGet(lastButtonClicked as string,() => {categoryClick(lastButtonClicked as string, startList[lastButtonClicked])},userValueChoice))
+          const buttonCode = (buttonGet(lastButtonClicked as string,() => {categoryClick(lastButtonClicked as string, startList[lastButtonClicked as keyof typeof startList])},userValueChoice))
           newList=[...newList,buttonCode];
         }
         else {
@@ -90,7 +91,8 @@ export default function Page() {
 
   // Displayes the side Panel
   /* TODO  Remove and put in the buttons created / use data of button to create a specific table*/
-  const categoryClick = (text: string,list:[]) => {
+  const categoryClick = (text: string,list:string[]) => {
+    console.log(startList)
     setLastButtonClicked(text)
     setLastButtonClickedOptions(list)
     setDisplayValue(true);
@@ -105,6 +107,9 @@ export default function Page() {
       return;
     }
     const buttonCode = (buttonGet(text,() => {categoryClick(text,[])},'...'));
+    const newList: { [key: string]: string[] } = { ...startList }; // Add index signature to the type declaration
+    newList[text] = [];
+    setStartList(newList);
     setCategoryDisplayAddButton(false);
     setCategoryFormButtonList([...categoryFormButtonList, buttonCode]);
   };

@@ -3,7 +3,7 @@ import React, { Dispatch,SetStateAction, ReactNode, useEffect, useRef, useState 
 type Props = {
   state: (val: string) => void;
   setDisplayed: (val: boolean) => void;
-  items: string[];
+  items?: string[];
 }
 
 
@@ -18,6 +18,9 @@ function ValueBar(props: Props) {
       const setDisplayed = props.setDisplayed;
 
       useEffect(() => {
+        if(!props.items){
+          return;
+        }
         setValueFormButtonList(
           props.items.map((item, index) => (
             <button
