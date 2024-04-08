@@ -3,6 +3,7 @@ import React, { Dispatch,SetStateAction, ReactNode, useEffect, useRef, useState 
 type Props = {
   state: (val: string) => void;
   setDisplayed: (val: boolean) => void;
+  items: string[];
 }
 
 
@@ -15,6 +16,21 @@ function ValueBar(props: Props) {
       const valueAddTextFieldRef = useRef<HTMLInputElement>(null); // Ref for the input field to auto select
       const valueNewestButtonRef = useRef<HTMLButtonElement>(null); // Ref for the newest button added by the input field to auto select after adding
       const setDisplayed = props.setDisplayed;
+
+      useEffect(() => {
+        setValueFormButtonList(
+          props.items.map((item, index) => (
+            <button
+              key={index}
+              type={"button"}
+              onClick={() => selectionClick(item)}
+              className="btn-nav rounded-lg px-4 py-2"
+            >
+              <p>{item}</p>
+            </button>
+          ))
+        );
+      }, [props.items]);
     
      
     

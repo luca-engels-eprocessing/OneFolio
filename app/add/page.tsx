@@ -1,12 +1,13 @@
 "use client";
 import ValueBar from "@/components/ValueBar";
-import React from "react"
+import React, { MouseEventHandler } from "react"
 import { useEffect, useRef, useState, ReactNode } from "react";
 
 export default function Page() {
   const [displayValue, setDisplayValue] = useState(false); // Displayes the side Panel for selection or not
-  const [returns, setReturns] = useState(""); // Returns of the investment
-  const [sends, setSend] = useState<ReactNode>(null); // Returns of the investment
+  const [userValueChoice, setUserValueChoice] = useState(""); // Returns of the investment
+  const [lastButtonClicked, setLastButtonClicked] = useState<ReactNode>(null); // Returns of the investment
+  const [lastButtonClickedOptions, setLastButtonClickedOptions] = useState([]); // Returns of the investment
   const [categoryDisplayAddButton, setCategoryDisplayAddButton] =
     useState(false); // Switch for add button or input field
   const [categoryFormButtonList, setCategoryFormButtonList] = useState<
@@ -16,6 +17,50 @@ export default function Page() {
   const categoryAddTextFieldRef = useRef<HTMLInputElement>(null);
   const categoryNewestButtonRef = useRef<HTMLButtonElement>(null);
 
+  
+  const buttonGet = (text:string, onClick:MouseEventHandler<HTMLButtonElement> ,value:string) => {
+    return(
+      <button
+        type={"button"}
+        onClick={onClick}
+        ref={categoryNewestButtonRef}
+        className={
+          "w-full btn-nav flex flex-row px-4 py-2 rounded-lg gap-4 justify-center items-center"
+        }
+      >
+        <p className={"rounded-l-lg"}>{text}</p>
+        <div
+          className={"h-8 border-r-2 border-accentLight dark:border-accentDark"}
+        />
+        <p className={"rounded-l-lg"}>{value}</p>
+      </button>
+    )
+  }
+
+
+  const startList = {
+    "Aktien": ["Dax", "TecDax", "MDax", "SDax", "Nasdaq", "Dow Jones", "S&P 500"],
+    "Anleihen": ["Staatsanleihen", "Unternehmensanleihen", "Hochzinsanleihen", "Mischfonds", "Rentenfonds", "Geldmarktfonds", "Immobilienfonds", "Aktienfonds"],
+    "Rohstoffe": ["Edelmetalle", "Rohstoffe", "Immobilien", "Kryptowährungen", "Fonds", "ETFs", "Sparpläne", "Zertifikate", "Optionen", "Kredit", "Konto"],
+    "Immobilien": ["Familienhaus", "Mehrfamilienhaus", "Gewerbeimmobilie", "Immobilienfonds"],
+    "Kryptowährungen": ["Bitcoin","Etherium","Doge Coin"],
+    "Fonds": ["Mischfonds", "Rentenfonds", "Geldmarktfonds", "Immobilienfonds", "Aktienfonds"],
+    "ETFs": ["ETFs"],
+    "Sparpläne": ["Sparpläne"],
+    "Zertifikate": ["Zertifikate"],
+    "Optionen": ["Optionen"],
+    "Kredit": ["Kredit"],
+    "Konto": ["Konto"],
+  }
+
+  useEffect(() => {
+    const newList: ReactNode[] = [];
+    Object.keys(startList).map((item: any, index: any) => {
+      const buttonCode = (buttonGet(item,() => {categoryClick(item,startList[item])},'...'))
+      newList.push(buttonCode);
+    });
+    setCategoryFormButtonList(newList);
+  }, []);
 
   useEffect(() => {
     if (categoryDisplayAddButton && categoryAddTextFieldRef.current) {
@@ -29,25 +74,8 @@ export default function Page() {
     if(categoryFormButtonList.length > 0){  
       var newList:ReactNode[] = []
       categoryFormButtonList.map((item: any, index: any) => {
-        if(item.props.children && item.props.children[0].props.children == sends){
-          const buttonCode = (
-            <button
-              type={"button"}
-              onClick={() => {
-                categoryClick(sends as string)
-              }}
-              ref={categoryNewestButtonRef}
-              className={
-                "btn-nav flex flex-row px-4 py-2 rounded-lg gap-4 justify-center items-center"
-              }
-            >
-              <p className={"rounded-l-lg"}>{sends}</p>
-              <div
-                className={"h-8 border-r-2 border-accentLight dark:border-accentDark"}
-              />
-              <p className={"rounded-l-lg"}>{returns}</p>
-            </button>
-          );
+        if(item.props.children && item.props.children[0].props.children == lastButtonClicked){
+          const buttonCode = (buttonGet(lastButtonClicked as string,() => {categoryClick(lastButtonClicked as string, startList[lastButtonClicked])},userValueChoice))
           newList=[...newList,buttonCode];
         }
         else {
@@ -58,12 +86,13 @@ export default function Page() {
       setCategoryFormButtonList(newList);
     }
   
-  },[returns])
+  },[userValueChoice])
 
   // Displayes the side Panel
   /* TODO  Remove and put in the buttons created / use data of button to create a specific table*/
-  const categoryClick = (text: string) => {
-    setSend(text)
+  const categoryClick = (text: string,list:[]) => {
+    setLastButtonClicked(text)
+    setLastButtonClickedOptions(list)
     setDisplayValue(true);
   };
 
@@ -75,24 +104,7 @@ export default function Page() {
     if (text == "") {
       return;
     }
-    const buttonCode = (
-      <button
-        type={"button"}
-        onClick={() => {
-          categoryClick(text)
-        }}
-        ref={categoryNewestButtonRef}
-        className={
-          "btn-nav flex flex-row px-4 py-2 rounded-lg gap-4 justify-center items-center"
-        }
-      >
-        <p className={"rounded-l-lg"}>{text}</p>
-        <div
-          className={"h-8 border-r-2 border-accentLight dark:border-accentDark"}
-        />
-        <p className={"rounded-l-lg"}>...</p>
-      </button>
-    );
+    const buttonCode = (buttonGet(text,() => {categoryClick(text,[])},'...'));
     setCategoryDisplayAddButton(false);
     setCategoryFormButtonList([...categoryFormButtonList, buttonCode]);
   };
@@ -170,7 +182,7 @@ export default function Page() {
           </div>
         </form>
         {/* //TODO Add a list to be displayed */}
-        {displayValue && <ValueBar state={setReturns} setDisplayed={setDisplayValue} />}
+        {displayValue && <ValueBar state={setUserValueChoice} items={lastButtonClickedOptions} setDisplayed={setDisplayValue} />}
       </div>
     </main>
   );
