@@ -87,7 +87,7 @@ function ValueBar(props: Props) {
   return (
         <form
             className={
-            "flex-col flex gap-2 bg-sec border-def p-8 overflow-y-scroll scroll-light dark:scroll-dark"
+            "flex-col flex gap-2 bg-sec border-def p-8 overflow-y-scroll scroll-light dark:scroll-dark rounded-md"
             }
         >
             {valueFormButtonList.map((item, index) => (
