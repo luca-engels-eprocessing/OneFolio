@@ -126,13 +126,11 @@ export default function Page() {
 
   return (
     <main className="flex h-screen w-screen flex-col gap-16 py-24 pl-48 ">
-      <div className={""}>
         <h1 className={"h1"}>Fügen sie ein neues Investment hinzu</h1>
-      </div>
       <div className={"flex flex-row overflow-clip gap-32"}>
         <form
           className={
-            "border-def bg-sec p-8 flex gap-2 flex-col overflow-y-scroll scroll-light dark:scroll-dark"
+            "border-def bg-sec p-8 flex gap-2 flex-col overflow-y-scroll scroll-light dark:scroll-dark rounded-md"
           }
         >
             
