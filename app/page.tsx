@@ -1,4 +1,5 @@
-export default function Home() {
+"use server"
+export default async function Home() {
   return (
       <main className="flex h-full w-full flex-col gap-16 py-24 pl-48">
           <div>

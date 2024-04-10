@@ -22,13 +22,11 @@ const gridRef = useRef<HTMLDivElement>(null);
 const onClickExpand = () => {
     if(gridRef.current){
         if(gridRef.current.classList.toggle("expanded")){
-            console.log("1")
             gridRef.current.querySelectorAll(':nth-child(n+4):not(:last-child)').forEach((node) => {
                 node.classList.remove('hidden');
             });
         }
         else{
-            console.log("2")
             gridRef.current.querySelectorAll(':nth-child(n+4):not(:last-child)').forEach((node) => {
                 node.classList.add('hidden');
             });
