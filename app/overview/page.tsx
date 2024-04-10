@@ -1,9 +1,65 @@
+"use server"
 import InvestmentCard from '@/components/InvestmentCard'
 import React from 'react'
 
 type Props = {}
 
-const View = (props: Props) => {
+const data = {
+  investments: [
+    {
+      date: '01.01.2025',
+      title: 'Global Solar Fund',
+      details: {
+        Branche: 'Energie',
+        Summe: '400€',
+        Sparte: 'Solar Energie',
+        Laufzeit: '5 Jahre',
+        Risikoklasse: '1',
+        Rendite: '5%'
+      },
+    },
+    {
+      date: '01.01.2025',
+      title: 'Bitcoin Depot',
+      details: {
+        Branche: 'Kryptowährung',
+        Summe: '1000€',
+        Sparte: 'Bitcoin',
+        Typ: 'Aktienfonds',
+        Wiederholung: 'Monatlich',
+        Zum: '5ten des Monats',
+        Betrag: '50€'
+      },
+    },
+    {
+      date: '01.01.2026',
+      title: 'Real Estate Investment Trust',
+      details: {
+        Branche: 'Immobilien',
+        Summe: '2000€',
+        Sparte: 'Immobilienfonds',
+        Laufzeit: '10 Jahre',
+        Risikoklasse: '2',
+        Rendite: '7%'
+      },
+    },
+    {
+      date: '01.01.2026',
+      title: 'Tech Startups',
+      details: {
+        Branche: 'Technologie',
+        Summe: '1500€',
+        Sparte: 'Startups',
+        Typ: 'Aktienfonds',
+        Wiederholung: 'Quartalsweise',
+        Zum: '1ten des Monats',
+        Betrag: '100€'
+      },
+    }
+  ],
+}
+
+const View = async (props: Props) => {
   return (
     <main className="flex h-screen w-screen flex-col gap-16 py-24 pl-48 ">
         <h1 className={"h1"}>Ihre Investments im Überblick</h1>
@@ -17,14 +73,9 @@ const View = (props: Props) => {
           //TODO add functionality to the Anpassen button 
         */}
       <div className={"flex gap-2 border-def bg-sec p-8 flex-col scroll-light dark:scroll-dark rounded-md overflow-y-scroll"}>
-        <InvestmentCard date='01.01.2025' title='Investment 1' key1='Branche' value1='Branche 1' key2='Summe' value2='400€' key3='Sparte' value3='Sparte 1'/>
-        <InvestmentCard date='01.01.2025' title='Investment 1' key1='Branche' value1='Branche 1' key2='Summe' value2='400€' key3='Sparte' value3='Sparte 1'/>
-        <InvestmentCard date='01.01.2025' title='Investment 1' key1='Branche' value1='Branche 1' key2='Summe' value2='400€' key3='Sparte' value3='Sparte 1'/>
-        <InvestmentCard date='01.01.2025' title='Investment 1' key1='Branche' value1='Branche 1' key2='Summe' value2='400€' key3='Sparte' value3='Sparte 1'/>
-        <InvestmentCard date='01.01.2025' title='Investment 1' key1='Branche' value1='Branche 1' key2='Summe' value2='400€' key3='Sparte' value3='Sparte 1'/>
-        <InvestmentCard date='01.01.2025' title='Investment 1' key1='Branche' value1='Branche 1' key2='Summe' value2='400€' key3='Sparte' value3='Sparte 1'/>
-        <InvestmentCard date='01.01.2025' title='Investment 1' key1='Branche' value1='Branche 1' key2='Summe' value2='400€' key3='Sparte' value3='Sparte 1'/>
-        <InvestmentCard date='01.01.2025' title='Investment 1' key1='Branche' value1='Branche 1' key2='Summe' value2='400€' key3='Sparte' value3='Sparte 1'/>
+        {data.investments.map((investment, index) => (
+          <InvestmentCard key={index} {...investment} />
+        ))}
       </div>
         </main>
   )
