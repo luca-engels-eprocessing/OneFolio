@@ -19,7 +19,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={inter.className}>
-            <div className={"flex flex-row justify-between gap-64"}>
+            <div className={"flex xl:flex-row flex-col-reverse justify-between xl:gap-64 h-screen"}>
                 {children}
                 <Navbar/>
             </div>

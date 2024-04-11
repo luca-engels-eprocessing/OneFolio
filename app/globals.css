@@ -13,7 +13,7 @@
     @apply border-def transition-colors hover:bg-accentLight hover:text-accentTextLight  text-textLight bg-primLight hover:dark:bg-accentDark hover:dark:text-accentTextDark dark:text-textDark dark:bg-primDark focus:bg-accentLight dark:focus:bg-accentDark;
   };
   .h1{
-    @apply text-5xl font-bold text-primLight dark:text-primDark hover:text-accentLight dark:hover:text-accentDark;
+    @apply xl:text-5xl md:text-2xl text-xl font-bold text-primLight dark:text-primDark hover:text-accentLight dark:hover:text-accentDark;
   };
   .text-accent{
     @apply text-accentLight dark:text-accentDark group-hover:text-accentTextLight group-focus:text-accentTextLight dark:group-hover:text-accentTextDark dark:group-focus:text-accentTextDark;

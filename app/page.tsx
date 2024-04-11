@@ -1,7 +1,7 @@
 "use server"
 async function Home() {
   return (
-      <main className="flex h-full w-full flex-col gap-16 py-24 pl-48">
+      <main className="flex h-full w-full flex-col gap-16 py-24 xl:pl-48 px-16">
           <div>
               <h1 className={"h1"}>Ihr Portfolio im Überblick</h1>
           </div>

@@ -53,7 +53,7 @@ const Table = (props: Props) => {
                     setselectionList({ ...selectionList, [forKey]: key });
                 }
             }}>
-            <p className='w-full px-8 text-left text-3xl text-accent py-2'>{typeof value === 'string' ? value : key}</p>
+            <p className='w-full px-8 text-left 2xl:text-4xl xl:text-lg lg:text-2xl text-accent py-2'>{typeof value === 'string' ? value : key}</p>
         </button>
     );
     const createKeyButton = (key: string, value: any, index: number) => {
@@ -61,9 +61,8 @@ const Table = (props: Props) => {
             <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full group items-end' key={index} onClick={() =>{
                 setDisplayed(true)
                 createValueList(key)}}>
-                <p className='w-1/2 text-right py-2 text-4xl text-accent h-full '>{key}</p>
-                <div className={"h-full border-r-2 border-accentLight dark:border-accentDark group-hover:border-accentBorderLight group-focus:border-accentBorderLight dark:group-hover:border-accentBorderDark dark:group-focus:border-accentBorderDark"}/>
-                <p className='w-1/2 text-left py-2 text-2xl font-medium '>{
+                <p className='w-1/2 text-right py-2 pr-8 2xl:text-4xl xl:text-lg lg:text-2xl text-accent h-full border-r-2 border-accentLight dark:border-accentDark group-hover:border-accentBorderLight group-focus:border-accentBorderLight dark:group-hover:border-accentBorderDark dark:group-focus:border-accentBorderDark'>{key}</p>
+                <p className='w-1/2 text-left py-2 2xl:text-2xl xl:text-md lg:text-xl font-medium'>{
                     key in selectionList? selectionList[key as keyof typeof selectionList] : "..."
                 }</p>
             </button>
@@ -104,12 +103,12 @@ const Table = (props: Props) => {
     
     
     return (
-        <div className='flex flex-row gap-2 overflow-hidden'>
-                <div className={"flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md w-1/2 items-center h-full "+props.className}>
+        <div className='flex xl:flex-row flex-col gap-8 overflow-hidden h-full'>
+                <div className={  (displayed && " max-h-[50%]") + " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-1/2 items-center xl:max-h-full xl:h-fit "+" "+props.className}>
                     {keyButtonList}
                 </div>
                 {displayed && 
-                    <div className={"flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md w-1/2 items-center h-full "+props.className}>
+                    <div className={"flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-1/2 items-center xl:max-h-full xl:h-fit h-fit max-h-[50%]"+" "+props.className}>
                         {valueButtonList}
                     </div>
                 }

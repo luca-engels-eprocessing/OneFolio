@@ -36,33 +36,33 @@ const onClickExpand = () => {
 }
 
 return (
-    <div className={"btn-nav rounded-md flex flex-row gap-8 px-4 group h-full"}>
-        <button onClick={onClickExpand} className={"flex flex-col justify-between w-1/2 items-end text-right h-full gap-4"}>
-            <h1 className={"pt-8 text-accentLight dark:text-accentDark text-5xl font-semibold pb-8 group-hover:text-accentTextLight group-focus:text-accentTextLight dark:group-hover:text-accentTextDark dark:group-focus:text-accentTextDark"}>
+    <div className={"btn-nav rounded-md flex xl:flex-row flex-col xl:gap-8 px-4 group h-full"}>
+        <button onClick={onClickExpand} className={"flex xl:flex-col flex-row justify-between xl:w-1/2 w-full items-end text-right h-full gap-4"}>
+            <h1 className={"pt-8 text-accentLight dark:text-accentDark xl:text-5xl md:text-2xl text-xl font-semibold pb-8 group-hover:text-accentTextLight group-focus:text-accentTextLight dark:group-hover:text-accentTextDark dark:group-focus:text-accentTextDark"}>
                 {props.title}
             </h1>
             <div className='pb-8'>
-                <p className={"text-sm font-light"}>Läuft aus am:</p>
-                <p className={"text-2xl font-normal"}>{props.date}</p>
+                <p className={"xl:text-sm text-xs font-light"}>Läuft aus am:</p>
+                <p className={"xl:text-2xl text-lg font-normal"}>{props.date}</p>
             </div>
         </button>
-        <div className='py-4 h-full'>
+        <div className='xl:py-4 h-full'>
             <div
                 className={"border-r-2 h-full border-accentLight dark:border-accentDark group-hover:border-accentBorderLight group-focus:border-accentBorderLight dark:group-hover:border-accentBorderDark dark:group-focus:border-accentBorderDark"}
             />
         </div>
-        <div className='p-8 h-full w-1/2'>
-            <div className={"grid grid-cols-2 gap-4  items-center text-start grid-rows-2 w-full"} ref={gridRef}>
+        <div className='p-8 h-full xl:w-1/2 w-full'>
+            <div className={"grid gap-4  items-center text-start xl:grid-rows-2 xl:grid-cols-2 grid-cols-1 w-full"} ref={gridRef}>
                 {Object.entries(props.details).slice(0, 3).map(([key, value], index) => (
                     <div key={index} className={index >= 3 ? 'hidden' : ''}>
-                        <p className={"text-sm font-light"}>{key}</p>
-                        <p className={"text-2xl font-normal"}>{value as string}</p>
+                        <p className={"xl:text-sm text-xs font-light"}>{key}</p>
+                        <p className={"xl:text-2xl text-lg font-normal"}>{value as string}</p>
                     </div>
                 ))}
                 {Object.entries(props.details).slice(3).map(([key, value], index) => (
                     <div key={index + 3} className='hidden'>
-                        <p className={"text-sm font-light"}>{key}</p>
-                        <p className={"text-2xl font-normal"}>{value as string}</p>
+                        <p className={"xl:text-sm text-xs font-light"}>{key}</p>
+                        <p className={"xl:text-2xl text-lg font-normal"}>{value as string}</p>
                     </div>
                 ))}
                 <a onClick={onClickExpand} className='cursor-pointer'>Anpassen ...</a>
