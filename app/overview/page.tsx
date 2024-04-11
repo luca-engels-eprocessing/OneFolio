@@ -72,7 +72,7 @@ const View = async (props: Props) => {
           //TODO expand the investment card on click of the card
           //TODO add functionality to the Anpassen button 
         */}
-      <div className={"flex gap-2 border-def bg-sec p-8 flex-col scroll-light dark:scroll-dark rounded-md overflow-y-scroll"}>
+      <div className={"flex gap-2 border-def bg-sec p-4 flex-col scroll-light dark:scroll-dark rounded-md overflow-y-scroll"}>
         {data.investments.map((investment, index) => (
           <InvestmentCard key={index} {...investment} />
         ))}

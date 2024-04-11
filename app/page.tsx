@@ -1,12 +1,12 @@
 "use server"
-export default async function Home() {
+async function Home() {
   return (
       <main className="flex h-full w-full flex-col gap-16 py-24 pl-48">
           <div>
               <h1 className={"h1"}>Ihr Portfolio im Überblick</h1>
           </div>
           <div
-              className="h-full w-full grid grid-flow-row-dense grid-rows-2 grid-cols-2 gap-16 items-center content-center justify-around">
+              className="h-full w-full bg-sec border-def rounded-xl grid grid-flow-row-dense grid-rows-2 grid-cols-2 gap-16 items-center content-center justify-around">
               <div className={"row-start-1 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
                   <p className={"text-2xl font-medium"}>Ihre Branchen</p>
                   <div
@@ -39,3 +39,5 @@ export default async function Home() {
       </main>
   );
 }
+
+export default Home
