@@ -38,7 +38,7 @@ const onClickExpand = () => {
 return (
     <div className={"btn-nav rounded-md flex flex-row gap-8 px-4 group h-full"}>
         <button onClick={onClickExpand} className={"flex flex-col justify-between w-1/2 items-end text-right h-full gap-4"}>
-            <h1 className={"pt-8 text-accentLight dark:text-accentDark text-5xl font-semibold pb-8 group-hover:text-accentTextLight group-focus:text-accentTextLight dark:group-hover:text-accentTextDark dark:group:focus:text-accentTextDark"}>
+            <h1 className={"pt-8 text-accentLight dark:text-accentDark text-5xl font-semibold pb-8 group-hover:text-accentTextLight group-focus:text-accentTextLight dark:group-hover:text-accentTextDark dark:group-focus:text-accentTextDark"}>
                 {props.title}
             </h1>
             <div className='pb-8'>

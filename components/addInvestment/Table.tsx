@@ -1,5 +1,4 @@
 "use client"
-import { createKey } from 'next/dist/shared/lib/router/router';
 import React, { useEffect, ReactNode, ReactElement, ReactHTMLElement, useState } from 'react'
 
 type Props = {
@@ -11,69 +10,109 @@ type Props = {
 const Table = (props: Props) => {
     const [keyButtonList, setkeyButtonList] = useState<ReactNode[]>()
     const [valueButtonList, setvalueButtonList] = useState<ReactNode[]>()
-    const [displayed, setDisplayed] = useState<boolean>(true)
+    const [displayed, setDisplayed] = useState<boolean>(false)
     const [modifyableList, setModifyableList] = useState<{}>(props.items)
+    const [selectionList, setselectionList] = useState<{}>({})
     
-    const createValueButton = (key: string, value:any, index: number) => {
-        if(typeof value == 'string'){
-            return (
-                <button className='btn-nav rounded-md flex flex-row gap-8 px-4 group h-full w-fit' key={index} onClick={() => {console.log(value, " pressed")}}>
-                    <p>{value}</p>
-                </button>
-            );
-        }
-        else{
-            return (
-                <button className='btn-nav rounded-md flex flex-row gap-8 px-4 group h-full w-fit' key={index} onClick={() => {
-                    console.log("HERE",key)
-                    var list = {...modifyableList,...value}
-                    setModifyableList(list)
-                }}>
-                    <p>{key}</p>
-                </button>
-            )
-        }
-    }
+    const createValueButton = (key: string, value: any, index: number, forKey: string) => (
+        <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full' key={index}
+            onClick={() => {
+                setDisplayed(false)
+                if(Array.isArray(value)){
+                    delete modifyableList[forKey as keyof typeof modifyableList][key];
+                    var newModList = {}
+                    Object.entries(modifyableList).map(([keyI, valueI]) => {
+                        if (keyI === forKey) {
+                            newModList = {...newModList, [key]: value}
+                        }
+                        newModList = {...newModList, [keyI]: valueI};
+                    })
+                    setModifyableList(newModList)
+                    
+                }
+                else if(typeof value === 'string') {
+                    console.log(value, " pressed for ",forKey)
+                    setselectionList({ ...selectionList, [forKey]: value});
+                }
+                else{
+                    console.log(key, " pressed for ",forKey);
+                    var newModList = {}
+                    Object.entries(modifyableList).map(([keyI, valueI]) => {
+                        
+
+                        if (keyI in value) {
+                            delete selectionList[keyI as keyof typeof selectionList];
+                            return;
+                        }
+                        newModList = {...newModList, [keyI]: valueI};
+                        if (keyI === forKey) {
+                            newModList = {...newModList, ...value};
+                        }
+                    })
+                    setModifyableList(newModList);
+                    setselectionList({ ...selectionList, [forKey]: key });
+                }
+            }}>
+            <p className='w-full px-8 text-left text-3xl text-accent py-2'>{typeof value === 'string' ? value : key}</p>
+        </button>
+    );
     const createKeyButton = (key: string, value: any, index: number) => {
         return (
-            <button className='btn-nav rounded-md flex flex-row gap-8 px-4 group h-full w-fit' key={index} onClick={() => createValueList(key)}>
-                <p>{key}</p>
-                <div className={"border-r-2 w-1 h-full border-accentLight dark:border-accentDark group-hover:border-accentBorderLight group-focus:border-accentBorderLight dark:group-hover:border-accentBorderDark dark:group-focus:border-accentBorderDark"}/>
-                <p>...</p>
+            <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full group items-end' key={index} onClick={() =>{
+                setDisplayed(true)
+                createValueList(key)}}>
+                <p className='w-1/2 text-right py-2 text-4xl text-accent h-full '>{key}</p>
+                <div className={"h-full border-r-2 border-accentLight dark:border-accentDark group-hover:border-accentBorderLight group-focus:border-accentBorderLight dark:group-hover:border-accentBorderDark dark:group-focus:border-accentBorderDark"}/>
+                <p className='w-1/2 text-left py-2 text-2xl font-medium '>{
+                    key in selectionList? selectionList[key as keyof typeof selectionList] : "..."
+                }</p>
             </button>
         );
     }
+    const createAddButton = (node:string) => {
+        console.log(node)
+        return (
+            <form className='btn-nav rounded-md flex flex-col justify-center gap-8 px-4 group p-2 w-full' onSubmit={(e) => {
+                e.preventDefault();
 
-    const createValueList = (key: string) => {	
+            }}>
+                <input type='text' className='w-full px-8 text-left text-3xl text-accent py-2 border-0 btn-nav focus:text-textLight focus:dark:text-textDark' placeholder='Gruppe hinzufügen ...' />
+                <input type='text' className='w-full px-8 text-left text-3xl text-accent py-2 border-0 btn-nav focus:text-textLight focus:dark:text-textDark' placeholder='Untergruppe hinzufügen ...' />
+            </form>
+        );
+    }
+
+    const createValueList = (node: string) => {
+        console.log(displayed)
         var buttons :ReactNode[] = []
-        {Object.entries(modifyableList[key as keyof typeof modifyableList]).map(([key, value], index) => {
-            buttons.push(createValueButton(key, value, index))
+        {Object.entries(modifyableList[node as keyof typeof modifyableList]).map(([key, value], index) => {
+            buttons.push(createValueButton(key, value, index, node))
         })}
+        // buttons.push(createAddButton(node))
         setvalueButtonList(buttons)
         setDisplayed(true)
     }
     
     useEffect(() => {
-        console.log(modifyableList)
         var buttons :ReactNode[] = []
         {Object.entries(modifyableList).map(([key, value], index) => {
             buttons.push(createKeyButton(key, value, index))
         })}
         setkeyButtonList(buttons)
-    }, [modifyableList])
+    }, [selectionList,modifyableList])
     
     
     
     return (
-        <div className='flex flex-row gap-4'>
-            <div className={"flex-col flex gap-2 bg-sec border-def p-8 overflow-y-scroll scroll-light dark:scroll-dark rounded-md w-fit items-center "+props.className}>
-                {keyButtonList}
-            </div>
-            {displayed && 
-                <div className={"flex-col flex gap-2 bg-sec border-def p-8 overflow-y-scroll scroll-light dark:scroll-dark rounded-md w-fit items-center "+props.className}>
-                    {valueButtonList}
+        <div className='flex flex-row gap-2 overflow-hidden'>
+                <div className={"flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md w-1/2 items-center h-full "+props.className}>
+                    {keyButtonList}
                 </div>
-            }
+                {displayed && 
+                    <div className={"flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md w-1/2 items-center h-full "+props.className}>
+                        {valueButtonList}
+                    </div>
+                }
         </div>
     )
 }
