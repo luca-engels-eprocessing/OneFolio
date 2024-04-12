@@ -53,7 +53,7 @@ const Table = (props: Props) => {
                     setselectionList({ ...selectionList, [forKey]: key });
                 }
             }}>
-            <p className='w-full px-8 text-left 2xl:text-4xl xl:text-lg lg:text-2xl text-accent py-2'>{typeof value === 'string' ? value : key}</p>
+            <p className='w-full px-8 text-left 2xl:text-2xl xl:text-lg lg:text-2xl py-2'>{typeof value === 'string' ? value : key}</p>
         </button>
     );
     const createKeyButton = (key: string, value: any, index: number) => {
@@ -61,7 +61,7 @@ const Table = (props: Props) => {
             <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full group items-end' key={index} onClick={() =>{
                 setDisplayed(true)
                 createValueList(key)}}>
-                <p className='w-1/2 text-right py-2 pr-8 2xl:text-4xl xl:text-lg lg:text-2xl text-accent h-full border-r-2 border-accentLight dark:border-accentDark group-hover:border-accentBorderLight group-focus:border-accentBorderLight dark:group-hover:border-accentBorderDark dark:group-focus:border-accentBorderDark'>{key}</p>
+                <p className='w-1/2 text-center py-2 2xl:text-4xl xl:text-lg lg:text-2xl h-full border-r-2 border-accentLight dark:border-accentDark group-hover:border-accentBorderLight group-focus:border-accentBorderLight dark:group-hover:border-accentBorderDark dark:group-focus:border-accentBorderDark'>{key}</p>
                 <p className='w-1/2 text-left py-2 2xl:text-2xl xl:text-md lg:text-xl font-medium'>{
                     key in selectionList? selectionList[key as keyof typeof selectionList] : "..."
                 }</p>
@@ -87,7 +87,7 @@ const Table = (props: Props) => {
         {Object.entries(modifyableList[node as keyof typeof modifyableList]).map(([key, value], index) => {
             buttons.push(createValueButton(key, value, index, node))
         })}
-        // buttons.push(createAddButton(node))
+        buttons.push(createAddButton(node))
         setvalueButtonList(buttons)
         setDisplayed(true)
     }

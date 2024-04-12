@@ -16,7 +16,7 @@ const startList = {
             "Sparte": ["Familienhaus", "Mehrfamilienhaus", "Gewerbeimmobilie","Einfamilienhaus", "Wohnung"]
         },
         "Kryptowährung": {
-            "Sparte": ["Bitcoin", "Etherium", "Doge Coin"]
+            "Sparte": ["-","Bitcoin", "Doge Coin", "Ethereum", "Litecoin", "Ripple"]
         },
         "Gesundheit": {
             "Sparte": ["Pharma", "Biotech", "Medizin"]
@@ -28,7 +28,7 @@ const startList = {
             "Sparte": ["Lebensmittel", "Kleidung", "Technik"]
         },
     },
-    "Mehr ...": {
+    "Mehr...": {
       "Kapital": ["Eigenkapital", "Fremdkapital"],
       "Kündigung": ["Kündbar", "Unkündbar"],
       "Sicherheit": ["Sicher", "Unsicher"],
@@ -44,7 +44,7 @@ const startList = {
 
 function AddNew() {
   return (
-    <main className="flex w-screen flex-col gap-16 xl:py-24 pt-s0 pb-8 h-[calc(100vh-11rem)] xl:pl-48 px-16 ">
+    <main className="flex w-screen flex-col gap-16 xl:py-24 pt-s0 pb-8 h-[calc(100vh-11rem)]  xl:pl-48 px-16 ">
         <h1 className={"h1"}>Fügen sie neue Investments hinzu</h1>
         <Table items={startList} />
     </main>
