@@ -87,7 +87,7 @@ const Table = (props: Props) => {
         {Object.entries(modifyableList[node as keyof typeof modifyableList]).map(([key, value], index) => {
             buttons.push(createValueButton(key, value, index, node))
         })}
-        buttons.push(createAddButton(node))
+        // buttons.push(createAddButton(node))
         setvalueButtonList(buttons)
         setDisplayed(true)
     }
