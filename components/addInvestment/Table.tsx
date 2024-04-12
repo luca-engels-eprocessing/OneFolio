@@ -1,5 +1,6 @@
 "use client"
 import React, { useEffect, ReactNode, ReactElement, ReactHTMLElement, useState } from 'react'
+import { IconRowInsertBottom } from '@tabler/icons-react'
 
 type Props = {
     items: {},
@@ -75,8 +76,14 @@ const Table = (props: Props) => {
                 e.preventDefault();
 
             }}>
-                <input type='text' className='w-full px-8 text-left text-3xl text-accent py-2 border-0 btn-nav focus:text-textLight focus:dark:text-textDark' placeholder='Gruppe hinzufügen ...' />
-                <input type='text' className='w-full px-8 text-left text-3xl text-accent py-2 border-0 btn-nav focus:text-textLight focus:dark:text-textDark' placeholder='Untergruppe hinzufügen ...' />
+                <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' placeholder='Hinzufügen ...' />
+                <div className='flex flex-row text-3xl gap-8 items-center '>
+                    <p className='px-8 h-full text-left text-2xl py-2 border-0 ' >Als Untergruppe zu "{node}" hinzufügen?</p>
+                    <input type='checkbox' className='h-8 w-8 rounded-md'/>
+                    <button type='submit'>
+                        <IconRowInsertBottom size={32} />
+                    </button>
+                </div>
             </form>
         );
     }
@@ -87,7 +94,7 @@ const Table = (props: Props) => {
         {Object.entries(modifyableList[node as keyof typeof modifyableList]).map(([key, value], index) => {
             buttons.push(createValueButton(key, value, index, node))
         })}
-        // buttons.push(createAddButton(node))
+        buttons.push(createAddButton(node))
         setvalueButtonList(buttons)
         setDisplayed(true)
     }
