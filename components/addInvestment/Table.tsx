@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, ReactNode, ReactElement, ReactHTMLElement, useState } from 'react'
-import { IconRowInsertBottom } from '@tabler/icons-react'
+import { IconPlus } from '@tabler/icons-react'
 
 type Props = {
     items: {},
@@ -81,7 +81,7 @@ const Table = (props: Props) => {
                     <p className='px-8 h-full text-left text-2xl py-2 border-0 ' >Als Untergruppe zu {node} hinzufügen?</p>
                     <input type='checkbox' className='h-8 w-8 rounded-md'/>
                     <button type='submit'>
-                        <IconRowInsertBottom size={32} />
+                        <IconPlus size={32} />
                     </button>
                 </div>
             </form>
