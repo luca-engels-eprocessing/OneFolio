@@ -78,7 +78,7 @@ const Table = (props: Props) => {
             }}>
                 <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' placeholder='Hinzufügen ...' />
                 <div className='flex flex-row text-3xl gap-8 items-center '>
-                    <p className='px-8 h-full text-left text-2xl py-2 border-0 ' >Als Untergruppe zu "{node}" hinzufügen?</p>
+                    <p className='px-8 h-full text-left text-2xl py-2 border-0 ' >Als Untergruppe zu {node} hinzufügen?</p>
                     <input type='checkbox' className='h-8 w-8 rounded-md'/>
                     <button type='submit'>
                         <IconRowInsertBottom size={32} />
