@@ -1,10 +1,6 @@
 "use client"
 import React, { useRef } from 'react'
 
-type Detail = {
-    [key: string]: string;
-}[];
-
 
 type Props = {
     title: string,

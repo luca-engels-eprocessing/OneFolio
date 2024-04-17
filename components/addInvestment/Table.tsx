@@ -70,16 +70,34 @@ const Table = (props: Props) => {
         );
     }
     const createAddButton = (node:string) => {
-        console.log(node)
         return (
             <form className='btn-nav rounded-md flex flex-col justify-center gap-8 px-4 group p-2 w-full' onSubmit={(e) => {
                 e.preventDefault();
+                console.log(modifyableList)
+                console.log(!e.target['subCategory'].value)
+                if(!e.target['subCategory'].value){
+                    //log lenght of modyfiableList[node]
+                    const l = Object.keys(modifyableList[node as keyof typeof modifyableList]).length
+                    setModifyableList({...modifyableList, [node]: {...modifyableList[node],...{[l]:e.target['newCategory'].value}}})
+                }
+                else{
+                    const newCat = {[e.target['newCategory'].value]: {[e.target['subCategory'].value]:[]}}
+                    const curr = modifyableList[node as keyof typeof modifyableList]
+                    console.log(newCat)
+                    console.log("currernt",curr)
+                    console.log({...curr, ...newCat})
+                    const item = {[node]: {...curr, ...newCat}}
+                    console.log(item)
+                    setModifyableList({...modifyableList, ...item})
+                }
+                console.log(e.target['isSub'].checked)
 
             }}>
-                <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' placeholder='Hinzufügen ...' />
+                <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' name='newCategory' placeholder='Hinzufügen ...' />
+                <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' name='subCategory' placeholder='Untergruppe? ...' />
                 <div className='flex flex-row text-3xl gap-8 items-center '>
                     <p className='px-8 h-full text-left text-2xl py-2 border-0 ' >Als Untergruppe zu {node} hinzufügen?</p>
-                    <input type='checkbox' className='h-8 w-8 rounded-md'/>
+                    <input type='checkbox' name='isSub' className='h-8 w-8 rounded-md'/>
                     <button type='submit'>
                         <IconPlus size={32} />
                     </button>
@@ -105,6 +123,7 @@ const Table = (props: Props) => {
             buttons.push(createKeyButton(key, value, index))
         })}
         setkeyButtonList(buttons)
+        return
     }, [selectionList,modifyableList])
     
     
