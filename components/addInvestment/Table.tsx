@@ -66,6 +66,9 @@ const Table = (props: Props) => {
             </button>
         );
     }
+    // * FIX BUT 
+    // ! CHANGE THE mehr... Button to add correct. CURR NOT WORKING
+    // TODO Sub of Sub category not working (Also do not implement)
     const createAddButton = (node:string) => {
         return (
             <form className='btn-nav rounded-md flex flex-col justify-center gap-8 px-4 group p-2 w-full' onSubmit={(e) => {
@@ -118,8 +121,6 @@ const Table = (props: Props) => {
                 <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' name='newCategory' placeholder='Hinzufügen ...' />
                 <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' name='subCategory' placeholder='Untergruppe? ...' />
                 <div className='flex flex-row text-3xl gap-8 items-center '>
-                    <p className='px-8 h-full text-left text-2xl py-2 border-0 ' >Als Untergruppe zu {node} hinzufügen?</p>
-                    <input type='checkbox' name='isSub' className='h-8 w-8 rounded-md'/>
                     <button type='submit'>
                         <IconPlus size={32} />
                     </button>
