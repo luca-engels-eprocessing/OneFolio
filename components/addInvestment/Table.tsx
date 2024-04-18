@@ -70,16 +70,15 @@ const Table = (props: Props) => {
         return (
             <form className='btn-nav rounded-md flex flex-col justify-center gap-8 px-4 group p-2 w-full' onSubmit={(e) => {
                 e.preventDefault();
-                const newCat = e.target['newCategory'].value
-                const subCat = e.target['subCategory'].value
-
+                const newCat = (e.target as HTMLFormElement)['newCategory'].value;
+                const subCat = (e.target as HTMLFormElement)['subCategory'].value;
                 if(!subCat){
                     const curr = modifyableList[node as keyof typeof modifyableList]
                     var valueOfKey = ""
                     var keyOfKey = ""
                     //iterate and check if curr is in modyfiableList
                     Object.entries(modifyableList).map(([key, value]) => {
-                        if(!Array.isArray(value)&&typeof value === 'object'){
+                        if(!Array.isArray(value)&&value != null &&typeof value === 'object'){
                             Object.entries(value).map(([keyI, valueI]) => {
                                 if(valueI[node]&&valueI[node]==curr){
                                     valueOfKey = keyI
@@ -91,8 +90,8 @@ const Table = (props: Props) => {
                     })
                     if(valueOfKey){
                         const list = [...modifyableList[keyOfKey as keyof typeof modifyableList][valueOfKey][node], newCat]
-                        const listKey = {...modifyableList[keyOfKey][valueOfKey], [node]: list}
-                        const valueKey = {...modifyableList[keyOfKey],[valueOfKey]: listKey}
+                        const listKey = {...modifyableList[keyOfKey as keyof typeof modifyableList] as {}, [node]: list}
+                        const valueKey = {...modifyableList[keyOfKey as keyof typeof modifyableList] as {},[valueOfKey]: listKey}
 
                         const list2 = [...curr, newCat]
                         setModifyableList({...modifyableList, [node]: list, [keyOfKey]:valueKey})
@@ -103,13 +102,13 @@ const Table = (props: Props) => {
                     }
                     else{
                         const l = Object.keys(curr).length
-                        setModifyableList({...modifyableList, [node]: {...modifyableList[node],...{[l]:newCat}}})
+                        setModifyableList({...modifyableList, [node]: {...modifyableList[node as keyof typeof modifyableList] as {},...{[l]:newCat}}})
                     }
                 }
                 else{
-                    const newCat = {[newCat]: {[e.target['subCategory'].value]:[]}}
-                    const curr = modifyableList[node as keyof typeof modifyableList]
-                    const item = {[node]: {...curr, ...newCat}}
+                    const newCate = {[newCat]: {[subCat]:[]}}
+                    const curr = modifyableList[node as keyof typeof modifyableList] as {}
+                    const item = {[node]: {...curr, ...newCate}}
                     setModifyableList({...modifyableList, ...item})
                 }
                 setDisplayed(false)
