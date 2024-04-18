@@ -19,24 +19,21 @@ const Table = (props: Props) => {
         <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full' key={index}
             onClick={() => {
                 setDisplayed(false)
-                if(Array.isArray(value)){
+                if("Mehr..." == forKey){
                     delete modifyableList[forKey as keyof typeof modifyableList][key];
                     var newModList = {}
                     Object.entries(modifyableList).map(([keyI, valueI]) => {
                         if (keyI === forKey) {
-                            newModList = {...newModList, [key]: value}
+                            newModList = {...newModList, ...value}
                         }
                         newModList = {...newModList, [keyI]: valueI};
                     })
                     setModifyableList(newModList)
-                    
                 }
                 else if(typeof value === 'string') {
-                    console.log(value, " pressed for ",forKey)
                     setselectionList({ ...selectionList, [forKey]: value});
                 }
                 else{
-                    console.log(key, " pressed for ",forKey);
                     var newModList = {}
                     Object.entries(modifyableList).map(([keyI, valueI]) => {
                         
@@ -73,24 +70,50 @@ const Table = (props: Props) => {
         return (
             <form className='btn-nav rounded-md flex flex-col justify-center gap-8 px-4 group p-2 w-full' onSubmit={(e) => {
                 e.preventDefault();
-                console.log(modifyableList)
-                console.log(!e.target['subCategory'].value)
-                if(!e.target['subCategory'].value){
-                    //log lenght of modyfiableList[node]
-                    const l = Object.keys(modifyableList[node as keyof typeof modifyableList]).length
-                    setModifyableList({...modifyableList, [node]: {...modifyableList[node],...{[l]:e.target['newCategory'].value}}})
+                const newCat = e.target['newCategory'].value
+                const subCat = e.target['subCategory'].value
+
+                if(!subCat){
+                    const curr = modifyableList[node as keyof typeof modifyableList]
+                    var valueOfKey = ""
+                    var keyOfKey = ""
+                    //iterate and check if curr is in modyfiableList
+                    Object.entries(modifyableList).map(([key, value]) => {
+                        if(!Array.isArray(value)&&typeof value === 'object'){
+                            Object.entries(value).map(([keyI, valueI]) => {
+                                if(valueI[node]&&valueI[node]==curr){
+                                    valueOfKey = keyI
+                                    keyOfKey = key
+                                }
+
+                            })
+                        }
+                    })
+                    if(valueOfKey){
+                        const list = [...modifyableList[keyOfKey as keyof typeof modifyableList][valueOfKey][node], newCat]
+                        const listKey = {...modifyableList[keyOfKey][valueOfKey], [node]: list}
+                        const valueKey = {...modifyableList[keyOfKey],[valueOfKey]: listKey}
+
+                        const list2 = [...curr, newCat]
+                        setModifyableList({...modifyableList, [node]: list, [keyOfKey]:valueKey})
+                    }
+                    else if(Array.isArray(curr)){
+                        const list = [...curr, newCat]
+                        setModifyableList({...modifyableList, [node]: list})
+                    }
+                    else{
+                        const l = Object.keys(curr).length
+                        setModifyableList({...modifyableList, [node]: {...modifyableList[node],...{[l]:newCat}}})
+                    }
                 }
                 else{
-                    const newCat = {[e.target['newCategory'].value]: {[e.target['subCategory'].value]:[]}}
+                    const newCat = {[newCat]: {[e.target['subCategory'].value]:[]}}
                     const curr = modifyableList[node as keyof typeof modifyableList]
-                    console.log(newCat)
-                    console.log("currernt",curr)
-                    console.log({...curr, ...newCat})
                     const item = {[node]: {...curr, ...newCat}}
-                    console.log(item)
                     setModifyableList({...modifyableList, ...item})
                 }
-                console.log(e.target['isSub'].checked)
+                setDisplayed(false)
+                setselectionList({...selectionList, [node]: newCat})
 
             }}>
                 <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' name='newCategory' placeholder='Hinzufügen ...' />
@@ -118,6 +141,7 @@ const Table = (props: Props) => {
     }
     
     useEffect(() => {
+        console.log("useEffect")
         var buttons :ReactNode[] = []
         {Object.entries(modifyableList).map(([key, value], index) => {
             buttons.push(createKeyButton(key, value, index))
@@ -130,8 +154,12 @@ const Table = (props: Props) => {
     
     return (
         <div className='flex xl:flex-row flex-col gap-8 overflow-hidden h-full'>
-                <div className={  (displayed && " max-h-[50%]") + " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-1/2 items-center xl:max-h-full xl:h-fit "+" "+props.className}>
+                <div className={  (displayed && " max-h-[calc(50%-32px)]") + " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-[calc(50%-32px)] items-center xl:max-h-full xl:h-fit "+" "+props.className}>
                     {keyButtonList}
+                    <button onClick={() => {
+                        console.log(modifyableList)
+                        console.log(selectionList)
+                    }}>SAVE</button>
                 </div>
                 {displayed && 
                     <div className={"flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-1/2 items-center xl:max-h-full xl:h-fit h-fit max-h-[50%]"+" "+props.className}>
