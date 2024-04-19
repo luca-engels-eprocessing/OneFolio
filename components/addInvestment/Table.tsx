@@ -14,12 +14,31 @@ const Table = (props: Props) => {
     const [displayed, setDisplayed] = useState<boolean>(false)
     const [modifyableList, setModifyableList] = useState<{}>(props.items)
     const [selectionList, setselectionList] = useState<{}>({})
+
+
+    const findListInObject = (toFind: string[],iterate: {}) => {
+        var log = {}
+        Object.entries(iterate).map(([key, value]) => {
+            if(Array.isArray(value) && JSON.stringify(value) === JSON.stringify(toFind)) {
+                log = {[key]:value}
+            }   
+            if(value !=null&&!Array.isArray(value)&& typeof value === 'object'){
+                const ret = findListInObject(toFind,value)
+                if(Object.keys(ret).length !== 0){
+                    log = {...log,[key as string]:ret}
+                }
+            }
+        })
+        return log
+        
+
+    }
     
     const createValueButton = (key: string, value: any, index: number, forKey: string) => (
         <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full' key={index}
             onClick={() => {
                 setDisplayed(false)
-                if("Mehr..." == forKey){
+                                if("Mehr..." == forKey){
                     delete modifyableList[forKey as keyof typeof modifyableList][key];
                     var newModList = {}
                     Object.entries(modifyableList).map(([keyI, valueI]) => {
@@ -91,12 +110,13 @@ const Table = (props: Props) => {
                             })
                         }
                     })
+                    console.log(curr)
+                    console.log(findListInObject(curr,modifyableList))
                     if(valueOfKey){
                         const list = [...modifyableList[keyOfKey as keyof typeof modifyableList][valueOfKey][node], newCat]
                         const listKey = {...modifyableList[keyOfKey as keyof typeof modifyableList] as {}, [node]: list}
                         const valueKey = {...modifyableList[keyOfKey as keyof typeof modifyableList] as {},[valueOfKey]: listKey}
-
-                        const list2 = [...curr, newCat]
+                        console.log({[keyOfKey]:valueKey})
                         setModifyableList({...modifyableList, [node]: list, [keyOfKey]:valueKey})
                     }
                     else if(Array.isArray(curr)){
