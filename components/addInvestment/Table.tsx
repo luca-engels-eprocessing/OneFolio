@@ -30,8 +30,6 @@ const Table = (props: Props) => {
             }
         })
         return log
-        
-
     }
     
     const createValueButton = (key: string, value: any, index: number, forKey: string) => (
