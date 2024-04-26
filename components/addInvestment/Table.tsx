@@ -58,50 +58,7 @@ const Table = (props: Props) => {
     const ValueButton = ({name:key, index, forKey}:{name: string, index: number, forKey: string}) => {
         return (
             <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full' key={index}
-                onClick={(e)=>{
-                    setDisplayed(false)
-                    if("Mehr..." == forKey){
-                        const valueName=Object.keys(key)[0];
-                        const array = modifyableList[forKey as keyof typeof modifyableList] as string[]
-                        const index = array.indexOf(key)
-                        if(index !== -1){
-                            array.splice(index,1)
-                        }
-                        var newModList = {}
-                        
-                        Object.entries(modifyableList).map(([keyI, valueI]) => {
-                            if(keyI === forKey){
-                                newModList = {...newModList,...key[valueName as keyof typeof key] as {}}
-                            }
-                            newModList = {...newModList, [keyI]: valueI};
-                        })
-                        setModifyableList(newModList)
-                    }
-                    else if(typeof key != 'object') {
-                        console.log({[forKey]: key})
-                        setselectionList({ ...selectionList, [forKey]: key});
-                    }
-                    else{
-                        const valueName=Object.keys(key)[0];
-                        var newModList = {}
-                        if(Object.keys(key[valueName])[0] in selectionList){
-                            console.log("HERE",Object.keys(key[valueName])[0])
-                            delete selectionList[Object.keys(key[valueName])[0] as keyof typeof selectionList]
-                        }
-                        Object.entries(modifyableList).map(([keyI, valueI]) => {
-                            if(keyI in newModList){
-                            }
-                            else{
-                                newModList = {...newModList, [keyI]: valueI};
-                                if(keyI === forKey){
-                                    newModList = {...newModList,...key[valueName] as {}}
-                                }
-                            }
-                        })
-                        setModifyableList(newModList)
-                        setselectionList({ ...selectionList, [forKey]: valueName });
-                    }
-                }}>
+                onClick={(e) => onClickValueButton(e,key, index, forKey)}>
                 <p className='w-full px-8 text-left 2xl:text-2xl xl:text-lg lg:text-2xl py-2'>{typeof key === 'object' ? Object.keys(key)[0] : key}</p>
             </button>
         );
@@ -131,6 +88,51 @@ const Table = (props: Props) => {
             </form>
         );
     }
+    
+    const onClickValueButton = (e:any,key:string,index:number,forKey:string)  => {
+            setDisplayed(false)
+            if("Mehr..." == forKey){
+                const valueName=Object.keys(key)[0];
+                const array = modifyableList[forKey as keyof typeof modifyableList] as string[]
+                const index = array.indexOf(key)
+                if(index !== -1){
+                    array.splice(index,1)
+                }
+                var newModList = {}
+                
+                Object.entries(modifyableList).map(([keyI, valueI]) => {
+                    if(keyI === forKey){
+                        newModList = {...newModList,...key[valueName as keyof typeof key] as {}}
+                    }
+                    newModList = {...newModList, [keyI]: valueI};
+                })
+                setModifyableList(newModList)
+            }
+            else if(typeof key != 'object') {
+                console.log({[forKey]: key})
+                setselectionList({ ...selectionList, [forKey]: key});
+            }
+            else{
+                const valueName=Object.keys(key)[0];
+                var newModList = {}
+                if(Object.keys(key[valueName])[0] in selectionList){
+                    console.log("HERE",Object.keys(key[valueName])[0])
+                    delete selectionList[Object.keys(key[valueName])[0] as keyof typeof selectionList]
+                }
+                Object.entries(modifyableList).map(([keyI, valueI]) => {
+                    if(keyI in newModList){
+                    }
+                    else{
+                        newModList = {...newModList, [keyI]: valueI};
+                        if(keyI === forKey){
+                            newModList = {...newModList,...key[valueName] as {}}
+                        }
+                    }
+                })
+                setModifyableList(newModList)
+                setselectionList({ ...selectionList, [forKey]: valueName });
+            }
+        }
     
 
     const handleAddButtonSubmit = (e:any,node:string) => {
