@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, ReactNode, ReactElement, ReactHTMLElement, useState } from 'react'
+import React, { useEffect, ReactNode, useState, FormEvent } from 'react'
 import { IconPlus } from '@tabler/icons-react'
 
 type Props = {
@@ -47,25 +47,61 @@ export const editObject = (toFind: {}, iterate: {},toAdd:any[]) => {
 }
 
 export const deleteFromSelection = (toDelete: {}, modList: {}, selList: {}) => {
-    
-    console.log("HERE",toDelete)
     const one = modList[toDelete as keyof typeof modList] as []
     const two = selList[toDelete as keyof typeof selList]
-    console.log("HERE 1",one , two)
     var index = 0;
-    one.map((value) => {
-        if(Object.keys(value)[0] === two){
-            index = one.indexOf(value)
-        }
-
-    })
-    const c = modList[toDelete as keyof typeof modList][index][two]
-    if(c){
-        Object.keys(c).map((value) => {
-            delete modList[value as keyof typeof modList]
+    if(two){
+        one.map((value) => {
+            if(Object.keys(value)[0] === two){
+                index = one.indexOf(value)
+            }
+    
         })
+        const c = modList[toDelete as keyof typeof modList][index][two]
+        if(c){
+            Object.keys(c).map((value) => {
+                delete modList[value as keyof typeof modList]
+            })
+        }
     }
 
+}
+
+
+
+const ValueButton = ({onClick,index:index,name:key}:{onClick:()=>void,index:number,name:string}) => {
+    return (
+        <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full' key={index}
+            onClick={onClick}>
+            <p className='w-full px-8 text-left 2xl:text-2xl xl:text-lg lg:text-2xl py-2'>{typeof key === 'object' ? Object.keys(key)[0] : key}</p>
+        </button>
+    );
+}
+
+
+const KeyButton = ({onClick,name:key, index,selecList}:{onClick:()=>void,name:string, index: number,selecList:{}}) => {
+    return (
+        <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full group items-end' key={index} onClick={onClick}>
+            <p className='w-1/2 text-center py-2 2xl:text-4xl xl:text-lg lg:text-2xl h-full border-r-2 border-accentLight dark:border-accentDark group-hover:border-accentBorderLight group-focus:border-accentBorderLight dark:group-hover:border-accentBorderDark dark:group-focus:border-accentBorderDark'>{key}</p>
+            <p className='w-1/2 text-left py-2 2xl:text-2xl xl:text-md lg:text-xl font-medium'>{
+                key in selecList? selecList[key as keyof typeof selecList] : "..."
+            }</p>
+        </button>
+    );
+}
+
+const AddButton = ({onClick}:{onClick:(e:FormEvent<HTMLFormElement>)=>void}) => {
+    return (
+        <form className='btn-nav rounded-md flex flex-col justify-center gap-8 px-4 group p-2 w-full' onSubmit={onClick}>
+            <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' name='newCategory' placeholder='Hinzufügen ...' />
+            <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' name='subCategory' placeholder='Untergruppe? ...' />
+            <div className='flex flex-row text-3xl gap-8 items-center '>
+                <button type='submit'>
+                    <IconPlus size={32} />
+                </button>
+            </div>
+        </form>
+    );
 }
 
 const Table = (props: Props) => {
@@ -75,45 +111,13 @@ const Table = (props: Props) => {
     const [selectionList, setselectionList] = useState<{}>({})
     const [modifyableList, setModifyableList] = useState<{}>(props.items)
 
-    const KeyButton = ({name:key, index}:{name:string, index: number}) => {
-        return (
-            <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full group items-end' key={index} onClick={() =>{
-                setDisplayed(true)
-                createValueList(key)}}>
-                <p className='w-1/2 text-center py-2 2xl:text-4xl xl:text-lg lg:text-2xl h-full border-r-2 border-accentLight dark:border-accentDark group-hover:border-accentBorderLight group-focus:border-accentBorderLight dark:group-hover:border-accentBorderDark dark:group-focus:border-accentBorderDark'>{key}</p>
-                <p className='w-1/2 text-left py-2 2xl:text-2xl xl:text-md lg:text-xl font-medium'>{
-                    key in selectionList? selectionList[key as keyof typeof selectionList] : "..."
-                }</p>
-            </button>
-        );
-    }
 
-    const ValueButton = ({name:key, index, forKey}:{name: string, index: number, forKey: string}) => {
-        return (
-            <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full' key={index}
-                onClick={() => onClickValueButton(key, index, forKey)}>
-                <p className='w-full px-8 text-left 2xl:text-2xl xl:text-lg lg:text-2xl py-2'>{typeof key === 'object' ? Object.keys(key)[0] : key}</p>
-            </button>
-        );
-    }
 
-    const AddButton = ({node}:{node:string}) => {
-        return (
-            <form className='btn-nav rounded-md flex flex-col justify-center gap-8 px-4 group p-2 w-full' onSubmit={(e) => {handleAddButtonSubmit(e,node)}}>
-                <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' name='newCategory' placeholder='Hinzufügen ...' />
-                <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' name='subCategory' placeholder='Untergruppe? ...' />
-                <div className='flex flex-row text-3xl gap-8 items-center '>
-                    <button type='submit'>
-                        <IconPlus size={32} />
-                    </button>
-                </div>
-            </form>
-        );
-    }
     
     //TODO Clear modyfiableList of subelements (found twice in the list)
-    const onClickValueButton = (key:string,index:number,forKey:string)  => {
+    const onClickValueButton = (key:string,forKey:string)  => {
         setDisplayed(false)
+        deleteFromSelection(forKey,modifyableList,selectionList)
         if("Mehr..." == forKey){
             const valueName=Object.keys(key)[0];
             const array = modifyableList[forKey as keyof typeof modifyableList] as string[]
@@ -132,13 +136,11 @@ const Table = (props: Props) => {
             setModifyableList(newModList)
         }
         else if(typeof key != 'object') {
-            console.log({[forKey]: key})
             setselectionList({ ...selectionList, [forKey]: key});
         }
         else{
             const valueName=Object.keys(key)[0];
             var newModList = {}
-            deleteFromSelection(forKey,modifyableList,selectionList)
             if(Object.keys(key[valueName])[0] in selectionList){
                 delete selectionList[Object.keys(key[valueName])[0] as keyof typeof selectionList]
             }
@@ -160,7 +162,6 @@ const Table = (props: Props) => {
     //TODO FIX ADDING SUBGROUP doesnt delete current selected
     const handleAddButtonSubmit = (e:any,node:string) => {
         e.preventDefault();
-        console.log("HEREwcqdf",node)
         deleteFromSelection(node,modifyableList,selectionList)
         const newCat = (e.target as HTMLFormElement)['newCategory'].value as string;
         const subCat = (e.target as HTMLFormElement)['subCategory'].value;
@@ -173,33 +174,34 @@ const Table = (props: Props) => {
         else{
             const newCatSub = {[newCat]: {[subCat]:[]}}
             const curr = { [node]: modifyableList[node as keyof typeof modifyableList] as {} };
-            const listKeyValue = editObject(curr, modifyableList, [newCatSub]);
-            setModifyableList({...listKeyValue, [subCat]: []})
+            var newList = {}
+            Object.entries(editObject(curr, modifyableList, [newCatSub])).map(([key, value]) => {
+                newList = {...newList, [key]: value}
+                if(node == key){
+                    newList = {...newList, [subCat]: []}
+                }
+            })
+            setModifyableList(newList)
         }
         setDisplayed(false)
         setselectionList({...selectionList, [node]: newCat})
     }
 
     const createValueList = (node: string) => {
-        console.log(displayed)
         var buttons :ReactNode[] = []
-        console.log(modifyableList[node as keyof typeof modifyableList])
         for(var i = 0; i < Object.keys(modifyableList[node as keyof typeof modifyableList]).length; i++){
             const buttonName = modifyableList[node as keyof typeof modifyableList][i]
-            console.log()
-            // buttons.push(createValueButton(buttonName, i, node))
-            buttons.push(<ValueButton key={i} index={i} forKey={node} name={buttonName} />)
+            buttons.push(<ValueButton key={i} index={i} name={buttonName} onClick={()=>{onClickValueButton(buttonName, node)}} />)
         }
-        buttons.push(<AddButton node={node} key={"-1"} />)
+        buttons.push(<AddButton onClick={(e)=>{handleAddButtonSubmit(e,node)}} key={"-1"} />)
         setvalueButtonList(buttons)
         setDisplayed(true)
     }
     
     useEffect(() => {
-        console.log("useEffect")
         var buttons :ReactNode[] = []
         {Object.entries(modifyableList).map(([key], index) => {
-            buttons.push(<KeyButton name={key} index={index} key={index} />)
+            buttons.push(<KeyButton onClick={() =>{setDisplayed(true);createValueList(key)}} name={key} index={index} key={index} selecList={selectionList} />)
         })}
         setkeyButtonList(buttons)
         return
@@ -211,7 +213,7 @@ const Table = (props: Props) => {
         <div className='flex xl:flex-row flex-col gap-8 overflow-hidden h-full'>
                 <div className={  (displayed && " max-h-[calc(50%-32px)]") + " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-[calc(50%-32px)] items-center xl:max-h-full xl:h-fit "+" "+props.className}>
                     {keyButtonList}
-                    <button onClick={() => {
+                    <button onClick={(e) => {
                         console.log(modifyableList)
                         console.log(selectionList)
                     }}>SAVE</button>

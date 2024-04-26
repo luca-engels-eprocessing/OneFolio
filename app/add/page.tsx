@@ -1,3 +1,4 @@
+'use server'
 import Table from '@/components/addInvestment/Table'
 import React from 'react'
 
@@ -89,11 +90,12 @@ const sList = {
 //     }
 // }
 
-function AddNew() {
+async function AddNew() {
+  const list = await sList
   return (
     <main className="flex w-screen flex-col gap-16 xl:py-24 pt-s0 pb-8 h-[calc(100vh-11rem)]  xl:pl-48 px-16 ">
         <h1 className={"h1"}>Fügen sie neue Investments hinzu</h1>
-        <Table items={sList} />
+        <Table items={list} />
     </main>
   )
 }
