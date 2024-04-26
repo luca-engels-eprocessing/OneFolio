@@ -4,14 +4,13 @@ import { IconPlus } from '@tabler/icons-react'
 
 type Props = {
     items: {},
-    setDisplay?: (val: boolean) => void;
     className?: string;
 }
 
 
 // * Uses an object to find and changes the value of the object to the to Add array. The iterate object is the list that the toFind Object belongs to. The comments in the function show the current state and the variables that are at each position...
 //! JUST WORKS :D
-export const editObject = (toFind: {}, iterate: {},toAdd:string[]) => {
+export const editObject = (toFind: {}, iterate: {},toAdd:any[]) => {
 
     // iterate = {Branche: []} || {Laufzeit: []} || {Title: []}
     var fullNewList = {}
@@ -47,6 +46,28 @@ export const editObject = (toFind: {}, iterate: {},toAdd:string[]) => {
     return fullNewList
 }
 
+export const deleteFromSelection = (toDelete: {}, modList: {}, selList: {}) => {
+    
+    console.log("HERE",toDelete)
+    const one = modList[toDelete as keyof typeof modList] as []
+    const two = selList[toDelete as keyof typeof selList]
+    console.log("HERE 1",one , two)
+    var index = 0;
+    one.map((value) => {
+        if(Object.keys(value)[0] === two){
+            index = one.indexOf(value)
+        }
+
+    })
+    const c = modList[toDelete as keyof typeof modList][index][two]
+    if(c){
+        Object.keys(c).map((value) => {
+            delete modList[value as keyof typeof modList]
+        })
+    }
+
+}
+
 const Table = (props: Props) => {
     const [keyButtonList, setkeyButtonList] = useState<ReactNode[]>()
     const [valueButtonList, setvalueButtonList] = useState<ReactNode[]>()
@@ -54,16 +75,7 @@ const Table = (props: Props) => {
     const [selectionList, setselectionList] = useState<{}>({})
     const [modifyableList, setModifyableList] = useState<{}>(props.items)
 
-
-    const ValueButton = ({name:key, index, forKey}:{name: string, index: number, forKey: string}) => {
-        return (
-            <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full' key={index}
-                onClick={(e) => onClickValueButton(e,key, index, forKey)}>
-                <p className='w-full px-8 text-left 2xl:text-2xl xl:text-lg lg:text-2xl py-2'>{typeof key === 'object' ? Object.keys(key)[0] : key}</p>
-            </button>
-        );
-    }
-    const KeyButton = ({name:key, value, index}:{name:string, value: any, index: number}) => {
+    const KeyButton = ({name:key, index}:{name:string, index: number}) => {
         return (
             <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full group items-end' key={index} onClick={() =>{
                 setDisplayed(true)
@@ -75,6 +87,16 @@ const Table = (props: Props) => {
             </button>
         );
     }
+
+    const ValueButton = ({name:key, index, forKey}:{name: string, index: number, forKey: string}) => {
+        return (
+            <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full' key={index}
+                onClick={() => onClickValueButton(key, index, forKey)}>
+                <p className='w-full px-8 text-left 2xl:text-2xl xl:text-lg lg:text-2xl py-2'>{typeof key === 'object' ? Object.keys(key)[0] : key}</p>
+            </button>
+        );
+    }
+
     const AddButton = ({node}:{node:string}) => {
         return (
             <form className='btn-nav rounded-md flex flex-col justify-center gap-8 px-4 group p-2 w-full' onSubmit={(e) => {handleAddButtonSubmit(e,node)}}>
@@ -89,54 +111,57 @@ const Table = (props: Props) => {
         );
     }
     
-    const onClickValueButton = (e:any,key:string,index:number,forKey:string)  => {
-            setDisplayed(false)
-            if("Mehr..." == forKey){
-                const valueName=Object.keys(key)[0];
-                const array = modifyableList[forKey as keyof typeof modifyableList] as string[]
-                const index = array.indexOf(key)
-                if(index !== -1){
-                    array.splice(index,1)
+    //TODO Clear modyfiableList of subelements (found twice in the list)
+    const onClickValueButton = (key:string,index:number,forKey:string)  => {
+        setDisplayed(false)
+        if("Mehr..." == forKey){
+            const valueName=Object.keys(key)[0];
+            const array = modifyableList[forKey as keyof typeof modifyableList] as string[]
+            const index = array.indexOf(key)
+            if(index !== -1){
+                array.splice(index,1)
+            }
+            var newModList = {}
+            
+            Object.entries(modifyableList).map(([keyI, valueI]) => {
+                if(keyI === forKey){
+                    newModList = {...newModList,...key[valueName as keyof typeof key] as {}}
                 }
-                var newModList = {}
-                
-                Object.entries(modifyableList).map(([keyI, valueI]) => {
-                    if(keyI === forKey){
-                        newModList = {...newModList,...key[valueName as keyof typeof key] as {}}
-                    }
-                    newModList = {...newModList, [keyI]: valueI};
-                })
-                setModifyableList(newModList)
-            }
-            else if(typeof key != 'object') {
-                console.log({[forKey]: key})
-                setselectionList({ ...selectionList, [forKey]: key});
-            }
-            else{
-                const valueName=Object.keys(key)[0];
-                var newModList = {}
-                if(Object.keys(key[valueName])[0] in selectionList){
-                    console.log("HERE",Object.keys(key[valueName])[0])
-                    delete selectionList[Object.keys(key[valueName])[0] as keyof typeof selectionList]
-                }
-                Object.entries(modifyableList).map(([keyI, valueI]) => {
-                    if(keyI in newModList){
-                    }
-                    else{
-                        newModList = {...newModList, [keyI]: valueI};
-                        if(keyI === forKey){
-                            newModList = {...newModList,...key[valueName] as {}}
-                        }
-                    }
-                })
-                setModifyableList(newModList)
-                setselectionList({ ...selectionList, [forKey]: valueName });
-            }
+                newModList = {...newModList, [keyI]: valueI};
+            })
+            setModifyableList(newModList)
         }
+        else if(typeof key != 'object') {
+            console.log({[forKey]: key})
+            setselectionList({ ...selectionList, [forKey]: key});
+        }
+        else{
+            const valueName=Object.keys(key)[0];
+            var newModList = {}
+            deleteFromSelection(forKey,modifyableList,selectionList)
+            if(Object.keys(key[valueName])[0] in selectionList){
+                delete selectionList[Object.keys(key[valueName])[0] as keyof typeof selectionList]
+            }
+            Object.entries(modifyableList).map(([keyI, valueI]) => {
+                if(keyI in newModList){
+                }
+                else{
+                    newModList = {...newModList, [keyI]: valueI};
+                    if(keyI === forKey){
+                        newModList = {...newModList,...key[valueName] as {}}
+                    }
+                }
+            })
+            setModifyableList(newModList)
+            setselectionList({ ...selectionList, [forKey]: valueName });
+        }
+    }
     
-
+    //TODO FIX ADDING SUBGROUP doesnt delete current selected
     const handleAddButtonSubmit = (e:any,node:string) => {
         e.preventDefault();
+        console.log("HEREwcqdf",node)
+        deleteFromSelection(node,modifyableList,selectionList)
         const newCat = (e.target as HTMLFormElement)['newCategory'].value as string;
         const subCat = (e.target as HTMLFormElement)['subCategory'].value;
         if(!subCat){
@@ -146,10 +171,10 @@ const Table = (props: Props) => {
             setModifyableList(listKeyValue)
         }
         else{
-            const newCate = {[newCat]: {[subCat]:[]}}
-            const curr = modifyableList[node as keyof typeof modifyableList] as {}
-            const item = {[node]: {...curr, ...newCate}}
-            setModifyableList({...modifyableList, ...item})
+            const newCatSub = {[newCat]: {[subCat]:[]}}
+            const curr = { [node]: modifyableList[node as keyof typeof modifyableList] as {} };
+            const listKeyValue = editObject(curr, modifyableList, [newCatSub]);
+            setModifyableList({...listKeyValue, [subCat]: []})
         }
         setDisplayed(false)
         setselectionList({...selectionList, [node]: newCat})
@@ -165,7 +190,7 @@ const Table = (props: Props) => {
             // buttons.push(createValueButton(buttonName, i, node))
             buttons.push(<ValueButton key={i} index={i} forKey={node} name={buttonName} />)
         }
-        buttons.push(<AddButton node={node} />)
+        buttons.push(<AddButton node={node} key={"-1"} />)
         setvalueButtonList(buttons)
         setDisplayed(true)
     }
@@ -173,8 +198,8 @@ const Table = (props: Props) => {
     useEffect(() => {
         console.log("useEffect")
         var buttons :ReactNode[] = []
-        {Object.entries(modifyableList).map(([key, value], index) => {
-            buttons.push(<KeyButton name={key} value={value} index={index} />)
+        {Object.entries(modifyableList).map(([key], index) => {
+            buttons.push(<KeyButton name={key} index={index} key={index} />)
         })}
         setkeyButtonList(buttons)
         return
