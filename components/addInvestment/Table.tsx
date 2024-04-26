@@ -1,9 +1,6 @@
 "use client"
 import React, { useEffect, ReactNode, ReactElement, ReactHTMLElement, useState } from 'react'
 import { IconPlus } from '@tabler/icons-react'
-import { arrayBuffer } from 'stream/consumers';
-import { ValueOf } from 'next/dist/shared/lib/constants';
-import { M_PLUS_1 } from 'next/font/google';
 
 type Props = {
     items: {},
@@ -12,40 +9,43 @@ type Props = {
 }
 
 
-// TODO Return correct strng
+// * Uses an object to find and changes the value of the object to the to Add array. The iterate object is the list that the toFind Object belongs to. The comments in the function show the current state and the variables that are at each position...
+//! JUST WORKS :D
+const editObject = (toFind: {}, iterate: {},toAdd:string[]) => {
 
-// MAYBE BUILD THIS FROM GROUND UP AGAIN
-const findListInObject = (toFind: {},iterate: {}) => {
-    var log = {}
-    for(var i = 0; i < Object.keys(iterate).length; i++){
+    // iterate = {Branche: []} || {Laufzeit: []} || {Title: []}
+    var fullNewList = {}
+
+    for (var i =0; i < Object.keys(iterate).length; i++){
         const key = Object.keys(iterate)[i]
-        const value = iterate[key as keyof typeof iterate]
-        console.log(value)
-        if(Array.isArray(value) && JSON.stringify({[key]:value}) === JSON.stringify(toFind)) {
-            log = {[key]:value}
-            console.log("found",log)
-            return log
-        }   
-        if(value !=null&& typeof value === 'object'){
-            console.log(key,value,i)
-            var ret = {}
-            for(var j =0; j < Object.keys(value).length; j++){
-                if(typeof value[j] != "string"){
-                    const val = Object.keys(value[j])
-                    for(var k = 0; k < val.length; k++){
-                        console.log(1.1,value[j],value[j][val[k]],val[k],k)
-                        ret = findListInObject(toFind,value[j][val[k]])
+        const value = iterate[key as keyof typeof iterate] as []
+        //Branche : [{},{},{},{}] || Laufzeit : [1,2,3,4,5] || Title : []
+        if(JSON.stringify({[key]:value}) === JSON.stringify(toFind)){
+            fullNewList = {...fullNewList,[key]:[...value, ...toAdd]}
+        }
+        else if(value.length > 0){
+            var newList:any[] = []
+            for(var j = 0; j < value.length; j++){
+                // value[j] = {Energie:{}} || value[j] = 1
+                if (typeof value[j] == typeof {}) {
+                    for (var k = 0; k < Object.keys(value[j]).length; k++) {
+                        // Object.keys(value[j])[k] = Energie
+                        // value[j][Object.keys(value[j])[k]] = {Sparte: []}}
+                        const obj = editObject(toFind, value[j][Object.keys(value[j])[k]], toAdd)
+                        newList = [...newList, {[(Object.keys(value[j])[k])]:obj}]
                     }
+                } else {
+                    newList = [...newList, value[j]]
                 }
             }
-            if(Object.keys(ret).length !== 0){
-                log = {...log,[key as string]:ret}
-            }
+            fullNewList = {...fullNewList,[key]:newList}
+        }
+        else{
+            fullNewList = {...fullNewList,[key]:value}
         }
     }
-    return log
+    return fullNewList
 }
-
 
 const Table = (props: Props) => {
     const [keyButtonList, setkeyButtonList] = useState<ReactNode[]>()
@@ -116,9 +116,6 @@ const Table = (props: Props) => {
             </button>
         );
     }
-    // * FIX BUT 
-    // ! CHANGE THE mehr... Button to add correct. CURR NOT WORKING
-    // TODO Sub of Sub category not working (Also do not implement)
     const createAddButton = (node:string) => {
         return (
             <form className='btn-nav rounded-md flex flex-col justify-center gap-8 px-4 group p-2 w-full' onSubmit={(e) => {handleAddButtonSubmit(e,node)}}>
@@ -136,30 +133,13 @@ const Table = (props: Props) => {
 
     const handleAddButtonSubmit = (e:any,node:string) => {
         e.preventDefault();
-        const newCat = (e.target as HTMLFormElement)['newCategory'].value;
+        const newCat = (e.target as HTMLFormElement)['newCategory'].value as string;
         const subCat = (e.target as HTMLFormElement)['subCategory'].value;
-
-        console.log(1,newCat)
-        console.log(2,subCat)
-        console.log(3,node)
-
         if(!subCat){
-            const curr = {[node]:modifyableList[node as keyof typeof modifyableList] as []}
+            const curr = { [node]: modifyableList[node as keyof typeof modifyableList] as {} };
             //iterate and check if curr is in modyfiableList
-            const listKeyValue = findListInObject(curr,modifyableList)
-            console.log(4,curr)
-            console.log(5,listKeyValue)
-            if(listKeyValue){
-                setModifyableList({...modifyableList, ...listKeyValue})
-            }
-            else if(Array.isArray(curr)){
-                const list = [...curr, newCat]
-                setModifyableList({...modifyableList, [node]: list})
-            }
-            else{
-                const l = Object.keys(curr).length
-                setModifyableList({...modifyableList, [node]: {...modifyableList[node as keyof typeof modifyableList] as {},...{[l]:newCat}}})
-            }
+            const listKeyValue = editObject(curr, modifyableList, [newCat]);
+            setModifyableList(listKeyValue)
         }
         else{
             const newCate = {[newCat]: {[subCat]:[]}}
