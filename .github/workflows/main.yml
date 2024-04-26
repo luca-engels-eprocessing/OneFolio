@@ -38,6 +38,4 @@ jobs:
             - name: Build
               run: npm run build
               
-            - name: Code Coverage Summary
-              uses: irongut/CodeCoverageSummary@v1.3.0
             
