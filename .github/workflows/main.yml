@@ -30,7 +30,7 @@ jobs:
                   cache: 'npm'
 
             - name: Run CI command
-              run: npm ci
+              run: npm install
 
             - name: Check linting
               run: npm run lint
