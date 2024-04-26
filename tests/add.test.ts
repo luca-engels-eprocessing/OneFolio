@@ -53,7 +53,6 @@ describe('Check fill Table', () => {
             test('should fill list of subelements with multiple elements', () => {
                 const result = editObject({"C1": ["D1","E1"]}, sample, ["NEW"])
                 expected["A1"] = [{"B1": {"C1": ["D1","E1","NEW"]}},{"B2": {"C2": ["D2","E2"],"C3": ["D3","E3"]}}]
-                console.log(expected,result)
                 expect(result).toEqual(expected)
             });
 
