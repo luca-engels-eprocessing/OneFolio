@@ -27,7 +27,7 @@ jobs:
                   cache: 'npm'
 
             - name: Run CI command
-              run: npm install
+              run: npm run ci
 
             - name: Check linting
               run: npm run lint
