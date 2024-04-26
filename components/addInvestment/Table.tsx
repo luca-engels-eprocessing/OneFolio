@@ -8,67 +8,100 @@ type Props = {
     className?: string;
 }
 
+
+// * Uses an object to find and changes the value of the object to the to Add array. The iterate object is the list that the toFind Object belongs to. The comments in the function show the current state and the variables that are at each position...
+//! JUST WORKS :D
+export const editObject = (toFind: {}, iterate: {},toAdd:string[]) => {
+
+    // iterate = {Branche: []} || {Laufzeit: []} || {Title: []}
+    var fullNewList = {}
+
+    for (var i =0; i < Object.keys(iterate).length; i++){
+        const key = Object.keys(iterate)[i]
+        const value = iterate[key as keyof typeof iterate] as []
+        //Branche : [{},{},{},{}] || Laufzeit : [1,2,3,4,5] || Title : []
+        if(JSON.stringify({[key]:value}) === JSON.stringify(toFind)){
+            fullNewList = {...fullNewList,[key]:[...value, ...toAdd]}
+        }
+        else if(value.length > 0){
+            var newList:any[] = []
+            for(var j = 0; j < value.length; j++){
+                // value[j] = {Energie:{}} || value[j] = 1
+                if (typeof value[j] == typeof {}) {
+                    for (var k = 0; k < Object.keys(value[j]).length; k++) {
+                        // Object.keys(value[j])[k] = Energie
+                        // value[j][Object.keys(value[j])[k]] = {Sparte: []}}
+                        const obj = editObject(toFind, value[j][Object.keys(value[j])[k]], toAdd)
+                        newList = [...newList, {[(Object.keys(value[j])[k])]:obj}]
+                    }
+                } else {
+                    newList = [...newList, value[j]]
+                }
+            }
+            fullNewList = {...fullNewList,[key]:newList}
+        }
+        else{
+            fullNewList = {...fullNewList,[key]:value}
+        }
+    }
+    return fullNewList
+}
+
 const Table = (props: Props) => {
     const [keyButtonList, setkeyButtonList] = useState<ReactNode[]>()
     const [valueButtonList, setvalueButtonList] = useState<ReactNode[]>()
     const [displayed, setDisplayed] = useState<boolean>(false)
-    const [modifyableList, setModifyableList] = useState<{}>(props.items)
     const [selectionList, setselectionList] = useState<{}>({})
+    const [modifyableList, setModifyableList] = useState<{}>(props.items)
 
 
-    const findListInObject = (toFind: string[],iterate: {}) => {
-        var log = {}
-        Object.entries(iterate).map(([key, value]) => {
-            if(Array.isArray(value) && JSON.stringify(value) === JSON.stringify(toFind)) {
-                log = {[key]:value}
-            }   
-            if(value !=null&&!Array.isArray(value)&& typeof value === 'object'){
-                const ret = findListInObject(toFind,value)
-                if(Object.keys(ret).length !== 0){
-                    log = {...log,[key as string]:ret}
-                }
-            }
-        })
-        return log
-    }
-    
-    const createValueButton = (key: string, value: any, index: number, forKey: string) => (
+    const createValueButton = (key: string, index: number, forKey: string) => (
         <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full' key={index}
-            onClick={() => {
+            onClick={(e)=>{
                 setDisplayed(false)
-                                if("Mehr..." == forKey){
-                    delete modifyableList[forKey as keyof typeof modifyableList][key];
+                if("Mehr..." == forKey){
+                    const valueName=Object.keys(key)[0];
+                    const array = modifyableList[forKey as keyof typeof modifyableList] as string[]
+                    const index = array.indexOf(key)
+                    if(index !== -1){
+                        array.splice(index,1)
+                    }
                     var newModList = {}
+                    
                     Object.entries(modifyableList).map(([keyI, valueI]) => {
-                        if (keyI === forKey) {
-                            newModList = {...newModList, ...value}
+                        if(keyI === forKey){
+                            newModList = {...newModList,...key[valueName as keyof typeof key] as {}}
                         }
                         newModList = {...newModList, [keyI]: valueI};
                     })
                     setModifyableList(newModList)
                 }
-                else if(typeof value === 'string') {
-                    setselectionList({ ...selectionList, [forKey]: value});
+                else if(typeof key != 'object') {
+                    console.log({[forKey]: key})
+                    setselectionList({ ...selectionList, [forKey]: key});
                 }
                 else{
+                    const valueName=Object.keys(key)[0];
                     var newModList = {}
+                    if(Object.keys(key[valueName])[0] in selectionList){
+                        console.log("HERE",Object.keys(key[valueName])[0])
+                        delete selectionList[Object.keys(key[valueName])[0] as keyof typeof selectionList]
+                    }
                     Object.entries(modifyableList).map(([keyI, valueI]) => {
-                        
-
-                        if (keyI in value) {
-                            delete selectionList[keyI as keyof typeof selectionList];
-                            return;
+                        if(keyI in newModList){
                         }
-                        newModList = {...newModList, [keyI]: valueI};
-                        if (keyI === forKey) {
-                            newModList = {...newModList, ...value};
+                        else{
+                            newModList = {...newModList, [keyI]: valueI};
+                            if(keyI === forKey){
+                                newModList = {...newModList,...key[valueName] as {}}
+                            }
                         }
                     })
-                    setModifyableList(newModList);
-                    setselectionList({ ...selectionList, [forKey]: key });
+                    setModifyableList(newModList)
+                    setselectionList({ ...selectionList, [forKey]: valueName });
                 }
             }}>
-            <p className='w-full px-8 text-left 2xl:text-2xl xl:text-lg lg:text-2xl py-2'>{typeof value === 'string' ? value : key}</p>
+            <p className='w-full px-8 text-left 2xl:text-2xl xl:text-lg lg:text-2xl py-2'>{typeof key === 'object' ? Object.keys(key)[0] : key}</p>
         </button>
     );
     const createKeyButton = (key: string, value: any, index: number) => {
@@ -83,59 +116,9 @@ const Table = (props: Props) => {
             </button>
         );
     }
-    // * FIX BUT 
-    // ! CHANGE THE mehr... Button to add correct. CURR NOT WORKING
-    // TODO Sub of Sub category not working (Also do not implement)
     const createAddButton = (node:string) => {
         return (
-            <form className='btn-nav rounded-md flex flex-col justify-center gap-8 px-4 group p-2 w-full' onSubmit={(e) => {
-                e.preventDefault();
-                const newCat = (e.target as HTMLFormElement)['newCategory'].value;
-                const subCat = (e.target as HTMLFormElement)['subCategory'].value;
-                if(!subCat){
-                    const curr = modifyableList[node as keyof typeof modifyableList]
-                    var valueOfKey = ""
-                    var keyOfKey = ""
-                    //iterate and check if curr is in modyfiableList
-                    Object.entries(modifyableList).map(([key, value]) => {
-                        if(!Array.isArray(value)&&value != null &&typeof value === 'object'){
-                            Object.entries(value).map(([keyI, valueI]) => {
-                                if(valueI[node]&&valueI[node]==curr){
-                                    valueOfKey = keyI
-                                    keyOfKey = key
-                                }
-
-                            })
-                        }
-                    })
-                    console.log(curr)
-                    console.log(findListInObject(curr,modifyableList))
-                    if(valueOfKey){
-                        const list = [...modifyableList[keyOfKey as keyof typeof modifyableList][valueOfKey][node], newCat]
-                        const listKey = {...modifyableList[keyOfKey as keyof typeof modifyableList] as {}, [node]: list}
-                        const valueKey = {...modifyableList[keyOfKey as keyof typeof modifyableList] as {},[valueOfKey]: listKey}
-                        console.log({[keyOfKey]:valueKey})
-                        setModifyableList({...modifyableList, [node]: list, [keyOfKey]:valueKey})
-                    }
-                    else if(Array.isArray(curr)){
-                        const list = [...curr, newCat]
-                        setModifyableList({...modifyableList, [node]: list})
-                    }
-                    else{
-                        const l = Object.keys(curr).length
-                        setModifyableList({...modifyableList, [node]: {...modifyableList[node as keyof typeof modifyableList] as {},...{[l]:newCat}}})
-                    }
-                }
-                else{
-                    const newCate = {[newCat]: {[subCat]:[]}}
-                    const curr = modifyableList[node as keyof typeof modifyableList] as {}
-                    const item = {[node]: {...curr, ...newCate}}
-                    setModifyableList({...modifyableList, ...item})
-                }
-                setDisplayed(false)
-                setselectionList({...selectionList, [node]: newCat})
-
-            }}>
+            <form className='btn-nav rounded-md flex flex-col justify-center gap-8 px-4 group p-2 w-full' onSubmit={(e) => {handleAddButtonSubmit(e,node)}}>
                 <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' name='newCategory' placeholder='Hinzufügen ...' />
                 <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' name='subCategory' placeholder='Untergruppe? ...' />
                 <div className='flex flex-row text-3xl gap-8 items-center '>
@@ -146,13 +129,37 @@ const Table = (props: Props) => {
             </form>
         );
     }
+    
+
+    const handleAddButtonSubmit = (e:any,node:string) => {
+        e.preventDefault();
+        const newCat = (e.target as HTMLFormElement)['newCategory'].value as string;
+        const subCat = (e.target as HTMLFormElement)['subCategory'].value;
+        if(!subCat){
+            const curr = { [node]: modifyableList[node as keyof typeof modifyableList] as {} };
+            //iterate and check if curr is in modyfiableList
+            const listKeyValue = editObject(curr, modifyableList, [newCat]);
+            setModifyableList(listKeyValue)
+        }
+        else{
+            const newCate = {[newCat]: {[subCat]:[]}}
+            const curr = modifyableList[node as keyof typeof modifyableList] as {}
+            const item = {[node]: {...curr, ...newCate}}
+            setModifyableList({...modifyableList, ...item})
+        }
+        setDisplayed(false)
+        setselectionList({...selectionList, [node]: newCat})
+    }
 
     const createValueList = (node: string) => {
         console.log(displayed)
         var buttons :ReactNode[] = []
-        {Object.entries(modifyableList[node as keyof typeof modifyableList]).map(([key, value], index) => {
-            buttons.push(createValueButton(key, value, index, node))
-        })}
+        console.log(modifyableList[node as keyof typeof modifyableList])
+        for(var i = 0; i < Object.keys(modifyableList[node as keyof typeof modifyableList]).length; i++){
+            const buttonName = modifyableList[node as keyof typeof modifyableList][i]
+            console.log()
+            buttons.push(createValueButton(buttonName, i, node))
+        }
         buttons.push(createAddButton(node))
         setvalueButtonList(buttons)
         setDisplayed(true)
@@ -166,7 +173,7 @@ const Table = (props: Props) => {
         })}
         setkeyButtonList(buttons)
         return
-    }, [selectionList,modifyableList])
+    }, [selectionList,modifyableList,createKeyButton])
     
     
     
