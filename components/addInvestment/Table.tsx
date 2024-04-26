@@ -113,6 +113,7 @@ const Table = (props: Props) => {
 
 
 
+    useEffect(() => {
     
     //TODO Clear modyfiableList of subelements (found twice in the list)
     const onClickValueButton = (key:string,forKey:string)  => {
@@ -186,19 +187,18 @@ const Table = (props: Props) => {
         setDisplayed(false)
         setselectionList({...selectionList, [node]: newCat})
     }
-
-    const createValueList = (node: string) => {
-        var buttons :ReactNode[] = []
-        for(var i = 0; i < Object.keys(modifyableList[node as keyof typeof modifyableList]).length; i++){
-            const buttonName = modifyableList[node as keyof typeof modifyableList][i]
-            buttons.push(<ValueButton key={i} index={i} name={buttonName} onClick={()=>{onClickValueButton(buttonName, node)}} />)
-        }
-        buttons.push(<AddButton onClick={(e)=>{handleAddButtonSubmit(e,node)}} key={"-1"} />)
-        setvalueButtonList(buttons)
-        setDisplayed(true)
-    }
     
-    useEffect(() => {
+        const createValueList = (node: string) => {
+            var buttons :ReactNode[] = []
+            for(var i = 0; i < Object.keys(modifyableList[node as keyof typeof modifyableList]).length; i++){
+                const buttonName = modifyableList[node as keyof typeof modifyableList][i]
+                buttons.push(<ValueButton key={i} index={i} name={buttonName} onClick={()=>{onClickValueButton(buttonName, node)}} />)
+            }
+            buttons.push(<AddButton onClick={(e)=>{handleAddButtonSubmit(e,node)}} key={"-1"} />)
+            setvalueButtonList(buttons)
+            setDisplayed(true)
+        }
+
         var buttons :ReactNode[] = []
         {Object.entries(modifyableList).map(([key], index) => {
             buttons.push(<KeyButton onClick={() =>{setDisplayed(true);createValueList(key)}} name={key} index={index} key={index} selecList={selectionList} />)
