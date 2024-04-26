@@ -2,8 +2,6 @@ const createList = (values:{}, listType:any,) => {
     switch(typeof listType){
         case 'number':
             break
-        case 'date':
-            break
         case 'boolean':
             break
         case 'string':

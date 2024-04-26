@@ -11,7 +11,7 @@ type Props = {
 
 // * Uses an object to find and changes the value of the object to the to Add array. The iterate object is the list that the toFind Object belongs to. The comments in the function show the current state and the variables that are at each position...
 //! JUST WORKS :D
-const editObject = (toFind: {}, iterate: {},toAdd:string[]) => {
+export const editObject = (toFind: {}, iterate: {},toAdd:string[]) => {
 
     // iterate = {Branche: []} || {Laufzeit: []} || {Title: []}
     var fullNewList = {}
@@ -51,8 +51,8 @@ const Table = (props: Props) => {
     const [keyButtonList, setkeyButtonList] = useState<ReactNode[]>()
     const [valueButtonList, setvalueButtonList] = useState<ReactNode[]>()
     const [displayed, setDisplayed] = useState<boolean>(false)
-    const [modifyableList, setModifyableList] = useState<{}>(props.items)
     const [selectionList, setselectionList] = useState<{}>({})
+    const [modifyableList, setModifyableList] = useState<{}>(props.items)
 
 
     const createValueButton = (key: string, index: number, forKey: string) => (
@@ -173,7 +173,7 @@ const Table = (props: Props) => {
         })}
         setkeyButtonList(buttons)
         return
-    }, [selectionList,modifyableList])
+    }, [selectionList,modifyableList,createKeyButton])
     
     
     
