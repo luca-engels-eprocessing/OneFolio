@@ -55,56 +55,58 @@ const Table = (props: Props) => {
     const [modifyableList, setModifyableList] = useState<{}>(props.items)
 
 
-    const createValueButton = (key: string, index: number, forKey: string) => (
-        <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full' key={index}
-            onClick={(e)=>{
-                setDisplayed(false)
-                if("Mehr..." == forKey){
-                    const valueName=Object.keys(key)[0];
-                    const array = modifyableList[forKey as keyof typeof modifyableList] as string[]
-                    const index = array.indexOf(key)
-                    if(index !== -1){
-                        array.splice(index,1)
-                    }
-                    var newModList = {}
-                    
-                    Object.entries(modifyableList).map(([keyI, valueI]) => {
-                        if(keyI === forKey){
-                            newModList = {...newModList,...key[valueName as keyof typeof key] as {}}
+    const ValueButton = ({name:key, index, forKey}:{name: string, index: number, forKey: string}) => {
+        return (
+            <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full' key={index}
+                onClick={(e)=>{
+                    setDisplayed(false)
+                    if("Mehr..." == forKey){
+                        const valueName=Object.keys(key)[0];
+                        const array = modifyableList[forKey as keyof typeof modifyableList] as string[]
+                        const index = array.indexOf(key)
+                        if(index !== -1){
+                            array.splice(index,1)
                         }
-                        newModList = {...newModList, [keyI]: valueI};
-                    })
-                    setModifyableList(newModList)
-                }
-                else if(typeof key != 'object') {
-                    console.log({[forKey]: key})
-                    setselectionList({ ...selectionList, [forKey]: key});
-                }
-                else{
-                    const valueName=Object.keys(key)[0];
-                    var newModList = {}
-                    if(Object.keys(key[valueName])[0] in selectionList){
-                        console.log("HERE",Object.keys(key[valueName])[0])
-                        delete selectionList[Object.keys(key[valueName])[0] as keyof typeof selectionList]
-                    }
-                    Object.entries(modifyableList).map(([keyI, valueI]) => {
-                        if(keyI in newModList){
-                        }
-                        else{
-                            newModList = {...newModList, [keyI]: valueI};
+                        var newModList = {}
+                        
+                        Object.entries(modifyableList).map(([keyI, valueI]) => {
                             if(keyI === forKey){
-                                newModList = {...newModList,...key[valueName] as {}}
+                                newModList = {...newModList,...key[valueName as keyof typeof key] as {}}
                             }
+                            newModList = {...newModList, [keyI]: valueI};
+                        })
+                        setModifyableList(newModList)
+                    }
+                    else if(typeof key != 'object') {
+                        console.log({[forKey]: key})
+                        setselectionList({ ...selectionList, [forKey]: key});
+                    }
+                    else{
+                        const valueName=Object.keys(key)[0];
+                        var newModList = {}
+                        if(Object.keys(key[valueName])[0] in selectionList){
+                            console.log("HERE",Object.keys(key[valueName])[0])
+                            delete selectionList[Object.keys(key[valueName])[0] as keyof typeof selectionList]
                         }
-                    })
-                    setModifyableList(newModList)
-                    setselectionList({ ...selectionList, [forKey]: valueName });
-                }
-            }}>
-            <p className='w-full px-8 text-left 2xl:text-2xl xl:text-lg lg:text-2xl py-2'>{typeof key === 'object' ? Object.keys(key)[0] : key}</p>
-        </button>
-    );
-    const createKeyButton = (key: string, value: any, index: number) => {
+                        Object.entries(modifyableList).map(([keyI, valueI]) => {
+                            if(keyI in newModList){
+                            }
+                            else{
+                                newModList = {...newModList, [keyI]: valueI};
+                                if(keyI === forKey){
+                                    newModList = {...newModList,...key[valueName] as {}}
+                                }
+                            }
+                        })
+                        setModifyableList(newModList)
+                        setselectionList({ ...selectionList, [forKey]: valueName });
+                    }
+                }}>
+                <p className='w-full px-8 text-left 2xl:text-2xl xl:text-lg lg:text-2xl py-2'>{typeof key === 'object' ? Object.keys(key)[0] : key}</p>
+            </button>
+        );
+    }
+    const KeyButton = ({name:key, value, index}:{name:string, value: any, index: number}) => {
         return (
             <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full group items-end' key={index} onClick={() =>{
                 setDisplayed(true)
@@ -116,7 +118,7 @@ const Table = (props: Props) => {
             </button>
         );
     }
-    const createAddButton = (node:string) => {
+    const AddButton = ({node}:{node:string}) => {
         return (
             <form className='btn-nav rounded-md flex flex-col justify-center gap-8 px-4 group p-2 w-full' onSubmit={(e) => {handleAddButtonSubmit(e,node)}}>
                 <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' name='newCategory' placeholder='Hinzufügen ...' />
@@ -158,9 +160,10 @@ const Table = (props: Props) => {
         for(var i = 0; i < Object.keys(modifyableList[node as keyof typeof modifyableList]).length; i++){
             const buttonName = modifyableList[node as keyof typeof modifyableList][i]
             console.log()
-            buttons.push(createValueButton(buttonName, i, node))
+            // buttons.push(createValueButton(buttonName, i, node))
+            buttons.push(<ValueButton key={i} index={i} forKey={node} name={buttonName} />)
         }
-        buttons.push(createAddButton(node))
+        buttons.push(<AddButton node={node} />)
         setvalueButtonList(buttons)
         setDisplayed(true)
     }
@@ -169,11 +172,11 @@ const Table = (props: Props) => {
         console.log("useEffect")
         var buttons :ReactNode[] = []
         {Object.entries(modifyableList).map(([key, value], index) => {
-            buttons.push(createKeyButton(key, value, index))
+            buttons.push(<KeyButton name={key} value={value} index={index} />)
         })}
         setkeyButtonList(buttons)
         return
-    }, [selectionList,modifyableList,createKeyButton])
+    }, [selectionList,modifyableList])
     
     
     
