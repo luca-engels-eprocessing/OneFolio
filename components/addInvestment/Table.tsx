@@ -46,7 +46,7 @@ export const editObject = (toFind: {}, iterate: {},toAdd:any[]) => {
     return fullNewList
 }
 
-export const deleteFromSelection = (toDelete: {}, modList: {}, selList: {}) => {
+export const deleteFromSelection = (toDelete: string, modList: {}, selList: {}) => {
     const one = modList[toDelete as keyof typeof modList] as []
     const two = selList[toDelete as keyof typeof selList]
     var index = 0;
@@ -64,22 +64,22 @@ export const deleteFromSelection = (toDelete: {}, modList: {}, selList: {}) => {
             })
         }
     }
-
 }
 
 
 
-const ValueButton = ({onClick,index:index,name:key}:{onClick:()=>void,index:number,name:string}) => {
+export const ValueButton = ({onClick,index:index,name:key}:{onClick:()=>void,index:number,name:string|{}}) => {
+    const str = typeof key === 'object' ? Object.keys(key)[0] : key as string
     return (
         <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full' key={index}
             onClick={onClick}>
-            <p className='w-full px-8 text-left 2xl:text-2xl xl:text-lg lg:text-2xl py-2'>{typeof key === 'object' ? Object.keys(key)[0] : key}</p>
+            <p className='w-full px-8 text-left 2xl:text-2xl xl:text-lg lg:text-2xl py-2'>{str}</p>
         </button>
     );
 }
 
 
-const KeyButton = ({onClick,name:key, index,selecList}:{onClick:()=>void,name:string, index: number,selecList:{}}) => {
+export const KeyButton = ({onClick,name:key, index,selecList}:{onClick:()=>void,name:string, index: number,selecList:{}}) => {
     return (
         <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full group items-end' key={index} onClick={onClick}>
             <p className='w-1/2 text-center py-2 2xl:text-4xl xl:text-lg lg:text-2xl h-full border-r-2 border-accentLight dark:border-accentDark group-hover:border-accentBorderLight group-focus:border-accentBorderLight dark:group-hover:border-accentBorderDark dark:group-focus:border-accentBorderDark'>{key}</p>
@@ -90,7 +90,7 @@ const KeyButton = ({onClick,name:key, index,selecList}:{onClick:()=>void,name:st
     );
 }
 
-const AddButton = ({onClick}:{onClick:(e:FormEvent<HTMLFormElement>)=>void}) => {
+export const AddButton = ({onClick}:{onClick:(e:FormEvent<HTMLFormElement>)=>void}) => {
     return (
         <form className='btn-nav rounded-md flex flex-col justify-center gap-8 px-4 group p-2 w-full' onSubmit={onClick}>
             <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' name='newCategory' placeholder='Hinzufügen ...' />
