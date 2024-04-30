@@ -1,8 +1,8 @@
 For a task or process to be called finished or done the taks has to complete the following criteria:
 
 
-- [x] Die code coverage von 85% wurde eingehalten
-- [x] Tests funktionieren fehlerfrei.
-- [x] Die funktion wurde reviewed.
-- [x] Die akzeptanzkriterien sind eingehalten
-- [x] Die Funktionen wurden Dokumentiert
+- [x] A code coverage of 85% is achieved
+- [x] All tests are passed
+- [x] Functions are reviewed by test or by developer
+- [x] The acceptance criteria are done
+- [x] The functionality is documented
