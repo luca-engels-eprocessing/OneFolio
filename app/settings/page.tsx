@@ -1,6 +1,7 @@
 "use server"
 import React from 'react'
-
+import SigninButton, {UserInformaiton} from '@/components/auth/SigninButton'
+import { getServerSession } from 'next-auth'
 type Props = {}
 
 const userData = {
@@ -24,16 +25,19 @@ const bankData = {
 
 }
 
-const liItem = (key: string,value:string) => {
+const liItem = (key: string,value:string, item:number) => {
   return (
-    <li className='p-4 btn-nav my-2 font-light text-sm rounded-2xl'>{key + ":"}
+    <li className='p-4 btn-nav my-2 font-light text-sm rounded-2xl' key={item}>{key + ":"}
     <br></br>
       <span className='font-normal text-xl'>{value}</span>
     </li>
   )
 }
 
+
 async function Settings({}: Props) {
+  const userDatas = await getServerSession()
+
   return (
     <main className="flex h-[calc(100vh-11rem)] xl:h-screen w-full flex-col gap-16 py-24 xl:pl-48 px-16 ">
         <div>
@@ -42,20 +46,18 @@ async function Settings({}: Props) {
         <div className="flex h-full border-def bg-sec xl:flex-row flex-col rounded-md overflow-hidden">
         <div className='w-1/2 px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>
             <h1 className='text-accent text-4xl font-semibold'>Nutzer Informationen</h1>
+            
             <ul className=''>
-              {
-                Object.entries(userData).map(([key, value]) => {
-                  return liItem(key,value)
-                })
-              }
+            <SigninButton />
+            <UserInformaiton />
             </ul>
           </div>
           <div className='w-1/2 px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>
             <h1 className='text-accent text-4xl font-semibold'>Bankdaten</h1>
             <ul className=''>
               {
-                Object.entries(bankData).map(([key, value]) => {
-                  return liItem(key,value)
+                Object.entries(bankData).map(([key, value],index) => {
+                  return liItem(key,value,index)
                 })
               }
             </ul>

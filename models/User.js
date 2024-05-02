@@ -22,7 +22,7 @@ const userSchema = new Schema(
         },
         password: {
             type: String,
-            required: false,
+            required: true,
         },
         street: {
             type: String,
@@ -44,4 +44,4 @@ const userSchema = new Schema(
     { timestamps: true }
   );
   
-  export default mongoose.models.User || mongoose.model("User", userSchema);
+  export default mongoose.models.Account || mongoose.model("Account", userSchema);

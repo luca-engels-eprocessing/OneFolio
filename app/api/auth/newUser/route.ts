@@ -2,7 +2,7 @@
 import {NextRequest, NextResponse, userAgent } from "next/server";
 import {connect,disconnect} from '@/utils/db.js'
 import bcrypt from 'bcryptjs';
-import User from '@/models/User.js'
+import Account from '@/models/User.js'
 
 
 
@@ -10,13 +10,13 @@ export async function POST(req:NextRequest) {
   const jsonData= await req.json();
   await connect();
 
-  if(await User.findOne({ email: jsonData.email })){
+  if(await Account.findOne({ email: jsonData.email })){
     return NextResponse.json({ message: 'User exists!'},{ status: 200 });
   }
 
   const hashPWD = await bcrypt.hash(jsonData.password, 10);
 
-  const newUser = new User( {
+  const newUser = new Account( {
     name:{
       firstname: jsonData.firstname,
       lastname: jsonData.lastname,

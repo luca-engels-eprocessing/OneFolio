@@ -1,8 +1,8 @@
-
 const mongoose  = require('mongoose');
 
 
 export const connect = async () => {
+  
   if (mongoose.connections[0].readyState) return;
 
     try {

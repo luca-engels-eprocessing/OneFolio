@@ -3,6 +3,7 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import React from "react";
+import Providers from "@/components/provider";
 
 const inter = Roboto({ subsets: ["latin"], weight: ["100","300","400","500","700","900"]});
 
@@ -19,10 +20,12 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={inter.className}>
-            <div className={"flex xl:flex-row flex-col-reverse justify-between xl:gap-64 h-screen"}>
-                {children}
-                <Navbar/>
-            </div>
+              <Providers>
+                <div className={"flex xl:flex-row flex-col-reverse justify-between xl:gap-64 h-screen"}>
+                    {children}
+                    <Navbar/>
+                </div>
+              </Providers>
             </body>
         </html>
   );
