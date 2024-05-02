@@ -26,7 +26,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const { email, password } = await signInSchema.parseAsync(credentials)
 
           const user = await Account.findOne({ email: email })
-          console.log(user)
           if (user && (await compare(password, user.password))) {
               user.password = ""
               return user;
@@ -53,8 +52,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      session.user.name.firstname = token.name.firstname;
-      session.user.name.lastname = token.name.lastname;
+      session.user.firstname = token.name.firstname;
+      session.user.lastname = token.name.lastname;
       session.user.email = token.email as string;
       session.user.street = token.street as string;
       session.user.city = token.city as string;
