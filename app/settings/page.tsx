@@ -1,7 +1,6 @@
 "use server"
 import React from 'react'
 import SigninButton, {UserInformaiton} from '@/components/auth/SigninButton'
-import { getServerSession } from 'next-auth'
 type Props = {}
 
 const userData = {
@@ -36,7 +35,6 @@ const liItem = (key: string,value:string, item:number) => {
 
 
 async function Settings({}: Props) {
-  const userDatas = await getServerSession()
 
   return (
     <main className="flex h-[calc(100vh-11rem)] xl:h-screen w-full flex-col gap-16 py-24 xl:pl-48 px-16 ">
