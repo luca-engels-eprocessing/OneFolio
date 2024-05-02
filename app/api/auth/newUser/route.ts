@@ -1,5 +1,5 @@
 
-import {NextRequest, NextResponse, userAgent } from "next/server";
+import {NextRequest, NextResponse } from "next/server";
 import {connect,disconnect} from '@/utils/db.js'
 import bcrypt from 'bcryptjs';
 import Account from '@/models/User.js'

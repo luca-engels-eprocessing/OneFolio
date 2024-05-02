@@ -1,5 +1,4 @@
 import { login } from "@/components/auth/auth"
-import { MongoDBAdapter } from "@auth/mongodb-adapter"
 import NextAuth from "next-auth/next"
 import CredentialsProvider  from "next-auth/providers/credentials"
 const handler = NextAuth({
@@ -27,6 +26,11 @@ const handler = NextAuth({
             }
         })
     ],
+    callbacks: {
+        session({session,token,user}){
+            return session
+        }
+    }
 })
 
 export {handler as GET, handler as POST}

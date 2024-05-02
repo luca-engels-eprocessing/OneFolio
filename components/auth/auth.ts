@@ -1,8 +1,7 @@
-import { User } from "next-auth"
 import Account from '@/models/User.js'
-
 import {compare} from "bcryptjs"
 import { connect } from "@/utils/db";
+import { User } from 'next-auth';
 
 type LoginFn = (email: string, password: string) => Promise<User>;
 
