@@ -1,9 +1,9 @@
 import NextAuth, { DefaultSession } from "next-auth"
 import Account from '@/models/User.js'
 import {compare} from "bcryptjs"
-import { connect } from "@/utils/db";
+import { connect, disconnect, findAccount } from "@/utils/db";
 import Credentials from "next-auth/providers/credentials"
-import { signInSchema } from "./lib/zod";
+import { signInSchema } from "./utils/zod";
 import { ZodError } from "zod";
 
  
@@ -25,13 +25,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         try{
           const { email, password } = await signInSchema.parseAsync(credentials)
 
-          const user = await Account.findOne({ email: email })
+          const user = await findAccount(email)
+          
+          disconnect()
           if (user && (await compare(password, user.password))) {
               user.password = ""
               return user;
           } else throw new Error('No User Found');
         }
         catch (e){
+          disconnect();
           if(e instanceof ZodError) return null;
           console.log(e)
           return null

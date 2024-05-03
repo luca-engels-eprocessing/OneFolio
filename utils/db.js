@@ -1,4 +1,5 @@
 const mongoose  = require('mongoose');
+import Account from '@/models/User'; // Add this import statement
 
 
 export const connect = async () => {
@@ -27,3 +28,8 @@ export const disconnect = async () => {
   }
 }
 
+export const findAccount = async (email) => {
+  email = email.toLowerCase()
+  const user = await Account.findOne({ email: email })
+  return user
+}
