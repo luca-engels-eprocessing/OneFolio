@@ -1,6 +1,7 @@
 "use server"
 import React from 'react'
 import SigninButton, {UserInformaiton} from '@/components/auth/SigninButton'
+import SignupButton from '@/components/auth/SignupButton'
 type Props = {}
 
 const bankData = {
@@ -39,9 +40,13 @@ async function Settings({}: Props) {
             <SigninButton>
               <div className="flex flex-col">
                 <button className="p-4 btn-nav font-normal text-xl rounded-t-2xl border-b-[1px] text-center">Einloggen</button>
-                <button className="p-4 btn-nav font-normal text-xl rounded-b-2xl border-t-[1px] text-center">Registrieren</button>
               </div>
             </SigninButton>
+            <SignupButton>
+              <div className="flex flex-col">
+                <button className="p-4 btn-nav font-normal text-xl rounded-b-2xl border-t-[1px] text-center">Registrieren</button>
+              </div>
+            </SignupButton>
             <ul className=''>
             <UserInformaiton />
             </ul>
