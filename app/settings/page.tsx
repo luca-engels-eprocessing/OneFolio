@@ -36,8 +36,13 @@ async function Settings({}: Props) {
         <div className='w-1/2 px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>
             <h1 className='text-accent text-4xl font-semibold'>Nutzer Informationen</h1>
             
+            <SigninButton>
+              <div className="flex flex-col">
+                <button className="p-4 btn-nav font-normal text-xl rounded-t-2xl border-b-[1px] text-center">Einloggen</button>
+                <button className="p-4 btn-nav font-normal text-xl rounded-b-2xl border-t-[1px] text-center">Registrieren</button>
+              </div>
+            </SigninButton>
             <ul className=''>
-            <SigninButton />
             <UserInformaiton />
             </ul>
           </div>

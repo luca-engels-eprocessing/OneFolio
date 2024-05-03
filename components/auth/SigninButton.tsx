@@ -1,10 +1,24 @@
 'use client'
 import { signIn, signOut , useSession } from "next-auth/react";
 import React, { ReactNode } from "react";
+import { useRouter } from "next/navigation";
 
-const SigninButton = () => {
+
+type Props = {
+    children: ReactNode;
+    mode?: "modal" | "redirect",
+    asChild?: boolean;
+}
+
+
+const SigninButton = (props:Props) => {
     const { data: session , status } = useSession();
+    const router = useRouter();
     
+        const onClick = () => {
+            router.push("/auth/login")
+        }
+
     if (status === "authenticated" && session && session.user) {
         return (
             <li className="flex flex-col">
@@ -16,11 +30,18 @@ const SigninButton = () => {
             </li>
         )
     }
+
+    if (props.mode==="modal"){
+        return (
+            <span>
+                TODO IMPLEMENTR MODAL:
+            </span>
+        )
+    }
     return (
-        <li className="flex flex-col">
-            <button className="p-4 btn-nav font-normal text-xl rounded-t-2xl border-b-[1px] text-center" onClick={() => signIn()}>Einloggen</button>
-            <button className="p-4 btn-nav font-normal text-xl rounded-b-2xl border-t-[1px] text-center" onClick={() => signIn()}>Registrieren</button>
-        </li>
+        <span onClick={onClick} className="cursor-pointer">
+            {props.children}
+        </span>
     )
 }
 
