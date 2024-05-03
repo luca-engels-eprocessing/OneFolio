@@ -21,12 +21,15 @@ export const signUpSchema = z.object({
     .min(1, "Vorname ist benötigt"),
   lastname: z.string({ required_error: "Nachname ist benötigt" })
     .min(1, "Nachname ist benötigt"),
-  street: z.string({ required_error: "Street is required" })
-    .min(1, "Street is required"),
-  city: z.string({ required_error: "City is required" })
-    .min(1, "City is required"),
-  country: z.string({ required_error: "Country is required" })
-    .min(1, "Country is required"),
-  phone: z.string({ required_error: "Phone is required" })
-    .min(1, "Phone is required"),
+  passwordConfirm: z.string({ required_error: "Password ist benötigt" })
+  .min(1, "Password ist benötigt")
+  .min(8, "Password muss länger als 8 zeichen sein")
+  .max(32, "Password muss kürzer als 32 zeichen sein"),
+  street: z.string(),
+  city: z.string(),
+  country: z.string(),
+  phone: z.string(),
+}).refine((data)=> data.password === data.passwordConfirm,{
+  message: "Passwords müssen übereinstimmen",
+  path: ["passwordConfirm"]
 })
