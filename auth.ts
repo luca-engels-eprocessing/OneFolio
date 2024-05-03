@@ -1,7 +1,6 @@
 import NextAuth, { DefaultSession } from "next-auth"
-import Account from '@/models/User.js'
 import {compare} from "bcryptjs"
-import { connect, disconnect, findAccount } from "@/utils/db";
+import { db } from "@/utils/db";
 import Credentials from "next-auth/providers/credentials"
 import { signInSchema } from "./utils/zod";
 import { ZodError } from "zod";
@@ -18,23 +17,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        await connect();
         if(!credentials?.email || !credentials?.password){
             return null
         }
         try{
           const { email, password } = await signInSchema.parseAsync(credentials)
 
-          const user = await findAccount(email)
+          const user = await db.user.findFirst({where:{email:email}})
           
-          disconnect()
           if (user && (await compare(password, user.password))) {
-              user.password = ""
               return user;
           } else throw new Error('No User Found');
         }
         catch (e){
-          disconnect();
           if(e instanceof ZodError) return null;
           console.log(e)
           return null
@@ -49,7 +44,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     jwt({token, user}) {
       if (user) {
-        token.name = user.name as unknown as {firstname: string, lastname: string};
+        token.id = user.id ?? ''
+        token.firstname = user.firstname
+        token.lastname = user.lastname
         token.email = user.email ?? '';
         token.street = user.street;
         token.city = user.city;
@@ -59,13 +56,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      session.user.firstname = token.name.firstname;
-      session.user.lastname = token.name.lastname;
-      session.user.email = token.email as string;
-      session.user.street = token.street as string;
-      session.user.city = token.city as string;
-      session.user.country = token.country as string;
-      session.user.phone = token.phone as string;
+      session.user.id = token.id;
+      session.user.firstname = token.firstname;
+      session.user.lastname = token.lastname;
+      session.user.email = token.email;
+      session.user.street = token.street ?? "";
+      session.user.city = token.city ?? "";
+      session.user.country = token.country ?? "";
+      session.user.phone = token.phone ?? "";
       return session;
     },
   },

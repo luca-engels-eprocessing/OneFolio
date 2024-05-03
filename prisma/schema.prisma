@@ -16,8 +16,6 @@ model User {
   country   String?
   phone     String?
   street    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 type Name{
