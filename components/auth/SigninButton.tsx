@@ -8,15 +8,18 @@ const SigninButton = () => {
     if (status === "authenticated" && session && session.user) {
         return (
             <li className="flex flex-col">
-                <button className="p-4 btn-nav font-normal text-xl rounded-t-2xl border-b-[1px] text-center" onClick={() => signOut()}>{session.user.firstname + " " + session.user.lastname}</button>
-                <button className="p-4 btn-nav font-normal text-xl rounded-b-2xl border-t-[1px] text-center" onClick={() => signOut()}>Sign out</button>
+                <button className="p-4 btn-nav font-light text-sm rounded-t-2xl border-b-[1px] text-center" onClick={() => signOut()}>Eingeloggt als: 
+                <br />
+                <span className="font-normal text-xl">{session.user.firstname + " " + session.user.lastname}</span>
+                </button>
+                <button className="p-4 btn-nav font-normal text-xl rounded-b-2xl border-t-[1px] text-center" onClick={() => signOut()}>Ausloggen</button>
             </li>
         )
     }
     return (
         <li className="flex flex-col">
-            <button className="p-4 btn-nav font-normal text-xl rounded-t-2xl border-b-[1px] text-center" onClick={() => signIn()}>Sign in</button>
-            <button className="p-4 btn-nav font-normal text-xl rounded-b-2xl border-t-[1px] text-center" onClick={() => signIn()}>Register</button>
+            <button className="p-4 btn-nav font-normal text-xl rounded-t-2xl border-b-[1px] text-center" onClick={() => signIn()}>Einloggen</button>
+            <button className="p-4 btn-nav font-normal text-xl rounded-b-2xl border-t-[1px] text-center" onClick={() => signIn()}>Registrieren</button>
         </li>
     )
 }
@@ -25,6 +28,32 @@ const SigninButton = () => {
 const LiItem = ({name:key,value:value}:{name: string,value:string}) => {
         if (typeof value === "object"){
             return <></>;
+        }
+
+        switch (key) {
+            case "email":
+                key="E-mail"
+                break;
+            case "firstname":
+                key="Vorname"
+                break;
+            case "lastname":
+                key="Nachname"
+                break;
+            case "street":
+                key="Straße"
+                break;
+            case "city":
+                key="Stadt"
+                break;
+            case "country":
+                key="Land"
+                break;
+            case "phone":
+                key="Telefon"
+                break;
+            default:
+                break;
         }
         return (
             <li className='p-4 btn-nav my-2 font-light text-sm rounded-2xl'>{key + ":"}

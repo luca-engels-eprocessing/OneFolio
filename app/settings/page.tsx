@@ -3,15 +3,6 @@ import React from 'react'
 import SigninButton, {UserInformaiton} from '@/components/auth/SigninButton'
 type Props = {}
 
-const userData = {
-  Vorname: 'Max',
-  Nachname: 'Mustermann',
-  Email: 'Max@Mustermann.de',
-  Straße: 'Musterstraße 1',
-  "PLZ & Stadt": '12345 Musterstadt',
-  Land: 'Musterland',
-  Telefon: '0123456789',
-}
 const bankData = {
   IBAN: 'DE12345678912345678912',
   BIC: 'ABCDEF12345',
