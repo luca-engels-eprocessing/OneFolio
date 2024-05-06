@@ -29,6 +29,8 @@ export const signUpSchema = z.object({
   city: z.string(),
   country: z.string(),
   phone: z.string(),
+  streetnumber: z.string(),
+  zip: z.string(),
 }).refine((data)=> data.password === data.passwordConfirm,{
   message: "Passwords müssen übereinstimmen",
   path: ["passwordConfirm"]

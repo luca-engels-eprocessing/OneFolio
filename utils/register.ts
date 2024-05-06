@@ -12,13 +12,13 @@ export const register = async (values: z.infer<typeof signUpSchema>)=> {
         return {error: "Es gab einen Fehler!"}
     }   
 
-    const { email,password,firstname,lastname,street,city,country,phone}= validatedFields.data
+    const { email,password,firstname,lastname,street,streetnumber,city,zip,country,phone}= validatedFields.data
     const hashedPassword = await bcrypt.hash(password, 10)
 
 
     const existingUser = await getUserByEmail(email)
     if(existingUser){
-      return {error: "Diese E-Mail wird bereits benutzt"}
+      return {error: "Diese E-Mail wird bereits benutzt."}
     }
     await db.user.create({
         data:{
@@ -28,13 +28,17 @@ export const register = async (values: z.infer<typeof signUpSchema>)=> {
             },
             email: email.toLowerCase(),
             password: hashedPassword,
-            street: street,
-            city: city,
-            country: country,
-            phone: phone
+            address:{
+                street: street,
+                streetnumber: streetnumber,
+                city: city,
+                zip:zip,
+                country: country,
+                phone: phone
+            }
         }
     
     })
 
-    return {success: "Bestätigungsemail gesendet"}
+    return {success: "Bestätigungsemail gesendet!"}
 }

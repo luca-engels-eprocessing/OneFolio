@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useTransition } from "react"
+import React, { useEffect, useState, useTransition } from "react"
 import { CardWrapper } from "./CardWrapper"
 import {useForm} from "react-hook-form"
 import * as z from "zod"
@@ -13,9 +13,11 @@ import { Button } from "@/components/ui/button"
 import { FormError } from "@/components/form-error"
 import { FormSuccess } from "@/components/form-success"
 import { register } from "@/utils/register"
+import { useRouter } from "next/navigation";
 
 
 export const RegisterForm = () => {
+    const router = useRouter();
     const [error, setError] = useState<string | undefined>("")
     const [success, setSuccess] = useState<string | undefined>("")
     const [isPending, startTransition] = useTransition();
@@ -27,7 +29,9 @@ export const RegisterForm = () => {
             firstname:"",
             lastname:"",
             street:"",
+            streetnumber:"",
             city:"",
+            zip:"",
             country:"",
             phone:"",
         }
@@ -42,90 +46,114 @@ export const RegisterForm = () => {
             })
         })
     }
-
-
     return (
-        <CardWrapper headerLabel="Account erstellen!" backButtonLabel="Mit vorhandenem Account anmelden" backButtonHref="/auth/login">
+        <CardWrapper headerLabel="Erstellen sie jetzt ihren OneFolio Account!" backButtonLabel="Mit vorhandenem Account anmelden" backButtonHref="/auth/login">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
                     <div className="space-y-2">
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                            <FormField control={form.control} name="firstname" render={({field})=>(
-                            <FormItem>
-                                <FormLabel className="p-2 pb-1 flex flex-row gap-2">Vorname <p className="text-red-500">*</p></FormLabel>
-                                <FormControl className=" border-def rounded-lg">
-                                    <Input {...field} disabled={isPending} placeholder="Max" className="text-black" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>)} />
-                            <FormField control={form.control} name="lastname" render={({field})=>(
-                            <FormItem>
-                            <FormLabel className="p-2 pb-1 flex flex-row gap-2">Nachname <p className="text-red-500">*</p></FormLabel>
-                                <FormControl className=" border-def rounded-lg">
-                                    <Input {...field} disabled={isPending} placeholder="Mustermann" className="text-black" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>)} />
-                            <FormField control={form.control} name="street" render={({field})=>(
-                            <FormItem>
-                            <FormLabel className="p-2 pb-1 flex flex-row gap-2">Addresse</FormLabel>
-                                <FormControl className=" border-def rounded-lg">
-                                    <Input {...field} disabled={isPending} placeholder="Musterstraße 31" className="text-black" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>)} />
-                            <FormField control={form.control} name="city" render={({field})=>(
-                            <FormItem>
-                            <FormLabel className="p-2 pb-1 flex flex-row gap-2">Wohnort</FormLabel>
-                                <FormControl className=" border-def rounded-lg">
-                                    <Input {...field} disabled={isPending} placeholder="12345 Musterstadt" className="text-black" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>)} />
+                        <div className="grid grid-cols-2 gap-x-8">
+                            <div>
+                                <div className="grid grid-cols-2 gap-x-4">
+                                    <FormField control={form.control} name="firstname" render={({field})=>(
+                                    <FormItem>
+                                        <FormLabel className="p-2 pb-1 flex flex-row gap-2">Vorname <p className="text-red-500">*</p></FormLabel>
+                                        <FormControl className=" border-def rounded-lg">
+                                            <Input {...field} disabled={isPending} placeholder="Max" className="text-black" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>)} />
+                                    <FormField control={form.control} name="lastname" render={({field})=>(
+                                    <FormItem>
+                                    <FormLabel className="p-2 pb-1 flex flex-row gap-2">Nachname <p className="text-red-500">*</p></FormLabel>
+                                        <FormControl className=" border-def rounded-lg">
+                                            <Input {...field} disabled={isPending} placeholder="Mustermann" className="text-black" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>)} />
+                                </div>
+                                <FormField control={form.control} name="email" render={({field})=>(
+                                <FormItem>
+                                <FormLabel className="p-2 pb-1 flex flex-row gap-2">E-Mail <p className="text-red-500">*</p></FormLabel>
+                                    <FormControl className=" border-def rounded-lg">
+                                        <Input {...field} disabled={isPending} placeholder="Mustermann@example.com" type="email" className="text-black" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>)} />
+                                <FormField control={form.control} name="password" render={({field})=>(
+                                <FormItem>
+                                <FormLabel className="p-2 pb-1 flex flex-row gap-2">Password <p className="text-red-500">*</p></FormLabel>
+                                    <FormControl className=" border-def rounded-lg">
+                                        <Input {...field} disabled={isPending} placeholder="********" type="password" className="text-black" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>)} />
+                                <FormField control={form.control} name="passwordConfirm" render={({field})=>(
+                                <FormItem>
+                                <FormLabel className="p-2 pb-1 flex flex-row gap-2">Password bestätigen <p className="text-red-500">*</p></FormLabel>
+                                    <FormControl className=" border-def rounded-lg">
+                                        <Input {...field} disabled={isPending} placeholder="********" type="password" className="text-black" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>)} />
+                            </div>
+                            <div>
+                                
+                            <div className="grid grid-cols-2 gap-x-4">
+                                    <FormField control={form.control} name="street" render={({field})=>(
+                                    <FormItem>
+                                    <FormLabel className="p-2 pb-1 flex flex-row gap-2">Straße</FormLabel>
+                                        <FormControl className=" border-def rounded-lg">
+                                            <Input {...field} disabled={isPending} placeholder="Musterstraße" className="text-black" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>)} />
+                                    <FormField control={form.control} name="streetnumber" render={({field})=>(
+                                    <FormItem>
+                                    <FormLabel className="p-2 pb-1 flex flex-row gap-2">Hausnr.</FormLabel>
+                                        <FormControl className=" border-def rounded-lg">
+                                            <Input {...field} disabled={isPending} placeholder="31a" className="text-black" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>)} />
+                                    <FormField control={form.control} name="zip" render={({field})=>(
+                                    <FormItem>
+                                    <FormLabel className="p-2 pb-1 flex flex-row gap-2">Plz.</FormLabel>
+                                        <FormControl className=" border-def rounded-lg">
+                                            <Input {...field} disabled={isPending} placeholder="12345" className="text-black" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>)} />
+                                    <FormField control={form.control} name="city" render={({field})=>(
+                                    <FormItem>
+                                    <FormLabel className="p-2 pb-1 flex flex-row gap-2">Wohnort</FormLabel>
+                                        <FormControl className=" border-def rounded-lg">
+                                            <Input {...field} disabled={isPending} placeholder="Musterstadt" className="text-black" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>)} />
+
+                            </div>
+                                <FormField control={form.control} name="phone" render={({field})=>(
+                                    <FormItem>
+                                    <FormLabel className="p-2 pb-1 flex flex-row gap-2">Telefonnummer</FormLabel>
+                                        <FormControl className=" border-def rounded-lg">
+                                            <Input {...field} disabled={isPending} placeholder="+49 123 123456789" className="text-black" />
+                                        </FormControl>
+                                    <FormMessage />
+                                </FormItem>)} />
+                                <FormField control={form.control} name="country" render={({field})=>(
+                                    <FormItem>
+                                    <FormLabel className="p-2 pb-1 flex flex-row gap-2">Land</FormLabel>
+                                        <FormControl className=" border-def rounded-lg">
+                                            <Input {...field} disabled={isPending} placeholder="Deutschland" className="text-black" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>)} />
+                            </div>
                         </div>
-                        <FormField control={form.control} name="country" render={({field})=>(
-                            <FormItem>
-                            <FormLabel className="p-2 pb-1 flex flex-row gap-2">Heimatland</FormLabel>
-                                <FormControl className=" border-def rounded-lg">
-                                    <Input {...field} disabled={isPending} placeholder="Deutschland" className="text-black" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>)} />
-                        <FormField control={form.control} name="phone" render={({field})=>(
-                            <FormItem>
-                            <FormLabel className="p-2 pb-1 flex flex-row gap-2">Telefonnummer</FormLabel>
-                                <FormControl className=" border-def rounded-lg">
-                                    <Input {...field} disabled={isPending} placeholder="+49 123 123456789" className="text-black" />
-                                </FormControl>
-                            <FormMessage />
-                        </FormItem>)} />
-                        <FormField control={form.control} name="email" render={({field})=>(
-                        <FormItem>
-                        <FormLabel className="p-2 pb-1 flex flex-row gap-2">E-Mail <p className="text-red-500">*</p></FormLabel>
-                            <FormControl className=" border-def rounded-lg">
-                                <Input {...field} disabled={isPending} placeholder="Mustermann@example.com" type="email" className="text-black" />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>)} />
-                        <FormField control={form.control} name="password" render={({field})=>(
-                        <FormItem>
-                        <FormLabel className="p-2 pb-1 flex flex-row gap-2">Password <p className="text-red-500">*</p></FormLabel>
-                            <FormControl className=" border-def rounded-lg">
-                                <Input {...field} disabled={isPending} placeholder="********" type="password" className="text-black" />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>)} />
-                        <FormField control={form.control} name="passwordConfirm" render={({field})=>(
-                        <FormItem>
-                        <FormLabel className="p-2 pb-1 flex flex-row gap-2">Password bestätigen <p className="text-red-500">*</p></FormLabel>
-                            <FormControl className=" border-def rounded-lg">
-                                <Input {...field} disabled={isPending} placeholder="********" type="password" className="text-black" />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>)} />
                     </div>
-                    <FormError message={error}/>
-                    <FormSuccess message={success}/>
+                    <FormError message={error}  href="/auth/login"/>
+                    <FormSuccess message={success} href="/auth/login"/>
                     <Button disabled={isPending} className="btn-nav w-full " type="submit">
                         Account erstellen
                     </Button>

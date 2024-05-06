@@ -13,7 +13,7 @@ type Props = {
 };
 export const CardWrapper = (props:Props) => {
     return (
-        <Card className="w-[400px] shadow-md bg-secLight dark:bg-secDark border-def p-4">
+        <Card className="w-[800px] shadow-md bg-secLight dark:bg-secDark border-def p-4">
             <CardHeader>
                 <Header label={props.headerLabel} />
             </CardHeader>

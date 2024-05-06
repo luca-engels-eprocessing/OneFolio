@@ -9,20 +9,26 @@ datasource db {
 
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      Name
   email     String   @unique
   emailVerified DateTime?
   password  String
-  name      Name
-  city      String?
-  country   String?
-  phone     String?
-  street    String?
+  address   Address?
   role      UserRole @default(USER)
+}
+type Address {
+  street        String? @default("Hinzufügen...")
+  streetnumber  String? @default("Hinzufügen...") 
+  city          String? @default("Hinzufügen...")
+  zip           String? @default("Hinzufügen...")
+  country       String? @default("Hinzufügen...")
+  phone         String? @default("Hinzufügen...")
 }
 
 enum UserRole {
   USER
   ISSUER
+  ADMIN
 }
 
 type Name{
