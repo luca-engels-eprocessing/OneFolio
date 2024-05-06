@@ -7,6 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Investment {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String    @db.ObjectId
+  data        Json
+  user        User      @relation(fields: [userId],references: [id])
+}
+
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      Name
@@ -14,15 +21,16 @@ model User {
   emailVerified DateTime?
   password  String
   address   Address?
-  role      UserRole @default(USER)
+  role      UserRole @default(USER) 
+  investments Investment[]
 }
 type Address {
-  street        String? @default("Hinzufügen...")
-  streetnumber  String? @default("Hinzufügen...") 
-  city          String? @default("Hinzufügen...")
-  zip           String? @default("Hinzufügen...")
-  country       String? @default("Hinzufügen...")
-  phone         String? @default("Hinzufügen...")
+  street        String?
+  streetnumber  String? 
+  city          String?
+  zip           String?
+  country       String?
+  phone         String?
 }
 
 enum UserRole {

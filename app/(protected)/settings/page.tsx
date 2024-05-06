@@ -51,10 +51,8 @@ async function Settings({}: Props) {
         <div className="flex h-[80vh] w-[80vw] border-def bg-sec xl:flex-row flex-col rounded-md overflow-hidden">
           <div className='w-1/2 px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>
             <h1 className='text-accent text-4xl font-semibold'>Nutzer Informationen</h1>
-            <ul>
-              <LogoutButton />
-              <UserInformaiton info={user}/>
-            </ul>
+              <UserInformaiton info={user} key={1}/>
+              <LogoutButton key={2}/>
           </div>
           <div className='w-1/2 px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>
             <h1 className='text-accent text-4xl font-semibold'>Bankdaten</h1>

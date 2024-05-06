@@ -18,12 +18,12 @@ export const LogoutButton = (props:Props) => {
 
     if (status === "authenticated" && session && session.user) {
         return (
-            <li className="flex flex-col my-2">
+            <div className="flex flex-col my-2" key={"-1"}>
                 <button className="p-4 btn-nav font-normal text-sm rounded-2xl text-left" onClick={() => signOut()}>
                     <p className="text-textLight/70 dark:text-textDark/70">Sie sind eingeloggt.</p>
                     <span className="font-normal text-xl">Ausloggen?</span>
                 </button>
-            </li>
+            </div>
         )
     }
     return (
@@ -36,13 +36,13 @@ export const LogoutButton = (props:Props) => {
 }
 
 
-const LiItem = ({name:key,value:value}:{name: string,value:any}) => {
+const LiItem = ({name:key,value:value,index:index}:{name: string,value:any,index:number}) => {
         if (typeof value === "object" && value != null){
             const entry : ReactNode[] = []
-            Object.entries(value).map(([keyInner,valueInner])=>{
-                entry.push(<LiItem name={keyInner} value={valueInner} />)
+            Object.entries(value).map(([keyInner,valueInner],indexInner)=>{
+                entry.push(<LiItem name={keyInner} value={valueInner} index={(index)+(indexInner/10.0)} key={(index)+(indexInner/10.0)}/>)
             });
-            return <div className="grid grid-cols-2 gap-x-4">{entry}</div>
+            return <div className="grid grid-cols-2 gap-x-4" key={index}>{entry}</div>
         }
         switch (key) {
             case "email":
@@ -81,16 +81,16 @@ const LiItem = ({name:key,value:value}:{name: string,value:any}) => {
         if(value == null){
             
         return (
-            <li className='p-4 btn-nav my-2 font-light text-sm rounded-2xl text-textLight/70 dark:text-textDark/70'>{key + ":"}
+            <div className='p-4 btn-nav my-2 font-light text-sm rounded-2xl text-textLight/70 dark:text-textDark/70' key={index}>{key + ":"}
             <br></br>
                 <span className='font-normal text-xl text-textLight/50 dark:text-textDark/50'>Jetzt hinzufügen!</span>
-            </li>
+            </div>
         )
         }
         return (
-            <li className='p-4 btn-nav my-2 font-light text-sm rounded-2xl'><p className="text-textLight/70 dark:text-textDark/70">{key + ":"}</p>
+            <div className='p-4 btn-nav my-2 font-light text-sm rounded-2xl'><p className="text-textLight/70 dark:text-textDark/50" key={index}>{key + ":"}</p>
                 <span className='font-normal text-xl text-textLight dark:text-textDark'>{value}</span>
-            </li>
+            </div>
         )
     }
 
@@ -98,16 +98,16 @@ export const UserInformaiton = ({info}:{info:{}|null}) => {
 
     if (!info) {
         return (
-            <li></li>
+            <div></div>
         )
     }
     var c: ReactNode[] = []
     console.log("User: ", info)
-    Object.entries(info).map(([key, value]) => {
-        c.push(<LiItem name={key} value={value} />)
+    Object.entries(info).map(([key, value],index) => {
+        c.push(<LiItem name={key} value={value} index={index} key={index}/>)
     })
-    return <div>
+    return <>
         {c}
-    </div>
+    </>
 
 }

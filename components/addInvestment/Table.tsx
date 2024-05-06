@@ -2,6 +2,7 @@
 import React, { useEffect, ReactNode, useState, FormEvent } from 'react'
 import { IconPlus } from '@tabler/icons-react'
 import { Button } from '../ui/button';
+import { saveData } from '@/utils/saveInvestment';
 
 type Props = {
     items: {},
@@ -117,7 +118,15 @@ export const AddButton = ({onClick}:{onClick:(e:FormEvent<HTMLFormElement>)=>voi
     );
 }
 
-const Table = (props: Props) => {
+export const SaveButton= ({data}:{data:{}}) => {
+    return (
+        <button className='btn-nav w-full rounded-xl text-xl font-semibold py-8' onClick={(e) => {
+            console.log(data)
+            // saveData(data)
+        }}>Speichern</button>)
+}
+
+export const Table = (props: Props) => {
     const [keyButtonList, setkeyButtonList] = useState<ReactNode[]>()
     const [valueButtonList, setvalueButtonList] = useState<ReactNode[]>()
     const [displayed, setDisplayed] = useState<boolean>(false)
@@ -226,10 +235,7 @@ const Table = (props: Props) => {
         <div className='h-[80vh] w-[80vw] flex xl:flex-row flex-col gap-8 overflow-hidden'>
                 <div className={  (displayed && " max-h-[calc(50%-32px)]") + " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-[calc(50%-32px)] items-center xl:max-h-full xl:h-fit "+" "+props.className}>
                     {keyButtonList}
-                    <button className='btn-nav w-full rounded-xl text-xl font-semibold py-8' onClick={(e) => {
-                        console.log(modifyableList)
-                        console.log(selectionList)
-                    }}>SAVE</button>
+                    <SaveButton data={selectionList} />
                 </div>
                 {displayed && 
                     <div className={"flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-1/2 items-center xl:max-h-full xl:h-fit h-fit max-h-[50%]"+" "+props.className}>
@@ -239,5 +245,3 @@ const Table = (props: Props) => {
         </div>
     )
 }
-
-export default Table

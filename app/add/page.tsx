@@ -1,5 +1,5 @@
 'use server'
-import Table from '@/components/addInvestment/Table'
+import {Table} from '@/components/addInvestment/Table'
 import React from 'react'
 
 
