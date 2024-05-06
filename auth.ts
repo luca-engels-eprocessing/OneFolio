@@ -6,7 +6,7 @@ import { db } from "./utils/db"
 export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks:{
     async session({token,session}){
-      console.log({"SessionToken":token,session})
+      // console.log({"SessionToken":token,session})
       if(token.sub && session.user){
         session.user.id = token.sub
       }

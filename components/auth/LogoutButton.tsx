@@ -1,10 +1,7 @@
 'use client'
-import { signIn, signOut , useSession } from "next-auth/react";
-import React, { ReactNode, useState } from "react";
+import { signOut , useSession } from "next-auth/react";
+import React, { ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { getUserById } from "@/utils/db";
-
-
 type Props = {
     mode?: "modal" | "redirect",
     asChild?: boolean;
@@ -21,7 +18,7 @@ export const LogoutButton = (props:Props) => {
 
     if (status === "authenticated" && session && session.user) {
         return (
-            <li className="flex flex-col">
+            <li className="flex flex-col my-2">
                 <button className="p-4 btn-nav font-normal text-sm rounded-2xl text-left" onClick={() => signOut()}>
                     <span>Sie sind eingeloggt !</span>
                     <br />
@@ -40,11 +37,14 @@ export const LogoutButton = (props:Props) => {
 }
 
 
-const LiItem = ({name:key,value:value}:{name: string,value:string}) => {
-        if (typeof value === "object"){
-            return <></>;
+const LiItem = ({name:key,value:value}:{name: string,value:any}) => {
+        if (typeof value === "object" && value != null){
+            const entry : ReactNode[] = []
+            Object.entries(value).map(([keyInner,valueInner])=>{
+                entry.push(<LiItem name={keyInner} value={valueInner} />)
+            });
+            return <div className="grid grid-cols-2 gap-x-4">{entry}</div>
         }
-
         switch (key) {
             case "email":
                 key="E-mail"
@@ -57,6 +57,12 @@ const LiItem = ({name:key,value:value}:{name: string,value:string}) => {
                 break;
             case "lastname":
                 key="Nachname"
+                break;
+            case "streetnumber":
+                key="Hausnummer"
+                break;
+            case "zip":
+                key="Postleitzahl"
                 break;
             case "street":
                 key="Straße"
@@ -73,6 +79,9 @@ const LiItem = ({name:key,value:value}:{name: string,value:string}) => {
             default:
                 break;
         }
+        if(value == null){
+            value = "Jetzt einfügen"
+        }
         return (
             <li className='p-4 btn-nav my-2 font-light text-sm rounded-2xl'>{key + ":"}
             <br></br>
@@ -81,20 +90,18 @@ const LiItem = ({name:key,value:value}:{name: string,value:string}) => {
         )
     }
 
-export const UserInformaiton = ({info}:{info:any}) => {
-    const { data: session } = useSession();
+export const UserInformaiton = ({info}:{info:{}|null}) => {
 
-    if (!session || !session.user || !session.user.id) {
+    if (!info) {
         return (
             <li></li>
         )
     }
     var c: ReactNode[] = []
     console.log("User: ", info)
-    Object.entries(session.user).map(([key, value]) => {
+    Object.entries(info).map(([key, value]) => {
         c.push(<LiItem name={key} value={value} />)
     })
-    console.log(c)
     return <div>
         {c}
     </div>

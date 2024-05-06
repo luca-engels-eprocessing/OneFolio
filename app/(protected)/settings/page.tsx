@@ -35,6 +35,14 @@ async function Settings({}: Props) {
     return <p>Loading...</p>
   }
   const userData = await getUserById(session.user.id)
+  if(!userData){
+    return  <p>ERROR</p>
+  }
+  const {name,email,address} = userData
+  
+
+  const user = {name,email,address}
+
   return (
     <main className="h-full w-full flex flex-col gap-8 items-center justify-center">
         <div>
@@ -43,9 +51,9 @@ async function Settings({}: Props) {
         <div className="flex h-[80vh] w-[80vw] border-def bg-sec xl:flex-row flex-col rounded-md overflow-hidden">
           <div className='w-1/2 px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>
             <h1 className='text-accent text-4xl font-semibold'>Nutzer Informationen</h1>
-            <LogoutButton />
-            <ul className=''>
-            <UserInformaiton info={userData}/>
+            <ul>
+              <LogoutButton />
+              <UserInformaiton info={user}/>
             </ul>
           </div>
           <div className='w-1/2 px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>

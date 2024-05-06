@@ -28,8 +28,8 @@ export const register = async (values: z.infer<typeof signUpSchema>)=> {
             address: { 
                 street: street || null, 
                 streetnumber: streetnumber || null, 
-                city: city || null, 
                 zip:zip || null, 
+                city: city || null, 
                 country:country || null, 
                 phone:phone || null, 
             }
