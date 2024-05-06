@@ -29,9 +29,6 @@ const liItem = (key: string,value:string, item:number) => {
 
 async function Settings({}: Props) {
   const session = await auth();
-  if (session) {
-    return <div>{JSON.stringify(session)}</div>
-  }
   return (
     <main className="flex h-[calc(100vh-11rem)] xl:h-screen w-full flex-col gap-16 py-24 xl:pl-48 px-16 ">
         <div>
