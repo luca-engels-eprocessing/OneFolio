@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, ReactNode, useState, FormEvent } from 'react'
 import { IconPlus } from '@tabler/icons-react'
+import { Button } from '../ui/button';
 
 type Props = {
     items: {},
@@ -91,15 +92,27 @@ export const KeyButton = ({onClick,name:key, index,selecList}:{onClick:()=>void,
 }
 
 export const AddButton = ({onClick}:{onClick:(e:FormEvent<HTMLFormElement>)=>void}) => {
+    const [isExpanded, setIsExpanded] = useState(false)
     return (
-        <form className='btn-nav rounded-md flex flex-col justify-center gap-8 px-4 group p-2 w-full' onSubmit={onClick}>
-            <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' name='newCategory' placeholder='Hinzufügen ...' />
-            <input type='text' className='w-full px-8 text-left text-3xl py-2 border-0 bg-transparent' name='subCategory' placeholder='Untergruppe? ...' />
-            <div className='flex flex-row text-3xl gap-8 items-center '>
-                <button type='submit'>
-                    <IconPlus size={32} />
-                </button>
+        <form className='btn-nav rounded-md flex flex-col justify-center px-4 group p-2 w-full' onSubmit={onClick}>
+            <div className="flex-row flex">
+                <input type='text' className='w-full text-left text-3xl p-2 border-0 bg-transparent' name='newCategory' placeholder='Hinzufügen ...' />
+                <div className='flex flex-row text-3xl gap-8 items-center '>
+                    <button type='submit'>
+                        <IconPlus size={32} />
+                    </button>
+                </div>
             </div>
+            {isExpanded ? (
+                <>
+                    <input type='text' className='w-full text-left text-3xl p-2 border-0 bg-transparent' name='subCategory' placeholder='Untergruppe? ...' />
+                    <Button onClick={()=>setIsExpanded(false)} className='cursor-pointer justify-start' variant={"link"} size={"sm"} asChild>
+                        <p>Einfach...</p>
+                    </Button>
+                </>
+            ) : (
+                <Button onClick={()=>setIsExpanded(true)} variant={"link"} size={"sm"} className='cursor-pointer justify-start' asChild><p>Erweitern...</p></Button>
+            )}
         </form>
     );
 }
@@ -210,10 +223,10 @@ const Table = (props: Props) => {
     
     
     return (
-        <div className='flex xl:flex-row flex-col gap-8 overflow-hidden h-full'>
+        <div className='h-[80vh] w-[80vw] flex xl:flex-row flex-col gap-8 overflow-hidden'>
                 <div className={  (displayed && " max-h-[calc(50%-32px)]") + " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-[calc(50%-32px)] items-center xl:max-h-full xl:h-fit "+" "+props.className}>
                     {keyButtonList}
-                    <button onClick={(e) => {
+                    <button className='btn-nav w-full rounded-xl text-xl font-semibold py-8' onClick={(e) => {
                         console.log(modifyableList)
                         console.log(selectionList)
                     }}>SAVE</button>

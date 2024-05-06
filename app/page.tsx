@@ -2,12 +2,12 @@
 
 async function Home() {
   return (
-      <main className="flex h-full w-full flex-col gap-16 py-24 xl:pl-48 px-16">
+      <main className="h-full w-full flex flex-col gap-8 items-center justify-center">
           <div>
               <h1 className={"h1"}>Ihr Portfolio im Überblick</h1>
           </div>
           <div
-              className="h-full w-full bg-sec border-def rounded-xl grid grid-flow-row-dense grid-rows-2 grid-cols-2 gap-16 items-center content-center justify-around">
+              className="h-[80vh] w-[80vw] bg-sec border-def rounded-xl grid grid-flow-row-dense grid-rows-2 grid-cols-2 gap-16 items-center content-center justify-around">
               <div className={"row-start-1 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
                   <p className={"text-2xl font-medium"}>Ihre Branchen</p>
                   <div

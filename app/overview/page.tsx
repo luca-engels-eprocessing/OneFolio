@@ -61,7 +61,7 @@ const data = {
 
 const View = async (props: Props) => {
   return (
-    <main className="flex h-screen w-screen flex-col gap-16 py-24 xl:pl-48 px-16 ">
+    <main className="h-full w-full flex flex-col gap-8 items-center justify-center">
         <h1 className={"h1"}>Ihre Investments im Überblick</h1>
         
         {/*
@@ -72,7 +72,7 @@ const View = async (props: Props) => {
           //TODO expand the investment card on click of the card
           //TODO add functionality to the Anpassen button 
         */}
-      <div className={"flex gap-2 border-def bg-sec p-4 flex-col scroll-light dark:scroll-dark rounded-md overflow-y-scroll"}>
+      <div className={"h-[80vh] w-[80vw] flex gap-2 border-def bg-sec p-4 flex-col scroll-light dark:scroll-dark rounded-md overflow-y-scroll"}>
         {data.investments.map((investment, index) => (
           <InvestmentCard key={index} {...investment} />
         ))}

@@ -47,7 +47,7 @@ export const RegisterForm = () => {
         })
     }
     return (
-        <CardWrapper headerLabel="Erstellen sie jetzt ihren OneFolio Account!" backButtonLabel="Mit vorhandenem Account anmelden" backButtonHref="/auth/login">
+        <CardWrapper className="w-[800px] " headerLabel="Erstellen sie jetzt ihren OneFolio Account!" backButtonLabel="Mit vorhandenem Account anmelden" backButtonHref="/auth/login">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
                     <div className="space-y-2">

@@ -21,24 +21,20 @@ export const register = async (values: z.infer<typeof signUpSchema>)=> {
       return {error: "Diese E-Mail wird bereits benutzt."}
     }
     await db.user.create({
-        data:{
-            name:{
-                firstname: firstname,
-                lastname: lastname
-            },
+        data: {
+            name: { firstname, lastname },
             email: email.toLowerCase(),
             password: hashedPassword,
-            address:{
-                street: street,
-                streetnumber: streetnumber,
-                city: city,
-                zip:zip,
-                country: country,
-                phone: phone
+            address: { 
+                street: street || null, 
+                streetnumber: streetnumber || null, 
+                city: city || null, 
+                zip:zip || null, 
+                country:country || null, 
+                phone:phone || null, 
             }
         }
-    
-    })
+    });
 
     return {success: "Bestätigungsemail gesendet!"}
 }

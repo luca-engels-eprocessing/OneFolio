@@ -21,7 +21,7 @@ export default function RootLayout({
         <html lang="en">
             <body className={inter.className}>
               <Providers>
-                <div className={"flex xl:flex-row flex-col-reverse justify-between xl:gap-64 h-screen"}>
+                <div className={"flex xl:flex-row flex-col-reverse justify-between h-screen"}>
                     {children}
                     <Navbar/>
                 </div>

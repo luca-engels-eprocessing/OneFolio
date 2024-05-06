@@ -1,19 +1,21 @@
 "use client"
 
-import React, { Children, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { Card,CardContent,CardFooter,CardHeader } from "@/components/ui/card";
 import { Header } from "@/components/auth/header";
 import BackButton from "./BackButton";
+import { cn } from "@/lib/utils";
 
 type Props = {
     children: ReactNode;
+    className?: string,
     headerLabel: string;
     backButtonLabel:string;
     backButtonHref:string;
 };
 export const CardWrapper = (props:Props) => {
     return (
-        <Card className="w-[800px] shadow-md bg-secLight dark:bg-secDark border-def p-4">
+        <Card className={cn("shadow-md bg-secLight dark:bg-secDark border-def p-4",props.className)}>
             <CardHeader>
                 <Header label={props.headerLabel} />
             </CardHeader>

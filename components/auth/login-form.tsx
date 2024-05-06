@@ -40,7 +40,7 @@ export const LoginForm = () => {
 
 
     return (
-        <CardWrapper headerLabel="Jetzt anmelden!" backButtonLabel="Jetzt registrieren" backButtonHref="/auth/register">
+        <CardWrapper className="w-[400px] " headerLabel="Jetzt anmelden!" backButtonLabel="Jetzt registrieren" backButtonHref="/auth/register">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
                     <div className="space-y-4">
