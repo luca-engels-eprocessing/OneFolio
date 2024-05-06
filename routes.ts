@@ -5,8 +5,6 @@
  */
 export const publicRoutes = [
     "/",
-    "/add",
-    "/overview",
 ];
 
 /**

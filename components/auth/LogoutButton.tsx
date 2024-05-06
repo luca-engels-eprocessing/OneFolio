@@ -20,8 +20,7 @@ export const LogoutButton = (props:Props) => {
         return (
             <li className="flex flex-col my-2">
                 <button className="p-4 btn-nav font-normal text-sm rounded-2xl text-left" onClick={() => signOut()}>
-                    <span>Sie sind eingeloggt !</span>
-                    <br />
+                    <p className="text-textLight/70 dark:text-textDark/70">Sie sind eingeloggt.</p>
                     <span className="font-normal text-xl">Ausloggen?</span>
                 </button>
             </li>
@@ -80,12 +79,17 @@ const LiItem = ({name:key,value:value}:{name: string,value:any}) => {
                 break;
         }
         if(value == null){
-            value = "Jetzt einfügen"
+            
+        return (
+            <li className='p-4 btn-nav my-2 font-light text-sm rounded-2xl text-textLight/70 dark:text-textDark/70'>{key + ":"}
+            <br></br>
+                <span className='font-normal text-xl text-textLight/50 dark:text-textDark/50'>Jetzt hinzufügen!</span>
+            </li>
+        )
         }
         return (
-            <li className='p-4 btn-nav my-2 font-light text-sm rounded-2xl'>{key + ":"}
-            <br></br>
-                <span className='font-normal text-xl'>{value}</span>
+            <li className='p-4 btn-nav my-2 font-light text-sm rounded-2xl'><p className="text-textLight/70 dark:text-textDark/70">{key + ":"}</p>
+                <span className='font-normal text-xl text-textLight dark:text-textDark'>{value}</span>
             </li>
         )
     }
