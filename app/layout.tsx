@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   description: "OneFolio ermöglicht das einfache Managen ihrer Investment über alle platformen. So halten sie den Überblick",
   icons: {
     shortcut: "/images/favicon.ico",
-    apple: "/images/logo192.png",
-    icon: "/images/logo192.png",
+    apple: "/images/logo512.png",
+    icon: "/images/logo512.png",
   },
 };
 
