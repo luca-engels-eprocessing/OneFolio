@@ -3,6 +3,7 @@ import React from 'react'
 import  {LogoutButton,UserInformaiton} from '@/components/auth/LogoutButton'
 import {auth} from "@/auth"
 import { getUserById } from '@/utils/db'
+import { cn } from '@/lib/utils'
 type Props = {}
 
 const bankData = {
@@ -20,11 +21,20 @@ const bankData = {
 
 
 const liItem = (key: string,value:string, item:number) => {
+  // return (
+  //   <li className='p-4 btn-nav my-2 font-light text-sm rounded-2xl' key={item}>{key + ":"}
+  //   <br></br>
+  //     <span className='font-normal text-xl'>{value}</span>
+  //   </li>
+  // )
+  if(value.length>18){
+    value = value.substring(0,14)+"..."
+  }
   return (
-    <li className='p-4 btn-nav my-2 font-light text-sm rounded-2xl' key={item}>{key + ":"}
-    <br></br>
-      <span className='font-normal text-xl'>{value}</span>
-    </li>
+    
+    <div className='lg:p-4 p-2 btn-nav xl:my-2 my-1 font-light xl:text-sm text-xs xl:rounded-2xl rounded-md'><p className="text-textLight/70 dark:text-textDark/50" key={item}>{key + ":"}</p>
+      <span className={cn(value?'text-textLight dark:text-textDark':'text-textLight/50 dark:text-textDark/50','font-normal xl:text-xl lg:text-lg text-sm')}>{value?value:"Jetzt hinzufügen!"}</span>
+    </div>
   )
 }
 
@@ -49,13 +59,13 @@ async function Settings({}: Props) {
           <h1 className={"h1"}>Ihre Einstellungen</h1>
         </div>
         <div className="flex h-[80vh] w-[80vw] border-def bg-sec xl:flex-row flex-col rounded-md overflow-hidden">
-          <div className='w-1/2 px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>
-            <h1 className='text-accent text-4xl font-semibold'>Nutzer Informationen</h1>
+          <div className='xl:w-1/2 w-full px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>
+            <h2 className='text-accent h2 font-semibold'>Nutzer Informationen</h2>
               <UserInformaiton info={user} key={1}/>
               <LogoutButton key={2}/>
           </div>
-          <div className='w-1/2 px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>
-            <h1 className='text-accent text-4xl font-semibold'>Bankdaten</h1>
+          <div className='xl:w-1/2 w-full px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>
+            <h2 className='text-accent h2 font-semibold'>Bankdaten</h2>
             <ul className=''>
               {
                 Object.entries(bankData).map(([key, value],index) => {

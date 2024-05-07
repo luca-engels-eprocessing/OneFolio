@@ -15,6 +15,9 @@
   .h1{
     @apply xl:text-5xl md:text-2xl text-xl font-bold text-primLight dark:text-primDark hover:text-accentLight dark:hover:text-accentDark;
   };
+  .h2{
+    @apply xl:text-3xl md:text-xl text-inherit font-bold text-primLight dark:text-primDark hover:text-accentLight dark:hover:text-accentDark;
+  };
   .text-accent{
     @apply text-accentLight dark:text-accentDark group-hover:text-accentTextLight group-focus:text-accentTextLight dark:group-hover:text-accentTextDark dark:group-focus:text-accentTextDark;
   };
