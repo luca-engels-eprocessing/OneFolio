@@ -5,6 +5,8 @@ import { Button } from '../ui/button';
 import { saveData } from '@/utils/saveInvestment';
 import { FormError } from '../form-error';
 import { FormSuccess } from '../form-success';
+import { clearLine } from 'readline';
+import { cn } from '@/lib/utils';
 
 type Props = {
     items: {},
@@ -120,7 +122,7 @@ export const AddButton = ({onClick}:{onClick:(e:FormEvent<HTMLFormElement>)=>voi
     );
 }
 
-export const SaveButton= ({data}:{data:{[key: string]:any}}) => {
+export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>void}) => {
     const [success, setSuccess] = useState<string|undefined>("")  
     const [error, setError] = useState<string|undefined>("")
 
@@ -139,6 +141,7 @@ export const SaveButton= ({data}:{data:{[key: string]:any}}) => {
 
     return (<>
             <button className='btn-nav w-full rounded-xl text-xl font-semibold py-8' onClick={(e) => {
+                onClick()
                 setError("")
                 setSuccess("")
                 console.log(data)
@@ -259,16 +262,22 @@ export const Table = (props: Props) => {
         return
     }, [selectionList,modifyableList])
     
-    
+    const clearList = () => {
+        setselectionList({})
+        setModifyableList(props.items)
+        setDisplayed(false)
+        setvalueButtonList([])
+        setkeyButtonList([])
+    }
     
     return (
         <div className='h-[80vh] w-[80vw] flex xl:flex-row flex-col gap-8 overflow-hidden'>
-                <div className={  (displayed && " max-h-[calc(50%-32px)]") + " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-[calc(50%-32px)] items-center xl:max-h-full xl:h-fit "+" "+props.className}>
+                <div className={  cn(displayed && " max-h-[calc(50%-32px)]", " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-[calc(50%-32px)] items-center xl:max-h-full xl:h-fit",props.className)}>
                     {keyButtonList}
-                    <SaveButton data={selectionList} />
+                    <SaveButton data={selectionList} onClick={clearList} />
                 </div>
                 {displayed && 
-                    <div className={"flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-1/2 items-center xl:max-h-full xl:h-fit h-fit max-h-[50%]"+" "+props.className}>
+                    <div className={cn("flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-1/2 items-center xl:max-h-full xl:h-fit h-fit max-h-[50%]",props.className)}>
                         {valueButtonList}
                     </div>
                 }
