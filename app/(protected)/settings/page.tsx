@@ -58,7 +58,7 @@ async function Settings({}: Props) {
         <div>
           <h1 className={"h1"}>Ihre Einstellungen</h1>
         </div>
-        <div className="flex h-[80vh] w-[80vw] border-def bg-sec xl:flex-row flex-col rounded-md overflow-hidden">
+        <div className="flex h-[80vh] w-[80vw] border-def bg-sec xl:flex-row gap-y-4 flex-col rounded-md overflow-hidden">
           <div className='xl:w-1/2 w-full px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>
             <h2 className='text-accent h2 font-semibold'>Nutzer Informationen</h2>
               <UserInformaiton info={user} key={1}/>
