@@ -141,7 +141,6 @@ export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>v
 
     return (<>
             <button className='btn-nav w-full rounded-xl text-xl font-semibold py-8' onClick={(e) => {
-                onClick()
                 setError("")
                 setSuccess("")
                 console.log(data)
@@ -149,6 +148,7 @@ export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>v
                     setError(data.error)
                     setSuccess(data.success)
                 })
+                onClick()
             }}>Speichern</button>
             <FormError message={error}/>
             <FormSuccess message={success}/>
