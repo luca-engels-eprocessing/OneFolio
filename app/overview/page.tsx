@@ -1,5 +1,9 @@
 "use server"
+import { auth } from '@/auth'
 import InvestmentCard from '@/components/InvestmentCard'
+import { Button } from '@/components/ui/button'
+import { getInvestmentsByUserId } from '@/utils/db'
+import Link from 'next/link'
 import React from 'react'
 
 type Props = {}
@@ -60,6 +64,24 @@ const data = {
 }
 
 const View = async (props: Props) => {
+  const session = await auth()
+  if(!session || !session.user ||!session.user.id){
+    return <p>Loading...</p>
+  }
+  const investmentData = await getInvestmentsByUserId(session.user.id)
+  if(!investmentData){
+    return  <p>ERROR</p>
+  }
+  const list = investmentData.map((data)=>{
+    const {title,date,data:det} = data.data
+    let details = {}
+    det.map((e)=> {
+      details = {...details,[e.key]:e.value}
+    })
+    const ret = {title,date,details}
+    return ret
+  })
+
   return (
     <main className="h-full w-full flex flex-col gap-8 items-center justify-center">
         <h1 className={"h1"}>Ihre Investments im Überblick</h1>
@@ -73,8 +95,19 @@ const View = async (props: Props) => {
           //TODO add functionality to the Anpassen button 
         */}
       <div className={"h-[80vh] w-[80vw] flex gap-2 border-def bg-sec p-4 flex-col scroll-light dark:scroll-dark rounded-md overflow-y-scroll"}>
-        {data.investments.map((investment, index) => (
-          <InvestmentCard key={index} {...investment} />
+        {(Array.isArray(list) && list.length === 0)?
+        <div className='flex flex-col justify-center'>
+          <h1 className={"text-4xl text-center"}>Keine Investments vorhanden</h1>
+          
+          <Button className='cursor-pointer justify-center' variant={"link"} size={"sm"} asChild>
+            <Link href={"/add"}>
+              <p className={"text-center"}>Fügen sie neue Investments hinzu</p>
+            </Link>
+          </Button>
+        </div>
+        
+        :list.map((investment, index) => (
+          <InvestmentCard key={index} data={investment} />
         ))}
       </div>
         </main>

@@ -24,3 +24,12 @@ export const getUserById = async (id:string) => {
     throw(e)
   }
 }
+
+export const getInvestmentsByUserId = async (id:string) => {
+  try {
+    const investments = await db.investment.findMany({where:{userId:id}})
+    return investments
+  } catch (e){
+    throw(e)
+  }
+}

@@ -9,27 +9,30 @@ type Props = {
     
 }
 
-const InvestmentCard = (props: Props) => {
-const expandRef = useRef<HTMLDivElement>(null);
-const gridRef = useRef<HTMLDivElement>(null);
 
-//TODO expand button height to h-96 if button is pressed
-
-const onClickExpand = () => {
-    if(gridRef.current){
-        if(gridRef.current.classList.toggle("expanded")){
-            gridRef.current.querySelectorAll(':nth-child(n+4):not(:last-child)').forEach((node) => {
-                node.classList.remove('hidden');
-            });
+const InvestmentCard = ({data:props}:{data:Props}) => {
+    const expandRef = useRef<HTMLDivElement>(null);
+    const gridRef = useRef<HTMLDivElement>(null);
+    
+    //TODO expand button height to h-96 if button is pressed
+    
+    const onClickExpand = () => {
+        if(gridRef.current){
+            if(gridRef.current.classList.toggle("expanded")){
+                gridRef.current.querySelectorAll(':nth-child(n+4):not(:last-child)').forEach((node) => {
+                    node.classList.remove('hidden');
+                });
+            }
+            else{
+                gridRef.current.querySelectorAll(':nth-child(n+4):not(:last-child)').forEach((node) => {
+                    node.classList.add('hidden');
+                });
+            }
+            
         }
-        else{
-            gridRef.current.querySelectorAll(':nth-child(n+4):not(:last-child)').forEach((node) => {
-                node.classList.add('hidden');
-            });
-        }
-        
     }
-}
+    
+    console.log("PROPS:" ,props.details)
 
 return (
     <div className={"btn-nav rounded-md flex xl:flex-row flex-col xl:gap-8 px-4 group h-full"}>
@@ -37,10 +40,12 @@ return (
             <h1 className={"pt-8 text-accentLight dark:text-accentDark xl:text-5xl md:text-2xl text-xl font-semibold pb-8 group-hover:text-accentTextLight group-focus:text-accentTextLight dark:group-hover:text-accentTextDark dark:group-focus:text-accentTextDark"}>
                 {props.title}
             </h1>
-            <div className='pb-8'>
-                <p className={"xl:text-sm text-xs font-light"}>Läuft aus am:</p>
-                <p className={"xl:text-2xl text-lg font-normal"}>{props.date}</p>
-            </div>
+                {props.date&&
+                <div className='pb-8'>
+                    <p className={"xl:text-sm text-xs font-light"}>Erstellt:</p>
+                    <p className={"xl:text-2xl text-lg font-normal"}>{props.date}</p>
+                </div>
+                }
         </button>
         <div className='xl:py-4 h-full'>
             <div
@@ -61,7 +66,7 @@ return (
                         <p className={"xl:text-2xl text-lg font-normal"}>{value as string}</p>
                     </div>
                 ))}
-                <a onClick={onClickExpand} className='cursor-pointer'>Anpassen ...</a>
+                <a onClick={onClickExpand} className='cursor-pointer'>Mehr ...</a>
             </div>
         </div>
     </div>

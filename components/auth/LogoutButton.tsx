@@ -12,9 +12,9 @@ export const LogoutButton = (props:Props) => {
     const { data: session , status } = useSession();
     const router = useRouter();
     
-        const onClick = () => {
-            router.push("/auth/login")
-        }
+    const onClick = () => {
+        router.push("/auth/login")
+    }
 
     if (status === "authenticated" && session && session.user) {
         return (

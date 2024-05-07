@@ -35,3 +35,9 @@ export const signUpSchema = z.object({
   message: "Passwords müssen übereinstimmen",
   path: ["passwordConfirm"]
 })
+export const investmentSchema = z.object({
+  title: z.string({ required_error: "Bitte füge einen Titel für das Investment ein" })
+    .min(1,"Bitte füge einen Titel für das Investment ein"),
+  date: z.string(),
+  data: z.any()
+})

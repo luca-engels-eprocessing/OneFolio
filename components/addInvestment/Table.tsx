@@ -3,6 +3,8 @@ import React, { useEffect, ReactNode, useState, FormEvent } from 'react'
 import { IconPlus } from '@tabler/icons-react'
 import { Button } from '../ui/button';
 import { saveData } from '@/utils/saveInvestment';
+import { FormError } from '../form-error';
+import { FormSuccess } from '../form-success';
 
 type Props = {
     items: {},
@@ -118,12 +120,37 @@ export const AddButton = ({onClick}:{onClick:(e:FormEvent<HTMLFormElement>)=>voi
     );
 }
 
-export const SaveButton= ({data}:{data:{}}) => {
-    return (
-        <button className='btn-nav w-full rounded-xl text-xl font-semibold py-8' onClick={(e) => {
-            console.log(data)
-            // saveData(data)
-        }}>Speichern</button>)
+export const SaveButton= ({data}:{data:{[key: string]:any}}) => {
+    const [success, setSuccess] = useState<string|undefined>("")  
+    const [error, setError] = useState<string|undefined>("")
+
+    let prepData : {title:string,date:string,data:{}}
+    Object.entries(data).map(([key,value])=>{
+        if(key === "Titel"){
+            prepData = {...prepData, title: value}
+        }
+        else if(key === "Start Datum des Investments"){
+            prepData = {...prepData, date: value}
+        }
+        else{
+            prepData = {...prepData, data: {...prepData.data, [key]:value}}
+        }
+    })
+
+    return (<>
+            <button className='btn-nav w-full rounded-xl text-xl font-semibold py-8' onClick={(e) => {
+                setError("")
+                setSuccess("")
+                console.log(data)
+                saveData(prepData).then((data)=> {
+                    setError(data.error)
+                    setSuccess(data.success)
+                })
+            }}>Speichern</button>
+            <FormError message={error}/>
+            <FormSuccess message={success}/>
+        </>
+    )
 }
 
 export const Table = (props: Props) => {
@@ -187,7 +214,10 @@ export const Table = (props: Props) => {
         e.preventDefault();
         deleteFromSelection(node,modifyableList,selectionList)
         const newCat = (e.target as HTMLFormElement)['newCategory'].value as string;
-        const subCat = (e.target as HTMLFormElement)['subCategory'].value;
+        let subCat
+        if(e.target["subCategory"]){
+            subCat = (e.target as HTMLFormElement)['subCategory'].value;
+        }
         if(!subCat){
             const curr = { [node]: modifyableList[node as keyof typeof modifyableList] as {} };
             //iterate and check if curr is in modyfiableList

@@ -4,7 +4,8 @@ import React from 'react'
 
 
 const sList = {
-    "Title": [],
+    "Titel": [],
+    "Start Datum des Investments": ["2020","2021","2022","2023","JAN/2024","FEB/2024","MÄR/2024","APR/2024","MAI/2024" ],
     "Laufzeit (in Jahren)": [1, 2, 3, 4, 5, 10, 15, 30, 40, 50, 99],
     "Branche":[
         {"Energie": {"Sparte": ["Solar Energie", "Wind Energie", "Wasser Energie", "Kern Energie"]}},

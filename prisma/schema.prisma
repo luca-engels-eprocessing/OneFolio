@@ -10,8 +10,19 @@ datasource db {
 model Investment {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   userId      String    @db.ObjectId
-  data        Json
+  data        InvestmentData
   user        User      @relation(fields: [userId],references: [id])
+}
+
+type InvestmentData {
+  title   String
+  date    String
+  data    KeyValuePair[]
+}
+
+type KeyValuePair{
+  key       String
+  value     String
 }
 
 model User {
