@@ -5,9 +5,7 @@ import { Button } from '../ui/button';
 import { saveData } from '@/utils/saveInvestment';
 import { FormError } from '../form-error';
 import { FormSuccess } from '../form-success';
-import { clearLine } from 'readline';
 import { cn } from '@/lib/utils';
-
 type Props = {
     items: {},
     className?: string;
@@ -96,21 +94,28 @@ export const KeyButton = ({onClick,name:key, index,selecList}:{onClick:()=>void,
     );
 }
 
-export const AddButton = ({onClick}:{onClick:(e:FormEvent<HTMLFormElement>)=>void}) => {
+export const AddButton = ({onClick,inputType}:{onClick:(e:FormEvent<HTMLFormElement>)=>void,inputType:string|undefined}) => {
     const [isExpanded, setIsExpanded] = useState(false)
     return (
-        <form className='btn-nav rounded-md flex flex-col justify-center px-4 group p-2 w-full' onSubmit={onClick}>
-            <div className="flex-row flex">
-                <input type='text' className='w-full text-left text-3xl p-2 border-0 bg-transparent' name='newCategory' placeholder='Hinzufügen ...' />
+        <form className='border-def bg-prim rounded-md flex flex-col justify-center px-4 group p-2 w-full' onSubmit={onClick}>
+            <div className="flex-row flex gap-4">
+                <input type={(inputType)?inputType:'text'} className='w-full text-left text-3xl p-2 border-0 bg-transparent' name='newCategory' placeholder='Hinzufügen ...' />
                 <div className='flex flex-row text-3xl gap-8 items-center '>
-                    <button type='submit'>
-                        <IconPlus size={32} />
+                    <button type='submit' className='btn-nav p-4 rounded-lg flex flex-row justify-center gap-2 content-center'>
+                        <p className="text-md">Hinzufügen</p> <IconPlus size={32} />
                     </button>
                 </div>
             </div>
             {isExpanded ? (
                 <>
-                    <input type='text' className='w-full text-left text-3xl p-2 border-0 bg-transparent' name='subCategory' placeholder='Untergruppe? ...' />
+                    <div className='flex flex-row justify-between content-bottom'>
+                        <input type='text' className='w-full text-left text-3xl p-2 border-0 bg-transparent' name='subCategory' placeholder='Untergruppe? ...' />
+                        <select name="inputType" id="inputType" className='bg-prim'>
+                            <option value="text">Text</option>
+                            <option value="number">Nummer</option>
+                            <option value="date">Datum</option>
+                        </select>
+                    </div>
                     <Button onClick={()=>setIsExpanded(false)} className='cursor-pointer justify-start' variant={"link"} size={"sm"} asChild>
                         <p>Einfach...</p>
                     </Button>
@@ -131,11 +136,16 @@ export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>v
         if(key === "Titel"){
             prepData = {...prepData, title: value}
         }
-        else if(key === "Start Datum des Investments"){
+        else if(key === "Startdatum des Investments"){
             prepData = {...prepData, date: value}
         }
         else{
-            prepData = {...prepData, data: {...prepData.data, [key]:value}}
+            if(prepData && prepData.data){
+                prepData = {...prepData, data: {...prepData.data, [key]:value}}
+            }
+            else{
+                prepData = {...prepData, data: {[key]:value}}
+            }
         }
     })
 
@@ -162,101 +172,113 @@ export const Table = (props: Props) => {
     const [displayed, setDisplayed] = useState<boolean>(false)
     const [selectionList, setselectionList] = useState<{}>({})
     const [modifyableList, setModifyableList] = useState<{}>(props.items)
-
-
-
+    
     useEffect(() => {
-    
-    //TODO Clear modyfiableList of subelements (found twice in the list)
-    const onClickValueButton = (key:string,forKey:string)  => {
-        setDisplayed(false)
-        deleteFromSelection(forKey,modifyableList,selectionList)
-        if("Mehr..." == forKey){
-            const valueName=Object.keys(key)[0];
-            const array = modifyableList[forKey as keyof typeof modifyableList] as string[]
-            const index = array.indexOf(key)
-            if(index !== -1){
-                array.splice(index,1)
-            }
-            var newModList = {}
-            
-            Object.entries(modifyableList).map(([keyI, valueI]) => {
-                if(keyI === forKey){
-                    newModList = {...newModList,...key[valueName as keyof typeof key] as {}}
+        const onClickValueButton = (key:string,forKey:string)  => {
+            setDisplayed(false)
+            deleteFromSelection(forKey,modifyableList,selectionList)
+            if("Mehr..." == forKey){
+                const valueName=Object.keys(key)[0];
+                const array = modifyableList[forKey as keyof typeof modifyableList] as string[]
+                const index = array.indexOf(key)
+                if(index !== -1){
+                    array.splice(index,1)
                 }
-                newModList = {...newModList, [keyI]: valueI};
-            })
-            setModifyableList(newModList)
-        }
-        else if(typeof key != 'object') {
-            setselectionList({ ...selectionList, [forKey]: key});
-        }
-        else{
-            const valueName=Object.keys(key)[0];
-            var newModList = {}
-            if(Object.keys(key[valueName])[0] in selectionList){
-                delete selectionList[Object.keys(key[valueName])[0] as keyof typeof selectionList]
-            }
-            Object.entries(modifyableList).map(([keyI, valueI]) => {
-                if(keyI in newModList){
-                }
-                else{
-                    newModList = {...newModList, [keyI]: valueI};
+                var newModList = {}
+                
+                Object.entries(modifyableList).map(([keyI, valueI]) => {
                     if(keyI === forKey){
-                        newModList = {...newModList,...key[valueName] as {}}
+                        newModList = {...newModList,...key[valueName as keyof typeof key] as {}}
                     }
+                    newModList = {...newModList, [keyI]: valueI};
+                })
+                setModifyableList(newModList)
+            }
+            else if(typeof key != 'object') {
+                setselectionList({ ...selectionList, [forKey]: key});
+            }
+            else{
+                const valueName=Object.keys(key)[0];
+                var newModList = {}
+                if(Object.keys(key[valueName])[0] in selectionList){
+                    delete selectionList[Object.keys(key[valueName])[0] as keyof typeof selectionList]
                 }
-            })
-            setModifyableList(newModList)
-            setselectionList({ ...selectionList, [forKey]: valueName });
+                Object.entries(modifyableList).map(([keyI, valueI]) => {
+                    if(keyI in newModList){
+                    }
+                    else{
+                        newModList = {...newModList, [keyI]: valueI};
+                        if(keyI === forKey){
+                            newModList = {...newModList,...key[valueName] as {}}
+                        }
+                    }
+                })
+                setModifyableList(newModList)
+                setselectionList({ ...selectionList, [forKey]: valueName });
+            }
         }
-    }
-    
-    //TODO FIX ADDING SUBGROUP doesnt delete current selected
-    const handleAddButtonSubmit = (e:any,node:string) => {
-        e.preventDefault();
-        deleteFromSelection(node,modifyableList,selectionList)
-        const newCat = (e.target as HTMLFormElement)['newCategory'].value as string;
-        let subCat
-        if(e.target["subCategory"]){
-            subCat = (e.target as HTMLFormElement)['subCategory'].value;
+
+        const handleAddButtonSubmit = (e:any,node:string) => {
+            e.preventDefault();
+            deleteFromSelection(node,modifyableList,selectionList)
+            const newCat = (e.target as HTMLFormElement)['newCategory'].value as string;
+            const type = e.target['inputType']?e.target['inputType'].value as string:undefined
+            if(newCat == ''){
+                return
+            }
+            const subCat = e.target["subCategory"]?e.target['subCategory'].value:undefined;
+            if(node == "Mehr..."){
+                setModifyableList({...modifyableList,[newCat]:[type?type:"text"]})
+                return
+            }
+            if(!subCat){
+                const curr = { [node]: modifyableList[node as keyof typeof modifyableList] as {} };
+                //iterate and check if curr is in modyfiableList
+                const listKeyValue = editObject(curr, modifyableList, [newCat]);
+                setModifyableList(listKeyValue)
+            }
+            else{
+                const newCatSub = {[newCat]: {[subCat]:[type?type:"text"]}}
+                const curr = { [node]: modifyableList[node as keyof typeof modifyableList] as {} };
+                var newList = {}
+                Object.entries(editObject(curr, modifyableList, [newCatSub])).map(([key, value]) => {
+                    newList = {...newList, [key]: value}
+                    if(node == key){
+                        newList = {...newList, [subCat]: [type?type:"text"]}
+                    }
+                })
+                setModifyableList(newList)
+            }
+            setDisplayed(false)
+            setselectionList({...selectionList, [node]: newCat})
         }
-        if(!subCat){
-            const curr = { [node]: modifyableList[node as keyof typeof modifyableList] as {} };
-            //iterate and check if curr is in modyfiableList
-            const listKeyValue = editObject(curr, modifyableList, [newCat]);
-            setModifyableList(listKeyValue)
-        }
-        else{
-            const newCatSub = {[newCat]: {[subCat]:[]}}
-            const curr = { [node]: modifyableList[node as keyof typeof modifyableList] as {} };
-            var newList = {}
-            Object.entries(editObject(curr, modifyableList, [newCatSub])).map(([key, value]) => {
-                newList = {...newList, [key]: value}
-                if(node == key){
-                    newList = {...newList, [subCat]: []}
-                }
-            })
-            setModifyableList(newList)
-        }
-        setDisplayed(false)
-        setselectionList({...selectionList, [node]: newCat})
-    }
-    
+        
         const createValueList = (node: string) => {
             var buttons :ReactNode[] = []
-            for(var i = 0; i < Object.keys(modifyableList[node as keyof typeof modifyableList]).length; i++){
+            for(var i = 1; i < Object.keys(modifyableList[node as keyof typeof modifyableList]).length; i++){
                 const buttonName = modifyableList[node as keyof typeof modifyableList][i]
                 buttons.push(<ValueButton key={i} index={i} name={buttonName} onClick={()=>{onClickValueButton(buttonName, node)}} />)
             }
-            buttons.push(<AddButton onClick={(e)=>{handleAddButtonSubmit(e,node)}} key={"-1"} />)
+            let inputType
+            if(Object.keys(modifyableList[node as keyof typeof modifyableList]).length>0){
+                inputType = modifyableList[node as keyof typeof modifyableList][0]
+            }
+            console.log(inputType)
+            buttons.push(<AddButton onClick={(e)=>{handleAddButtonSubmit(e,node)}} inputType={inputType}/>)
             setvalueButtonList(buttons)
             setDisplayed(true)
         }
 
+    
+        console.log(modifyableList)
+    
+    //TODO Clear modyfiableList of subelements (found twice in the list)
         var buttons :ReactNode[] = []
+        if(Object.keys(modifyableList).length === 0){
+            setModifyableList({"Titel":['text'],"Startdatum des Investments":['date'],"Mehr...":['text']})
+        }
         {Object.entries(modifyableList).map(([key], index) => {
-            buttons.push(<KeyButton onClick={() =>{setDisplayed(true);createValueList(key)}} name={key} index={index} key={index} selecList={selectionList} />)
+            buttons.push(<KeyButton onClick={() =>{createValueList(key)}} name={key} index={index} key={index} selecList={selectionList} />)
         })}
         setkeyButtonList(buttons)
         return
@@ -271,7 +293,7 @@ export const Table = (props: Props) => {
     }
     
     return (
-        <div className='h-[80vh] w-[80vw] flex xl:flex-row flex-col gap-8 overflow-hidden'>
+        <div className=' w-[80vw] flex xl:flex-row flex-col gap-8 overflow-hidden'>
                 <div className={  cn(displayed && " max-h-[calc(50%-32px)]", " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-[calc(50%-32px)] items-center xl:max-h-full xl:h-fit",props.className)}>
                     {keyButtonList}
                     <SaveButton data={selectionList} onClick={clearList} />

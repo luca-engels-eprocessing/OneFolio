@@ -17,10 +17,12 @@ export const saveData = async (values:  z.infer<typeof investmentSchema>)=> {
     const {title,date,data} = validatedFields.data
 
     const valueData:any[] = []
-    Object.entries(data).map(([key,value])=>{
-        const data = {key:key,value:String(value)}
-        valueData.push(data)
-    })
+    if(data){
+        Object.entries(data).map(([key,value])=>{
+            const data = {key:key,value:String(value)}
+            valueData.push(data)
+        })
+    }
 
     console.log("ValueData",valueData)
 

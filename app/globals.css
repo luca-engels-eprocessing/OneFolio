@@ -4,16 +4,22 @@
 
 @layer components{
   .border-def{
-    @apply border-2 hover:border-accentBorderLight border-borderLight hover:dark:border-accentBorderDark dark:border-borderDark transition-colors;
+    @apply border-2 border-borderLight  dark:border-borderDark transition-colors;
+  };
+  .border-def-hover{
+    @apply border-def hover:border-accentBorderLight hover:dark:border-accentBorderDark;
   };
   .bg-sec{
     @apply transition-colors bg-secLight dark:bg-secDark
   }
+  .bg-prim{
+    @apply transition-colors bg-primLight dark:bg-primDark
+  }
   .btn-nav{
-    @apply border-def transition-colors hover:bg-accentLight hover:text-accentTextLight  text-textLight bg-primLight hover:dark:bg-accentDark hover:dark:text-accentTextDark dark:text-textDark dark:bg-primDark focus:bg-accentLight dark:focus:bg-accentDark;
+    @apply border-def-hover transition-colors hover:bg-accentLight hover:text-accentTextLight  text-textLight bg-primLight hover:dark:bg-accentDark hover:dark:text-accentTextDark dark:text-textDark dark:bg-primDark focus:bg-accentLight dark:focus:bg-accentDark;
   };
   .h1{
-    @apply xl:text-5xl md:text-2xl text-xl font-bold text-primLight dark:text-primDark hover:text-accentLight dark:hover:text-accentDark;
+    @apply xl:text-5xl md:text-2xl text-xl font-bold text-primLight dark:text-accentDark;
   };
   .h2{
     @apply xl:text-3xl md:text-xl text-inherit font-bold text-primLight dark:text-primDark hover:text-accentLight dark:hover:text-accentDark;

@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import React from "react";
 import Providers from "@/components/auth/provider";
+import {LoginButton} from "@/components/auth/LoginButton"
 
 const inter = Roboto({ subsets: ["latin"], weight: ["100","300","400","500","700","900"]});
 
@@ -29,9 +30,12 @@ export default function RootLayout({
         <html lang="en">
           <body className={inter.className}>
             <Providers>
-              <div className={"flex xl:flex-row sm:flex-col-reverse flex-col justify-between h-screen"}>
+              <LoginButton/>
+              <div className={"flex xl:flex-row-reverse sm:flex-col flex-col justify-evenly h-screen"}>
+                <div className={"w-full xl:h-full xl:pb-8 h-[80vh] pt-16"}>
                   {children}
-                  <Navbar/>
+                </div>
+                <Navbar/>
               </div>
             </Providers>
           </body>

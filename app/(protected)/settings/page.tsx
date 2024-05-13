@@ -54,11 +54,11 @@ async function Settings({}: Props) {
   const user = {name,email,address}
 
   return (
-    <main className="h-full w-full flex flex-col gap-8 items-center justify-center">
+    <main className="h-full w-full flex flex-col gap-8 items-center justify-start pb-2">
         <div>
           <h1 className={"h1"}>Ihre Einstellungen</h1>
         </div>
-        <div className="flex h-[80vh] w-[80vw] border-def bg-sec xl:flex-row gap-y-4 flex-col rounded-md overflow-hidden">
+        <div className="flex w-[80vw] h-[100%] border-def bg-sec xl:flex-row gap-y-4 flex-col rounded-md overflow-hidden">
           <div className='xl:w-1/2 w-full px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>
             <h2 className='text-accent h2 font-semibold'>Nutzer Informationen</h2>
               <UserInformaiton info={user} key={1}/>
