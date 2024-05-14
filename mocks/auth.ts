@@ -4,7 +4,6 @@ export const {
 	auth,
 	signIn,
 	signOut,
-  adapter,
 	handlers: { GET, POST },
 } = {
 	auth: {
@@ -17,7 +16,6 @@ export const {
 	},
 	signIn: jest.fn(),
 	signOut: jest.fn(),
-	adapter:jest.fn(),
 	handlers: {
 		GET: jest.fn(),
 		POST: jest.fn(),

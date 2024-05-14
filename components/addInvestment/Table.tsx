@@ -1,10 +1,10 @@
 "use client"
 import React, { useEffect, ReactNode, useState} from 'react'
-import { saveData } from '@/utils/saveInvestment';
-import { FormError } from '@/components/form-error';
-import { FormSuccess } from '@/components/form-success';
-import { AddButton } from '@/components/addInvestment/addCategory'
 import { cn } from '@/lib/utils';
+import { AddButton } from '@/components/addInvestment/addCategoryButton';
+import { SaveButton } from '@/components/addInvestment/saveInvestmentButton';
+import { KeyButton } from '@/components/addInvestment/keyButton';
+import { ValueButton } from '@/components/addInvestment/valueButton';
 type Props = {
     items: {},
     className?: string;
@@ -69,70 +69,6 @@ export const deleteFromSelection = (toDelete: string, modList: {}, selList: {}) 
     }
 }
 
-
-
-export const ValueButton = ({onClick,index:index,name:key}:{onClick:()=>void,index:number,name:string|{}}) => {
-    const str = typeof key === 'object' ? Object.keys(key)[0] : key as string
-    return (
-        <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full' key={index}
-            onClick={onClick}>
-            <p className='w-full px-8 text-left 2xl:text-2xl xl:text-lg lg:text-2xl py-2'>{str}</p>
-        </button>
-    );
-}
-
-
-export const KeyButton = ({onClick,name:key, index,selecList}:{onClick:()=>void,name:string, index: number,selecList:{}}) => {
-    return (
-        <button className='btn-nav rounded-md flex flex-row justify-center gap-8 px-4 group p-2 w-full group items-end' key={index} onClick={onClick}>
-            <p className='w-1/2 text-center py-2 2xl:text-4xl xl:text-lg lg:text-2xl h-full border-r-2 border-accentLight dark:border-accentDark group-hover:border-accentBorderLight group-focus:border-accentBorderLight dark:group-hover:border-accentBorderDark dark:group-focus:border-accentBorderDark'>{key}</p>
-            <p className='w-1/2 text-left py-2 2xl:text-2xl xl:text-md lg:text-xl font-medium'>{
-                key in selecList? selecList[key as keyof typeof selecList] : "..."
-            }</p>
-        </button>
-    );
-}
-
-
-
-export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>void}) => {
-    const [success, setSuccess] = useState<string|undefined>("")  
-    const [error, setError] = useState<string|undefined>("")
-
-    let prepData : {title:string,date:string,data:{}}
-    Object.entries(data).map(([key,value])=>{
-        if(key === "Titel"){
-            prepData = {...prepData, title: value}
-        }
-        else if(key === "Startdatum des Investments"){
-            prepData = {...prepData, date: value}
-        }
-        else{
-            if(prepData && prepData.data){
-                prepData = {...prepData, data: {...prepData.data, [key]:value}}
-            }
-            else{
-                prepData = {...prepData, data: {[key]:value}}
-            }
-        }
-    })
-
-    return (<>
-            <button className='btn-nav w-full rounded-xl text-xl font-semibold py-8' onClick={(e) => {
-                setError("")
-                setSuccess("")
-                console.log(data)
-                saveData(prepData).then((data)=> {
-                    setError(data.error)
-                    setSuccess(data.success)
-                })
-                onClick()
-            }}>Speichern</button>
-            <FormError message={error}/>
-            <FormSuccess message={success}/>
-        </>
-    )
-}
 
 export const Table = (props: Props) => {
     const [keyButtonList, setkeyButtonList] = useState<ReactNode[]>()
@@ -232,7 +168,7 @@ export const Table = (props: Props) => {
                 inputType = modifyableList[node as keyof typeof modifyableList][0]
             }
             console.log(inputType)
-            buttons.push(<AddButton onClick={(e)=>{handleAddButtonSubmit(e,node)}} inputType={inputType} key={Object.keys(modifyableList[node as keyof typeof modifyableList]).length}/>)
+            buttons.push(<AddButton onSubmit={(e)=>{handleAddButtonSubmit(e,node)}} inputType={inputType} key={Object.keys(modifyableList[node as keyof typeof modifyableList]).length}/>)
             setvalueButtonList(buttons)
             setDisplayed(true)
         }

@@ -5,30 +5,22 @@ import {db, getUserById} from "@/utils/db"
 import { investmentSchema } from "./zod"
 import * as z from "zod"
 
-export const saveData = async (values:  z.infer<typeof investmentSchema>)=> {
-    console.log("VALUES",values)
-    const validatedFields = investmentSchema.safeParse(values);
-    console.log("FIelds",validatedFields)
+export const saveData = async (data:  z.infer<typeof investmentSchema>)=> {
+    const validatedFields = investmentSchema.safeParse(data);
     const session = await auth()
-
     if(validatedFields.error){
-        return {error: "Es gab einen Fehler!"}
+        return {error: validatedFields.error.message.toString()}
     }
-    const {title,date,data} = validatedFields.data
-
+    const {title,date,data: fieldData} = validatedFields.data
     const valueData:any[] = []
-    if(data){
-        Object.entries(data).map(([key,value])=>{
+    if(fieldData){
+        Object.entries(fieldData).map(([key,value])=>{
             const data = {key:key,value:String(value)}
             valueData.push(data)
         })
     }
-
-    console.log("ValueData",valueData)
-
-
     if(!session||!session.user||!session.user.id){
-        return {error: "Es gab einen Fehler"}
+        return {error: "Es gab einen Fehler beim laden der Nutzerdaten!"}
     }
     await db.investment.create({
         data: {
@@ -40,6 +32,6 @@ export const saveData = async (values:  z.infer<typeof investmentSchema>)=> {
             }
         }
     });
-
     return {success: "Investment erfolgreich gespeichert!"}
 }
+

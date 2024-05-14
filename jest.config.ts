@@ -94,7 +94,9 @@ const config: Config = {
 		'@/auth': '<rootDir>/mocks/auth.ts',
 		'next-auth/providers/credentials': '<rootDir>/mocks/next-auth-providers-credentials.ts',
     'next-auth': '<rootDir>/mocks/next-auth.ts',
-    '@auth/prisma-adapter' : '<rootDir>/mocks/prisma-adapter.ts'
+    '@auth/prisma-adapter' : '<rootDir>/mocks/prisma-adapter.ts',
+    '@/utils/db': '<rootDir>/mocks/db.ts',
+    '@prisma/client': '<rootDir>/mocks/PrismaClient.ts',
   },
 
 

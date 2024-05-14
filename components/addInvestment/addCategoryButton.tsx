@@ -3,12 +3,11 @@ import { IconPlus } from '@tabler/icons-react'
 import { Button } from '../ui/button';
 import React , { FormEvent, RefObject, useRef} from "react";
 
-export const AddButton = ({onClick,inputType}:{onClick:(e:FormEvent<HTMLFormElement>)=>void,inputType:string|undefined}) => {
+export const AddButton = ({onSubmit,inputType}:{onSubmit:(e:FormEvent<HTMLFormElement>)=>void,inputType?:string}) => {
     const expandDivRef: RefObject<HTMLDivElement> = useRef(null); 
     const textParRef:RefObject<HTMLParagraphElement> = useRef(null);
     
     const onClickExpand = () => {
-        console.log("HERE")
         if(expandDivRef.current && textParRef.current){
             if(expandDivRef.current.classList.toggle("expanded")){
                 expandDivRef.current.classList.remove("hidden")
@@ -23,7 +22,7 @@ export const AddButton = ({onClick,inputType}:{onClick:(e:FormEvent<HTMLFormElem
 
 
     return (
-        <form className='border-def bg-prim rounded-md flex flex-col justify-center px-4 group p-2 w-full' onSubmit={onClick}>
+        <form className='border-def bg-prim rounded-md flex flex-col justify-center px-4 group p-2 w-full' onSubmit={onSubmit}>
             <div className="flex-row flex gap-4">
                 <input type={(inputType)?inputType:'text'} className='w-full text-left text-3xl p-2 border-0 bg-transparent' name='newCategory' placeholder='Hinzufügen ...' />
                 <div className='flex flex-row text-3xl gap-8 items-center '>
