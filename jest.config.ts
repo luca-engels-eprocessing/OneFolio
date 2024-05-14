@@ -90,7 +90,13 @@ const config: Config = {
   // ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  // moduleNameMapper: {},
+  moduleNameMapper: {
+		'@/auth': '<rootDir>/mocks/auth.ts',
+		'next-auth/providers/credentials': '<rootDir>/mocks/next-auth-providers-credentials.ts',
+    'next-auth': '<rootDir>/mocks/next-auth.ts',
+    '@auth/prisma-adapter' : '<rootDir>/mocks/prisma-adapter.ts'
+  },
+
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],

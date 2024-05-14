@@ -1,10 +1,9 @@
 "use client"
-import React, { useEffect, ReactNode, useState, FormEvent } from 'react'
-import { IconPlus } from '@tabler/icons-react'
-import { Button } from '../ui/button';
+import React, { useEffect, ReactNode, useState} from 'react'
 import { saveData } from '@/utils/saveInvestment';
-import { FormError } from '../form-error';
-import { FormSuccess } from '../form-success';
+import { FormError } from '@/components/form-error';
+import { FormSuccess } from '@/components/form-success';
+import { AddButton } from '@/components/addInvestment/addCategory'
 import { cn } from '@/lib/utils';
 type Props = {
     items: {},
@@ -94,38 +93,7 @@ export const KeyButton = ({onClick,name:key, index,selecList}:{onClick:()=>void,
     );
 }
 
-export const AddButton = ({onClick,inputType}:{onClick:(e:FormEvent<HTMLFormElement>)=>void,inputType:string|undefined}) => {
-    const [isExpanded, setIsExpanded] = useState(false)
-    return (
-        <form className='border-def bg-prim rounded-md flex flex-col justify-center px-4 group p-2 w-full' onSubmit={onClick}>
-            <div className="flex-row flex gap-4">
-                <input type={(inputType)?inputType:'text'} className='w-full text-left text-3xl p-2 border-0 bg-transparent' name='newCategory' placeholder='Hinzufügen ...' />
-                <div className='flex flex-row text-3xl gap-8 items-center '>
-                    <button type='submit' className='btn-nav p-4 rounded-lg flex flex-row justify-center gap-2 content-center'>
-                        <p className="text-md">Hinzufügen</p> <IconPlus size={32} />
-                    </button>
-                </div>
-            </div>
-            {isExpanded ? (
-                <>
-                    <div className='flex flex-row justify-between content-bottom'>
-                        <input type='text' className='w-full text-left text-3xl p-2 border-0 bg-transparent' name='subCategory' placeholder='Untergruppe? ...' />
-                        <select name="inputType" id="inputType" className='bg-prim'>
-                            <option value="text">Text</option>
-                            <option value="number">Nummer</option>
-                            <option value="date">Datum</option>
-                        </select>
-                    </div>
-                    <Button onClick={()=>setIsExpanded(false)} className='cursor-pointer justify-start' variant={"link"} size={"sm"} asChild>
-                        <p>Einfach...</p>
-                    </Button>
-                </>
-            ) : (
-                <Button onClick={()=>setIsExpanded(true)} variant={"link"} size={"sm"} className='cursor-pointer justify-start' asChild><p>Erweitern...</p></Button>
-            )}
-        </form>
-    );
-}
+
 
 export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>void}) => {
     const [success, setSuccess] = useState<string|undefined>("")  
@@ -264,7 +232,7 @@ export const Table = (props: Props) => {
                 inputType = modifyableList[node as keyof typeof modifyableList][0]
             }
             console.log(inputType)
-            buttons.push(<AddButton onClick={(e)=>{handleAddButtonSubmit(e,node)}} inputType={inputType}/>)
+            buttons.push(<AddButton onClick={(e)=>{handleAddButtonSubmit(e,node)}} inputType={inputType} key={Object.keys(modifyableList[node as keyof typeof modifyableList]).length}/>)
             setvalueButtonList(buttons)
             setDisplayed(true)
         }

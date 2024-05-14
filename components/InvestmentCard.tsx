@@ -11,7 +11,6 @@ type Props = {
 
 
 const InvestmentCard = ({data:props}:{data:Props}) => {
-    const expandRef = useRef<HTMLDivElement>(null);
     const gridRef = useRef<HTMLDivElement>(null);
     
     //TODO expand button height to h-96 if button is pressed
@@ -28,7 +27,6 @@ const InvestmentCard = ({data:props}:{data:Props}) => {
                     node.classList.add('hidden');
                 });
             }
-            
         }
     }
     
