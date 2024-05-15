@@ -71,13 +71,14 @@ export const deleteFromSelection = (toDelete: string, modList: {}, selList: {}) 
 
 
 export const Table = (props: Props) => {
-    const [keyButtonList, setkeyButtonList] = useState<ReactNode[]>()
+    const [keyButtonList, setkeyButtonList] = useState<ReactNode[]>([])
     const [valueButtonList, setvalueButtonList] = useState<ReactNode[]>()
     const [displayed, setDisplayed] = useState<boolean>(false)
     const [selectionList, setselectionList] = useState<{}>({})
     const [modifyableList, setModifyableList] = useState<{}>(props.items)
     
     useEffect(() => {
+    
         const onClickValueButton = (key:string,forKey:string)  => {
             setDisplayed(false)
             deleteFromSelection(forKey,modifyableList,selectionList)
@@ -132,8 +133,10 @@ export const Table = (props: Props) => {
             }
             const subCat = e.target["subCategory"]?e.target['subCategory'].value:undefined;
             if(node == "Mehr..."){
-                setModifyableList({...modifyableList,[newCat]:[type?type:"text"]})
-                return
+                setDisplayed(false)
+                const { ["Mehr..." as keyof typeof modifyableList]: omitted, ...rest } = modifyableList;
+                setModifyableList({...rest, [newCat]: [type ? type : "text"],["Mehr..."]:omitted});
+                return;
             }
             if(!subCat){
                 const curr = { [node]: modifyableList[node as keyof typeof modifyableList] as {} };
@@ -168,25 +171,38 @@ export const Table = (props: Props) => {
                 inputType = modifyableList[node as keyof typeof modifyableList][0]
             }
             console.log(inputType)
-            buttons.push(<AddButton onSubmit={(e)=>{handleAddButtonSubmit(e,node)}} inputType={inputType} key={Object.keys(modifyableList[node as keyof typeof modifyableList]).length}/>)
+            buttons.push(<AddButton node={node} onSubmit={(e)=>{handleAddButtonSubmit(e,node)}} inputType={inputType} key={Object.keys(modifyableList[node as keyof typeof modifyableList]).length}/>)
             setvalueButtonList(buttons)
             setDisplayed(true)
         }
-
     
-        console.log(modifyableList)
-    
-    //TODO Clear modyfiableList of subelements (found twice in the list)
+        //TODO Clear modyfiableList of subelements (found twice in the list)
         var buttons :ReactNode[] = []
         if(Object.keys(modifyableList).length === 0){
-            setModifyableList({"Titel":['text'],"Startdatum des Investments":['date'],"Mehr...":['text']})
+            setModifyableList({"Titel":['text'],"Mehr...":['text',{"Startdatum des Investments":{"Startdatum des Investments":['date']}}]})
         }
-        {Object.entries(modifyableList).map(([key], index) => {
-            buttons.push(<KeyButton onClick={() =>{createValueList(key)}} name={key} index={index} key={index} selecList={selectionList} />)
+        {Object.entries(modifyableList).map(([key,value], index) => {
+            buttons.push(<KeyButton name={key} index={index} key={index} selecList={selectionList}  onClick={() =>{createValueList(key)}} deleteItem={()=>{
+                setDisplayed(false)
+                const updateList = {...modifyableList, "Mehr...": [...modifyableList["Mehr..." as keyof typeof modifyableList] as [], {[key]: {[key]: modifyableList[key as keyof typeof modifyableList]}}]};
+                const {[key as keyof typeof updateList]: omitted, ...rest} = updateList;
+                console.log(updateList)
+                console.log(modifyableList)
+                console.log(rest)
+                console.log(modifyableList["Mehr..." as keyof typeof modifyableList])
+                setModifyableList(rest)
+                // const {[key as keyof typeof modifyableList]: trash,["Mehr..." as keyof typeof modifyableList]:omitted,...rest} = modifyableList
+                // const updateList = {...rest,["Mehr"]:{...modifyableList["Mehr..." as keyof typeof modifyableList] as {,}}};
+                // setModifyableList(updateList)
+                delete selectionList[key as keyof typeof selectionList];
+            }} />)
         })}
-        setkeyButtonList(buttons)
-        return
-    }, [selectionList,modifyableList])
+        if(JSON.stringify(buttons) !== JSON.stringify(keyButtonList)){
+            setkeyButtonList(buttons)
+        }
+        
+    }, [selectionList, modifyableList, keyButtonList, valueButtonList])
+
     
     const clearList = () => {
         setselectionList({})

@@ -35,7 +35,12 @@ export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>v
                     setError(data.error)
                     setSuccess(data.success)
                 })
-                onClick()
+                console.log(data.success)
+                console.log(data.error)
+                if(data.success){
+                    console.log("1")
+                    onClick()
+                }
             }}>Speichern</button>
             <FormError message={error}/>
             <FormSuccess message={success}/>

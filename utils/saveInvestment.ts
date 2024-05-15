@@ -5,15 +5,19 @@ import {db, getUserById} from "@/utils/db"
 import { investmentSchema } from "./zod"
 import * as z from "zod"
 
-export const saveData = async (data:  z.infer<typeof investmentSchema>)=> {
+export const saveData = async (data:  z.infer<typeof investmentSchema>): Promise<{success?:string, error?:string}>=> {
     const validatedFields = investmentSchema.safeParse(data);
     const session = await auth()
     if(validatedFields.error){
-        return {error: validatedFields.error.message.toString()}
+        console.log(validatedFields)
+        return {error: "Bitte füge einen Titel für dein Investment ein"}    
     }
-    const {title,date,data: fieldData} = validatedFields.data
-    const valueData:any[] = []
-    if(fieldData){
+    const {title, date, data: fieldData} = validatedFields.data
+    if (!date&&(!fieldData||Object.keys(fieldData).length === 0)) {
+        return {error: "Dein Investment hat keine Daten. Füge mehr Informationen hinzu"}
+    }
+    const valueData: any[] = []
+    if (fieldData) {
         Object.entries(fieldData).map(([key,value])=>{
             const data = {key:key,value:String(value)}
             valueData.push(data)

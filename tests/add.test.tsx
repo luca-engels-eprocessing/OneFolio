@@ -7,7 +7,7 @@ import { auth } from '@/auth';
 import { afterEach } from 'node:test';
 import { ValueButton } from '@/components/addInvestment/valueButton';
 import { KeyButton } from '@/components/addInvestment/keyButton';
-
+import { saveData } from '@/utils/saveInvestment';
 
 const getSample = () => {
     return {
@@ -128,19 +128,29 @@ describe('Check Value Button',()=>{
 
 describe('Check Key Button',()=>{
     test('KeyButton with no SelList',()=> {
-        const result = KeyButton({ onClick: () => {}, index:1, name: "Name",selecList: {}})
-        expect(result.props.children[0].props.children).toEqual("Name")
-        expect(result.props.children[1].props.children).toEqual("...")
+        const { getByText, } = render(<KeyButton onClick={()=>{}} deleteItem={()=>{}} index={1} name="Name" selecList={{}} />)
+        const result = KeyButton({ onClick: () => {}, deleteItem: () => {}, index:1, name: "Name", selecList: {}})
+        expect(getByText("Name")).toBeTruthy()
+        expect(getByText("...")).toBeTruthy()
+        console.log(result)
         expect(result.key).toEqual("1")
-        expect(result.props.onClick.toString()).toEqual((()=>{}).toString())
+        expect(result.props.children[0].props.onClick.toString()).toEqual((()=>{}).toString())
     })
     test('KeyButton with SelList',()=> {
-        const result = KeyButton({ onClick: () => {}, index:1, name: "Name",selecList: {"Name":"Test"}})
-        expect(result.props.children[0].props.children).toEqual("Name")
-        expect(result.props.children[1].props.children).toEqual("Test")
+        const { getByText, } = render(<KeyButton onClick={()=>{}} deleteItem={()=>{}} index={1} name="Name" selecList={{"Name":"Test"}} />)
+        const result = KeyButton({ onClick: () => {}, deleteItem: () => {}, index:1, name: "Name",selecList: {"Name":"Test"}})
+        expect(getByText("Name")).toBeTruthy()
+        expect(getByText("Test")).toBeTruthy()
         expect(result.key).toEqual("1")
-        expect(result.props.onClick.toString()).toEqual((()=>{}).toString())
+        expect(result.props.children[0].props.onClick.toString()).toEqual((()=>{}).toString())
     })
+    test('KeyButton onClick function', () => {
+        const mockOnClick = jest.fn();
+        const { getByText } = render(<KeyButton onClick={mockOnClick} deleteItem={() => {}} index={1} name="Test Button" selecList={{}} />);
+        const button = getByText('Test Button');
+        fireEvent.click(button);
+        expect(mockOnClick).toHaveBeenCalled();
+    });
 })
 
 describe('Check Add Button',()=>{
@@ -177,19 +187,19 @@ describe('Check Add Button',()=>{
     });
     test('AddButton input type text', () => {
         const { getByPlaceholderText } = render(<AddButton onSubmit={() => {}} inputType='text' />);
-        const input = getByPlaceholderText('Hinzufügen ...');
+        const input = getByPlaceholderText('Wert hinzufügen ...');
         expect(input.getAttribute('type')).toEqual('text');
     });
 
     test('AddButton input type number', () => {
         const { getByPlaceholderText } = render(<AddButton onSubmit={() => {}} inputType='number' />);
-        const input = getByPlaceholderText('Hinzufügen ...');
+        const input = getByPlaceholderText('Wert hinzufügen ...');
         expect(input.getAttribute('type')).toEqual('number');
     });
 
     test('AddButton input type date', () => {
         const { getByPlaceholderText } = render(<AddButton onSubmit={() => {}} inputType='date' />);
-        const input = getByPlaceholderText('Hinzufügen ...');
+        const input = getByPlaceholderText('Wert hinzufügen ...');
         expect(input.getAttribute('type')).toEqual('date');
     });
 })
@@ -206,19 +216,8 @@ describe('SaveInvestmentButton', () => {
         expect(button).toBeTruthy();
     });
 
-    test('SaveButton triggers onClick',async () => {
-        const onClickMock = jest.fn();
-        const { getByText } = render(<SaveButton data={{}} onClick={onClickMock} />);
-        const button = getByText('Speichern');
-        await act(async() => {
-            fireEvent.click(button);
-        });
-        expect(onClickMock).toHaveBeenCalled();
-    });
-
-
     test('SaveButton displays error message on failed save', async () => {
-        const errorMessage = "invalid_type";
+        const errorMessage = "Bitte füge einen Titel für dein Investment ein";
         const { getByText } = render(<SaveButton data={{}} onClick={() => {}} />);
         const button = getByText('Speichern');
         await act(async () => {
@@ -244,7 +243,7 @@ describe('SaveInvestmentButton', () => {
         expect(successDisplay).toBeTruthy();
     });
 
-    test('SaveButton displays error with no UserID', async () => {
+    test('SaveButton displays error if no UserID', async () => {
         const errorMessage = "Es gab einen Fehler beim laden der Nutzerdaten";
         const { getByText } = render(<SaveButton data={{"Titel": "Test","Startdatum des Investments":"2023-01-01","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />);
         const button = getByText('Speichern');

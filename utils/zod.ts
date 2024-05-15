@@ -38,6 +38,6 @@ export const signUpSchema = z.object({
 export const investmentSchema = z.object({
   title: z.string({ required_error: "Bitte füge einen Titel für das Investment ein" })
     .min(1,"Bitte füge einen Titel für das Investment ein"),
-  date: z.string(),
+  date: z.any(),
   data: z.any()
 })
