@@ -20,7 +20,7 @@ async function Home() {
               </div>
               <div className={"row-start-2 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
                   <p className={"text-2xl font-medium"}>Laufzeitbindungen</p>
-                    <MarketChart color="red" id={"bnb"}/>
+                    <MarketChart color="red" id={"toncoin"}/>
               </div>
               <div className={"row-start-2 col-start-2 flex flex-col p-4 content-center justify-center text-center"}>
                   <p className={"text-2xl font-medium"}>Ihre Risikoklassen</p>

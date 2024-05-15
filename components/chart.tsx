@@ -30,10 +30,7 @@ export const MarketChart: React.FC<LineProps> = ({ id,color }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=30&precision=2&interval=daily`
-        );
-        const data = await response.json();
+        const data = {prices:[[1,15],[2,21],[3,41],[4,15],[5,11],[6,31]]}
         console.log("chartData:", data);
         setChartData(data);
       } catch (error) {
@@ -53,11 +50,11 @@ export const MarketChart: React.FC<LineProps> = ({ id,color }) => {
   const { prices } = chartData;
 
   const data = {
-    labels: prices.map((entry: any) => new Date(entry[0]).toLocaleDateString()),
+    labels: prices.map((entry: any) => entry[0]),
     datasets: [
       {
         label: "Preise (EUR)",
-        data: prices.map((entry: any) => entry[1].toFixed(2)),
+        data: prices.map((entry: any) => entry[1]),
         borderColor: color,
         borderWidth: 2,
         pointRadius: 4,
