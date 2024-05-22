@@ -16,7 +16,7 @@ model Investment {
 
 type InvestmentData {
   title   String
-  date    String
+  date    String?
   data    KeyValuePair[]
 }
 

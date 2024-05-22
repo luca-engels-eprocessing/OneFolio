@@ -12,8 +12,8 @@ export const saveData = async (data:  z.infer<typeof investmentSchema>): Promise
         console.log(validatedFields)
         return {error: "Bitte füge einen Titel für dein Investment ein"}    
     }
-    const {title, date, data: fieldData} = validatedFields.data
-    if (!date&&(!fieldData||Object.keys(fieldData).length === 0)) {
+    let {title, date, data: fieldData} = validatedFields.data
+    if (!data&&(!fieldData||Object.keys(fieldData).length === 0)) {
         return {error: "Dein Investment hat keine Daten. Füge mehr Informationen hinzu"}
     }
     const valueData: any[] = []

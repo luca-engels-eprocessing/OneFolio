@@ -33,3 +33,13 @@ export const getInvestmentsByUserId = async (id:string) => {
     throw(e)
   }
 }
+
+export const deleteInvestmentById = async (id:string) => {
+  try {
+    const investments = await db.investment.delete({where:{id:id}})
+    return investments
+  } catch (e) {
+    throw(e)
+    
+  }
+}

@@ -2,7 +2,7 @@
 import { auth } from '@/auth'
 import InvestmentCard from '@/components/InvestmentCard'
 import { Button } from '@/components/ui/button'
-import { getInvestmentsByUserId } from '@/utils/db'
+import { deleteInvestmentById, getInvestmentsByUserId } from '@/utils/db'
 import Link from 'next/link'
 import React from 'react'
 
@@ -73,12 +73,13 @@ const View = async (props: Props) => {
     return  <p>ERROR</p>
   }
   const list = investmentData.map((data)=>{
+    const id = data.id
     const {title,date,data:det} = data.data
     let details = {}
     det.map((e)=> {
       details = {...details,[e.key]:e.value}
     })
-    const ret = {title,date,details}
+    const ret = {title,date,details,id}
     return ret
   })
 
@@ -105,13 +106,20 @@ const View = async (props: Props) => {
             </Link>
           </Button>
         </div>
-        
         :list.map((investment, index) => (
-          <InvestmentCard key={index} data={investment} />
+          <InvestmentCard key={index} data={investment} deleteOnClick={deleteItem}/>
         ))}
       </div>
         </main>
   )
 }
+
+async function deleteItem(id:string){
+  "use server"
+  deleteInvestmentById(id)
+  return null
+}
+
+
 
 export default View

@@ -6,9 +6,14 @@ import {
   Tooltip,
   PointElement,
   LineElement,
+  Title,
+  Legend,
+  BarElement,
+  RadialLinearScale,
+  ArcElement,
 } from "chart.js";
-import React,{ useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
+import React from "react";
+import { Chart } from "react-chartjs-2";
 
 // Register ChartJS components using ChartJS.register
 ChartJS.register(
@@ -16,55 +21,60 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
-  Tooltip
+  BarElement,
+  ArcElement,
+  RadialLinearScale,
+  Title,
+  Tooltip,
+  Legend
 );
 
 interface LineProps {
-  id: string;
+  data: {[key:string]:any[][]};
   color:string;
+  diagramKey:string,
+  type: "line"|"bar"|"pie"|"radar"
 }
 
-export const MarketChart: React.FC<LineProps> = ({ id,color }) => {
-  const [chartData, setChartData] = useState<any>(null);
+export const MarketChart= ({type, data:getData,color,diagramKey }:LineProps) => {
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = {prices:[[1,15],[2,21],[3,41],[4,15],[5,11],[6,31]]}
-        console.log("chartData:", data);
-        setChartData(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, [id]);
+  const chartData = getData[diagramKey]
 
-  if (!chartData || !chartData.prices) {
-    return (
-      <div className="flex items-center justify-center">
-        <div className="animate-spin rounded-full border-4 border-solid border-current border-r-transparent h-12 w-12"></div>
-      </div>
-    );
+  if(!chartData){
+    return(
+    <div>
+      Du musst dich einloggen und Investments erstellt haben um deine Investments zu sehen
+    </div>)
   }
-  const { prices } = chartData;
-
   const data = {
-    labels: prices.map((entry: any) => entry[0]),
+    labels: chartData.map((entry: any) => entry[0]),
     datasets: [
       {
-        label: "Preise (EUR)",
-        data: prices.map((entry: any) => entry[1]),
+        label: diagramKey,
+        data: chartData.map((entry: any) => entry[1]),
         borderColor: color,
         borderWidth: 2,
         pointRadius: 4,
       },
     ],
   };
-
-  return (
-    <div>
-      <Line  height={"80%"} data={data} />
+  return(
+    <div className="w-full h-64 flex justify-center items-center">
+      <Chart type={type} data={data} options={options} />
     </div>
-  );
+  )
+};
+export const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top' as const,
+    },
+  },
+  scales: {
+    y: {
+      min:0,
+    }
+
+  },
 };

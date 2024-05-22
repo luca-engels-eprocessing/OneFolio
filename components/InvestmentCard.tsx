@@ -1,16 +1,19 @@
 "use client"
+import { deleteInvestmentById } from '@/utils/db'
+import { IconTrash } from '@tabler/icons-react'
 import React, { useRef } from 'react'
 
 
 type Props = {
     title: string,
-    date: string,
-    details: {}
+    date: string | null,
+    details: {},
+    id:string
     
 }
 
 
-const InvestmentCard = ({data:props}:{data:Props}) => {
+const InvestmentCard = ({data:props,deleteOnClick}:{data:Props,deleteOnClick:(id:string)=>void}) => {
     const gridRef = useRef<HTMLDivElement>(null);
     
     //TODO expand button height to h-96 if button is pressed
@@ -67,6 +70,9 @@ return (
                 <a onClick={onClickExpand} className='cursor-pointer'>Mehr ...</a>
             </div>
         </div>
+        <button onClick={async() => {await deleteOnClick(props.id)}}>
+            <IconTrash />
+        </button>
     </div>
 )
 }
