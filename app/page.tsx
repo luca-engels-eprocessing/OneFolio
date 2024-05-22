@@ -17,6 +17,14 @@ async function Home() {
   const inv = await getInvestmentsByUserId(session.user.id);
   const investments = inv.map(data => data.data.data);
   let finalData: {[key: string]: any[][]} = {};
+  
+  if (!inv || !investments) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full border-4 border-solid border-current border-r-transparent h-12 w-12"></div>
+      </div>
+    );
+  }
 
   console.log(investments);
   investments.forEach(investment => {
@@ -47,22 +55,24 @@ async function Home() {
               <h1 className={"h1"}>Dein Portfolio im Überblick</h1>
           </div>
           <div
-              className="w-[80vw] bg-sec border-def rounded-xl grid grid-flow-row-dense grid-rows-2 grid-cols-2 gap-16 items-center content-center justify-around">
+              className="w-[80vw] bg-sec p-8 border-def rounded-xl grid grid-flow-row-dense grid-rows-2 grid-cols-2 gap-16 items-center content-center justify-around">
               <div className={"row-start-1 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
-                    <MarketChart type="line" color="blue" data={finalData} diagramKey="Branche"/>
+                    <MarketChart type="pie" color="blue" data={finalData} diagramKey="Steuer"/>
               </div>
               <div className={"row-start-1 col-start-2 flex flex-col p-4 content-center justify-center text-center"}>
-                    <MarketChart type="bar" color="green" data={finalData} diagramKey="Branche"/>
+                    <MarketChart type="bar" color="blue" data={finalData} diagramKey="Sparte"/>
               </div>
               <div className={"row-start-2 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
-                    <MarketChart type="pie" color="red" data={finalData} diagramKey="Branche"/>
+                    <MarketChart type="pie" color="blue" data={finalData} diagramKey="Branche"/>
               </div>
               <div className={"row-start-2 col-start-2 flex flex-col p-4 content-center justify-center text-center"}>
-                    <MarketChart type={"radar"} color="orange" data={finalData} diagramKey="Summe"/>
+                    <MarketChart type={"bar"} color="blue" data={finalData} diagramKey="Branche"/>
               </div>
           </div>
       </main>
   );
 }
+
+
 
 export default Home
