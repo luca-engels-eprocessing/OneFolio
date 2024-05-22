@@ -1,42 +1,23 @@
 "use client";
 import {
   Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  Tooltip,
-  PointElement,
-  LineElement,
-  Title,
-  Legend,
-  BarElement,
-  RadialLinearScale,
-  ArcElement,
-} from "chart.js";
+  registerables
+} from "chart.js/auto";
 import React from "react";
-import { Chart } from "react-chartjs-2";
+import { Chart as ReactChart } from "react-chartjs-2";
 
 // Register ChartJS components using ChartJS.register
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  RadialLinearScale,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(...registerables);
 
 interface LineProps {
   data: {[key:string]:any[][]};
   color:string;
   diagramKey:string,
-  type: "line"|"bar"|"pie"|"radar"
+  type: "line"|"bar"|"pie"|"radar",
+  title?:string,
 }
 
-export const MarketChart= ({type, data:getData,color,diagramKey }:LineProps) => {
+export const MarketChart= ({type, data:getData, title,color,diagramKey }:LineProps) => {
 
   const chartData = getData[diagramKey]
 
@@ -59,8 +40,9 @@ export const MarketChart= ({type, data:getData,color,diagramKey }:LineProps) => 
     ],
   };
   return(
-    <div className="w-full h-64 flex justify-center items-center">
-      <Chart type={type} data={data} options={options} />
+    <div className="w-full h-64 flex flex-col justify-center items-center">
+      <p className={"text-2xl font-medium"}>{title?title:"Deine "+diagramKey}</p>
+      <ReactChart type={type} data={data} options={options} />
     </div>
   )
 };
