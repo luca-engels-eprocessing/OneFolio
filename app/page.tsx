@@ -45,8 +45,6 @@ async function Home() {
       }
     })
   })
-
-
   return (
       <main className="h-full w-full flex flex-col gap-8 items-center justify-start  pb-2">
           <div>

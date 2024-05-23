@@ -3,7 +3,7 @@ import {
   Chart as ChartJS,
   registerables
 } from "chart.js/auto";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { Chart as ReactChart } from "react-chartjs-2";
 
 // Register ChartJS components using ChartJS.register
@@ -16,19 +16,32 @@ interface LineProps {
   title?:string,
 }
 
-export const MarketChart= ({type, data:getData, title,diagramKey }:LineProps) => {
+export const MarketChart= ({type:startType, data:getData, title,diagramKey }:LineProps) => {
   const [chartData, setChartData] = useState<any[][]>(getData[diagramKey]);
   const [isDarkTheme, setisDarkTheme] = useState<boolean>(false);
+  const [diagramValue,setDiagramValue] = useState<string>(diagramKey);
+  const [type,setType] = useState<"line"|"bar"|"pie"|"radar">(startType);
 
+
+  const onChange= (e:ChangeEvent) => {
+    e.preventDefault()
+    const selectedValue = (e.target as HTMLSelectElement).value
+    setDiagramValue(selectedValue)
+  }
+  const onChangeBar= (e:ChangeEvent) => {
+    e.preventDefault()
+    const selectedValue = (e.target as HTMLSelectElement).value
+    setType(selectedValue as "line"|"bar"|"pie"|"radar")
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setChartData(getData[diagramKey]);
+        setChartData(getData[diagramValue]);
       } catch (error) {
       }
     };
     fetchData();
-  }, [getData]);
+  }, [getData,diagramValue]);
   useEffect(() => {
   
     if(typeof window != "undefined" && window.matchMedia){
@@ -39,7 +52,7 @@ export const MarketChart= ({type, data:getData, title,diagramKey }:LineProps) =>
   if (!chartData) {
     return (
       <div className="flex items-center justify-center">
-        <div className="animate-spin rounded-full border-4 border-solid border-current border-r-transparent h-12 w-12">Loading...</div>
+        <div className="animate-spin rounded-full border-4 border-solid border-current border-r-transparent h-12 w-12"></div>
       </div>
     );
   }
@@ -58,7 +71,7 @@ export const MarketChart= ({type, data:getData, title,diagramKey }:LineProps) =>
     labels: chartData.map((entry: any) => entry[0]),
     datasets: [
       {
-        label: diagramKey,
+        label: diagramValue,
         data: chartData.map((entry: any) => entry[1]),
         borderColor: borderColor,
         backgroundColor: backgroundColor,
@@ -69,28 +82,27 @@ export const MarketChart= ({type, data:getData, title,diagramKey }:LineProps) =>
   };
   return(
     <div className="w-full h-64 flex flex-col justify-center items-start">
-      <p className={"text-2xl font-medium"}>{title?title:"Deine "+diagramKey}</p>
+      <p className={"text-2xl font-medium"}>{title?title:"Deine "+diagramValue}</p>
       <div className="flex flex-row gap-2">
-        <select className='bg-prim'>
-          <option value="Summe">Summe</option>
-          <option value="Branche">Branche</option>
-          <option value="Sparte">Sparte</option>
-          <option value="Rendite">Rendite</option>
-          <option value="Risikoklasse">Risikoklasse</option>
+        <select name="inputType" id="inputType" className='bg-prim' onChange={onChange}>
+          {Object.keys(getData).map((valueKey,index)=>{
+            console.log(valueKey,index)
+            return(<option key={index} value={valueKey}>{valueKey}</option>)
+          })}
         </select>
-        <p>für jedes</p>
-        <select className='bg-prim'>
-          <option value="Summe">Summe</option>
-          <option value="Branche">Branche</option>
-          <option value="Sparte">Sparte</option>
-          <option value="Rendite">Rendite</option>
-          <option value="Risikoklasse">Risikoklasse</option>
+        <p>als</p>
+        <select name="ChartType" id="ChartType" className='bg-prim' onChange={onChangeBar}>
+          <option value="pie">Kreis</option>
+          <option value="line">Linie</option>
+          <option value="bar">Bar</option>
+          <option value="radar">Netz</option>
         </select>
       </div>
       <ReactChart type={type} data={data} options={options} />
     </div>
   )
 };
+
 export const options = {
   responsive: true,
   plugins: {
