@@ -130,7 +130,6 @@ export const UserInformaiton = ({info}:{info:{}|null}) => {
         )
     }
     var c: ReactNode[] = []
-    console.log("User: ", info)
     Object.entries(info).map(([key, value],index) => {
         c.push(<LiItem name={key} value={value} index={index} key={index}/>)
     })

@@ -109,9 +109,7 @@ export const Table = (props: Props) => {
                     delete selectionList[Object.keys(key[valueName])[0] as keyof typeof selectionList]
                 }
                 Object.entries(modifyableList).map(([keyI, valueI]) => {
-                    if(keyI in newModList){
-                    }
-                    else{
+                    if(!(keyI in newModList)){
                         newModList = {...newModList, [keyI]: valueI};
                         if(keyI === forKey){
                             newModList = {...newModList,...key[valueName] as {}}
@@ -170,7 +168,6 @@ export const Table = (props: Props) => {
             if(Object.keys(modifyableList[node as keyof typeof modifyableList]).length>0){
                 inputType = modifyableList[node as keyof typeof modifyableList][0]
             }
-            console.log(inputType)
             buttons.push(<AddButton node={node} onSubmit={(e)=>{handleAddButtonSubmit(e,node)}} inputType={inputType} key={Object.keys(modifyableList[node as keyof typeof modifyableList]).length}/>)
             setvalueButtonList(buttons)
             setDisplayed(true)
@@ -186,14 +183,7 @@ export const Table = (props: Props) => {
                 setDisplayed(false)
                 const updateList = {...modifyableList, "Mehr...": [...modifyableList["Mehr..." as keyof typeof modifyableList] as [], {[key]: {[key]: modifyableList[key as keyof typeof modifyableList]}}]};
                 const {[key as keyof typeof updateList]: omitted, ...rest} = updateList;
-                console.log(updateList)
-                console.log(modifyableList)
-                console.log(rest)
-                console.log(modifyableList["Mehr..." as keyof typeof modifyableList])
                 setModifyableList(rest)
-                // const {[key as keyof typeof modifyableList]: trash,["Mehr..." as keyof typeof modifyableList]:omitted,...rest} = modifyableList
-                // const updateList = {...rest,["Mehr"]:{...modifyableList["Mehr..." as keyof typeof modifyableList] as {,}}};
-                // setModifyableList(updateList)
                 delete selectionList[key as keyof typeof selectionList];
             }} />)
         })}

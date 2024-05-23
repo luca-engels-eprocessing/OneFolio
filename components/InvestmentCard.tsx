@@ -32,8 +32,6 @@ const InvestmentCard = ({data:props,deleteOnClick}:{data:Props,deleteOnClick:(id
             }
         }
     }
-    
-    console.log("PROPS:" ,props.details)
 
 return (
     <div className={"btn-nav rounded-md flex xl:flex-row flex-col xl:gap-8 px-4 group h-full"}>

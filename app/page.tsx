@@ -26,7 +26,6 @@ async function Home() {
     );
   }
 
-  console.log(investments);
   investments.forEach(investment => {
     investment.forEach(data => {
       if(finalData[data.key]){
@@ -46,7 +45,6 @@ async function Home() {
       }
     })
   })
-  console.log("fin",finalData)
 
 
   return (
@@ -54,20 +52,26 @@ async function Home() {
           <div>
               <h1 className={"h1"}>Dein Portfolio im Überblick</h1>
           </div>
-          <div
-              className="w-[80vw] bg-sec p-8 border-def rounded-xl grid grid-flow-row-dense grid-rows-2 grid-cols-2 gap-16 items-center content-center justify-around">
-              <div className={"row-start-1 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
-                    <MarketChart type="pie" color="blue" data={finalData} diagramKey="Steuer"/>
-              </div>
-              <div className={"row-start-1 col-start-2 flex flex-col p-4 content-center justify-center text-center"}>
-                    <MarketChart type="bar" color="blue" data={finalData} diagramKey="Sparte"/>
-              </div>
-              <div className={"row-start-2 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
-                    <MarketChart type="pie" color="blue" data={finalData} diagramKey="Branche"/>
-              </div>
-              <div className={"row-start-2 col-start-2 flex flex-col p-4 content-center justify-center text-center"}>
-                    <MarketChart type={"bar"} color="blue" data={finalData} diagramKey="Branche"/>
-              </div>
+          <div className="flex flex-row-reverse gap-8">
+            <div className="p-4 w-[10vw] border-def rounded-xl bg-sec flex flex-col justify-between border-l-borderLight dark:border-l-borderDark border-l-2">
+              <p className="text-sm">Das könnte sie interessieren</p>
+              <p>Werbung</p>
+            </div>
+            <div
+                className="w-[60vw] border-def rounded-xl bg-sec p-8 grid grid-flow-row-dense grid-rows-2 grid-cols-2 gap-16 items-center content-center justify-around">
+                <div className={"row-start-1 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
+                      HARD FACTS <br/> Durchschnittsrendite <br/> Gesamtinvestition 
+                </div>
+                <div className={"row-start-1 col-start-2 flex flex-col p-4 content-center justify-center text-center"}>
+                      <MarketChart type="bar" data={finalData} diagramKey="Sparte"/>
+                </div>
+                <div className={"row-start-2 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
+                      HARD FACTS <br/> Durchschnittsrendite <br/> Gesamtinvestition 
+                </div>
+                <div className={"row-start-2 col-start-2 flex flex-col p-4 content-center justify-center text-center"}>
+                      HARD FACTS <br/> Durchschnittsrendite <br/> Gesamtinvestition 
+                </div>
+            </div>
           </div>
       </main>
   );

@@ -9,7 +9,6 @@ export const saveData = async (data:  z.infer<typeof investmentSchema>): Promise
     const validatedFields = investmentSchema.safeParse(data);
     const session = await auth()
     if(validatedFields.error){
-        console.log(validatedFields)
         return {error: "Bitte füge einen Titel für dein Investment ein"}    
     }
     let {title, date, data: fieldData} = validatedFields.data

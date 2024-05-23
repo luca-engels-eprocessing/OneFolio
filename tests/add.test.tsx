@@ -1,5 +1,5 @@
 import {describe, expect,test,jest} from '@jest/globals';
-import {editObject,deleteFromSelection} from '@/components/addInvestment/Table'
+import {editObject,deleteFromSelection, Table} from '@/components/addInvestment/Table'
 import { AddButton } from '@/components/addInvestment/addCategoryButton';
 import { render, fireEvent, act } from '@testing-library/react';
 import { SaveButton } from '@/components/addInvestment/saveInvestmentButton';
@@ -132,7 +132,6 @@ describe('Check Key Button',()=>{
         const result = KeyButton({ onClick: () => {}, deleteItem: () => {}, index:1, name: "Name", selecList: {}})
         expect(getByText("Name")).toBeTruthy()
         expect(getByText("...")).toBeTruthy()
-        console.log(result)
         expect(result.key).toEqual("1")
         expect(result.props.children[0].props.onClick.toString()).toEqual((()=>{}).toString())
     })
@@ -261,3 +260,91 @@ describe('SaveInvestmentButton', () => {
     
 });
 
+
+describe('Table rendering and fuctionality', () => {
+    const sList = {
+        "Titel": ['string',"TestTitle"],
+        "TestObject": ['string',{'Object':{'ObjectCategory':['number',1,2]}},{'Object2':{'ObjectCategory2':['number',1,2]}}]
+        
+    }
+    test('test save button click works', async () => {
+        const {getByText} = render(<Table items={{}} />)
+        const button = getByText("Speichern"); // Mocking auth to return the session data and authenticated status
+        await act(async () => {
+            fireEvent.click(button)
+        })
+        const value = getByText("Bitte füge einen Titel für dein Investment ein")
+        expect(value).toBeTruthy()
+    })
+    test('test category button to open values', async () => {
+        const {getByText} = render(<Table items={{}} />)
+        const button = getByText("Mehr..."); // Mocking auth to return the session data and authenticated status
+        await act(async () => {
+            fireEvent.click(button)
+        })
+        const value = getByText("Startdatum des Investments")
+        expect(value).toBeTruthy()
+    })
+    test('test add button to add category from Mehr...', async () => {
+        const {getByText,getByPlaceholderText} = render(<Table items={{}} />)
+        const button = getByText("Mehr..."); // Mocking auth to return the session data and authenticated status
+        await act(async () => {
+            fireEvent.click(button)
+        })
+        const value = getByText("Startdatum des Investments")
+        const hinzufügenTextField = getByPlaceholderText("Wert hinzufügen ...")
+        expect(value).toBeTruthy()
+        expect(hinzufügenTextField).toBeTruthy()
+        await act(async () => {
+            fireEvent.click(value)
+        })
+        const valueInCategory = getByText("Startdatum des Investments")
+        expect(valueInCategory).toBeTruthy()
+    })
+    test('test add button to add category from TextList', async () => {
+        const {getByText,getByPlaceholderText} = render(<Table items={sList} />)
+        const button = getByText("Titel"); // Mocking auth to return the session data and authenticated status
+        await act(async () => {
+            fireEvent.click(button)
+        })
+        const value = getByText("TestTitle")
+        const hinzufügenTextField = getByPlaceholderText("Wert hinzufügen ...")
+        expect(value).toBeTruthy()
+        expect(hinzufügenTextField).toBeTruthy()
+        await act(async () => {
+            fireEvent.click(value)
+        })
+        const valueInCategory = getByText("TestTitle")
+        expect(valueInCategory).toBeTruthy()
+    })
+    test('test add button to add category from Mehr...', async () => {
+        const {getByText,getByPlaceholderText} = render(<Table items={sList} />)
+        const button = getByText("TestObject"); // Mocking auth to return the session data and authenticated status
+        await act(async () => {
+            fireEvent.click(button)
+        })
+        const value = getByText("Object")
+        const hinzufügenTextField = getByPlaceholderText("Wert hinzufügen ...")
+        expect(value).toBeTruthy()
+        expect(hinzufügenTextField).toBeTruthy()
+        await act(async () => {
+            fireEvent.click(value)
+        })
+        const valueInCategory = getByText("Object")
+        const newCategoryAdded = getByText("ObjectCategory")
+        expect(valueInCategory).toBeTruthy()
+        expect(newCategoryAdded).toBeTruthy()
+        const button2 = getByText("TestObject")
+        await act(async () => {
+            fireEvent.click(button2)
+        })
+        const value2 = getByText("Object2")
+        await act(async () => {
+            fireEvent.click(value2)
+        })
+        const newValueInCategory = getByText("Object2")
+        const newCategoryAdded2 = getByText("ObjectCategory2")
+        expect(newValueInCategory).toBeTruthy()
+        expect(newCategoryAdded2).toBeTruthy()
+    })
+});
