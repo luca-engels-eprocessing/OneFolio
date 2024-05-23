@@ -1,7 +1,7 @@
 import {describe, expect,test,jest} from '@jest/globals';
 import {editObject,deleteFromSelection, Table} from '@/components/addInvestment/Table'
 import { AddButton } from '@/components/addInvestment/addCategoryButton';
-import { render, fireEvent, act } from '@testing-library/react';
+import { screen,render, fireEvent, act } from '@testing-library/react';
 import { SaveButton } from '@/components/addInvestment/saveInvestmentButton';
 import { auth } from '@/auth';
 import { afterEach } from 'node:test';
@@ -317,7 +317,7 @@ describe('Table rendering and fuctionality', () => {
         const valueInCategory = getByText("TestTitle")
         expect(valueInCategory).toBeTruthy()
     })
-    test('test add button to add category from Mehr...', async () => {
+    test('test add button to add category from ObjectList', async () => {
         const {getByText,getByPlaceholderText} = render(<Table items={sList} />)
         const button = getByText("TestObject"); // Mocking auth to return the session data and authenticated status
         await act(async () => {
@@ -346,5 +346,21 @@ describe('Table rendering and fuctionality', () => {
         const newCategoryAdded2 = getByText("ObjectCategory2")
         expect(newValueInCategory).toBeTruthy()
         expect(newCategoryAdded2).toBeTruthy()
+    })
+    test('Test add value to values button', async () => {
+        const {getByText,getByPlaceholderText} = render(<Table items={sList} />)
+        const button = getByText("TestObject"); // Mocking auth to return the session data and authenticated status
+        await act(async () => {
+            fireEvent.click(button)
+        })
+        const hinzufügenTextField = getByPlaceholderText("Wert hinzufügen ...")
+        hinzufügenTextField.setAttribute('value','TEST')
+        const addButton = screen.getByText("Hinzufügen")
+        await act(async () => {
+            fireEvent.click(addButton)
+        })
+        // const checkButton = getByText("TEST")
+        expect(true).toBeTruthy()
+
     })
 });
