@@ -15,59 +15,42 @@ async function Home() {
   }
 
   const inv = await getInvestmentsByUserId(session.user.id);
-  const investments = inv.map(data => data.data.data);
-  let finalData: {[key: string]: any[][]} = {};
-  
-  if (!inv || !investments) {
+  if (!inv) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="animate-spin rounded-full border-4 border-solid border-current border-r-transparent h-12 w-12"></div>
       </div>
     );
   }
+  const investments = inv.map(data => data.data.data);
+  const totalSum = investments.reduce((acc, cur) => acc + Number.parseInt(cur.find(data => data.key === "Summe")?.value || "0"), 0);
+  const averageRendite = Math.round(investments.reduce((acc, cur) => acc + Number.parseInt(cur.find(data => data.key === "Rendite (in %)")?.value || "0"), 0)/investments.length);
+  console.log("SUM: ",totalSum)
+  console.log("AVG: ",averageRendite)
 
-  investments.forEach(investment => {
-    investment.forEach(data => {
-      if(finalData[data.key]){
-        const retList:any[][] = []
-        let wasNotAdded = true
-        finalData[data.key].forEach(containValue => {
-          if(containValue[0]===data.value){
-            wasNotAdded = false
-            containValue[1] += 1
-          }
-          retList.push(containValue)
-        })
-        wasNotAdded?finalData = {...finalData,[data.key]:[...retList,[data.value,1]]}:finalData = {...finalData,[data.key]:[...retList]}
-      }
-      else{
-        finalData = {...finalData,[data.key]: [[data.value,1]]}
-      }
-    })
-  })
   return (
-      <main className="h-full w-full flex flex-col gap-8 items-center justify-start  pb-2">
+      <main className="w-full flex flex-col gap-8 items-center justify-start pb-2">
           <div>
               <h1 className={"h1"}>Dein Portfolio im Überblick</h1>
           </div>
-          <div className="flex flex-row-reverse gap-8">
-            <div className="p-4 w-[10vw] border-def rounded-xl bg-sec flex flex-col justify-between border-l-borderLight dark:border-l-borderDark border-l-2">
+          <div className="flex xl:flex-row-reverse flex-col gap-8">
+            <div className="p-4 xl:w-[10vw] w-auto border-def rounded-xl bg-sec flex flex-col justify-between border-l-borderLight dark:border-l-borderDark border-l-2">
               <p className="text-sm">Das könnte sie interessieren</p>
               <p>Werbung</p>
             </div>
             <div
-                className="w-[60vw] border-def rounded-xl bg-sec p-8 grid grid-flow-row-dense grid-rows-2 grid-cols-2 gap-16 items-center content-center justify-around">
+                className="w-[60vw] border-def rounded-xl bg-sec p-8 xl:grid grid-flow-row-dense xl:grid-rows-2 xL:grid-cols-2 flex flex-col gap-16 items-center content-center justify-around">
                 <div className={"row-start-1 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
                       HARD FACTS <br/> Durchschnittsrendite <br/> Gesamtinvestition 
                 </div>
                 <div className={"row-start-1 col-start-2 flex flex-col p-4 content-center justify-center text-center"}>
-                      <MarketChart type="bar" data={finalData} diagramKey="Sparte"/>
+                      Durchschnittsrendite: ~{averageRendite}%
                 </div>
                 <div className={"row-start-2 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
-                      HARD FACTS <br/> Durchschnittsrendite <br/> Gesamtinvestition 
+                      <MarketChart type="pie" data={investments} diagramKey="Branche"/>
                 </div>
                 <div className={"row-start-2 col-start-2 flex flex-col p-4 content-center justify-center text-center"}>
-                      HARD FACTS <br/> Durchschnittsrendite <br/> Gesamtinvestition 
+                      Gesamtinvestition: {totalSum}€
                 </div>
             </div>
           </div>

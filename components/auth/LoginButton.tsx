@@ -2,17 +2,21 @@
 import React from 'react'
 import {IconLogin,IconLogout} from "@tabler/icons-react"
 import { useRouter } from 'next/navigation'
+import { cn } from '@/lib/utils'
 import { signOut, useSession } from 'next-auth/react'
 
 
-type Props = {}
+type Props = {
+    className?:string,
+    title?:boolean
+}
 
 export const LoginButton = (props: Props) => {
     const { data: session , status } = useSession();
     const router = useRouter()
 
   return (
-    <button className="btn-nav p-4 rounded-lg absolute z-10 xl:top-10 bottom-10 xl:right-10 right-5 h-16 w-16 content-center justify-center flex" onClick={()=>{
+    <button className={cn(" content-end items-center justify-center flex",props.className)} onClick={()=>{
         if (status === "authenticated" && session && session.user) {
             signOut()
         }
@@ -20,7 +24,12 @@ export const LoginButton = (props: Props) => {
             router.push("auth/login")
         }
     }}>
-        {(status === "authenticated" && session && session.user)?<IconLogout />:<IconLogin />}
+        {props.title && (
+            <p className="text-white font-bold">
+                {status === "authenticated" ? "Ausloggen" : "Einloggen"}
+            </p>
+        )}
+        {status === "authenticated" ? <IconLogout size={32} /> : <IconLogin size={32} />}
     </button>
   )
 }
