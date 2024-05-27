@@ -41,3 +41,16 @@ describe('Check Gradient calculation', () => {
         expect(result).toEqual(expectedColors)
     });
 });
+
+
+// describe('Check Gradient calculation', () => {
+//     jest.mock('react-chartjs-2', () => ({
+//         Bar: () => null,
+//       }));
+//     test('should render the list', () => {
+//         const data = [[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"},{key:"Summe",value:"300"}],[{key:"Data",value:"TESTING"},{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}]]
+//         const {getByText} = render(<MarketChart data={data} diagramKey={'Data'} type={'bar'}/>)
+//         const text = getByText("Deine Data")
+//         expect(text).toBeTruthy()
+//     });
+// });
