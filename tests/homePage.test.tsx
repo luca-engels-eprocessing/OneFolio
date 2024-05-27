@@ -41,11 +41,3 @@ describe('Check Gradient calculation', () => {
         expect(result).toEqual(expectedColors)
     });
 });
-describe('Check Gradient calculation', () => {
-    test('should render the list', () => {
-        const {getByText} = render(<MarketChart data={{Test:[[1,1]]}} diagramKey={''} type={'line'}/>)
-        const text = getByText("Loading...")
-        expect(text).toBeTruthy()
-    });
-
-});

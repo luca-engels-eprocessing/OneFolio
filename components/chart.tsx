@@ -18,7 +18,7 @@ interface LineProps {
 export const MarketChart = ({type,data,diagramKey}:LineProps) => {
   const [diagramValueX,setDiagramValueX] = useState<string>(diagramKey);
   let isDarkTheme =false
-  if(typeof window != "undefined"){
+  if(typeof window != "undefined"&&window&&window.matchMedia){
     isDarkTheme=window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
   const [diagramValueY,setDiagramValueY] = useState<string>("Summe");
@@ -48,7 +48,6 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
         const y = Number.parseInt(getKeyFromList(diagramValueY,item))
         if(x && y){
           const index = getIndexFromKey(x,tempCharData)
-          console.log(index)  
           if(index>=0){
             tempCharData[index] = [x,tempCharData[index][1]+y]
           }
@@ -67,6 +66,7 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
         }
       }
     });
+    console.log("DATA: ",tempCharData)
     setChartData(tempCharData)
   }, [data,diagramValueX,diagramValueY]);
 

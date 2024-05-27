@@ -123,7 +123,7 @@ export const Table = (props: Props) => {
 
         const handleAddButtonSubmit = (e:any,node:string) => {
             e.preventDefault();
-            if((e.target as HTMLFormElement)['newCategory']==undefined||(e.target as HTMLFormElement)['newCategory'].value){
+            if((e.target as HTMLFormElement)['newCategory']==undefined||!(e.target as HTMLFormElement)['newCategory'].value){
                 return;
             }
             deleteFromSelection(node,modifyableList,selectionList)

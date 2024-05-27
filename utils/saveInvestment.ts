@@ -4,6 +4,7 @@ import { auth } from "@/auth"
 import {db, getUserById} from "@/utils/db"
 import { investmentSchema } from "./zod"
 import * as z from "zod"
+import { revalidatePath } from 'next/cache'
 
 export const saveData = async (data:  z.infer<typeof investmentSchema>): Promise<{success?:string, error?:string}>=> {
     const validatedFields = investmentSchema.safeParse(data);
@@ -35,6 +36,8 @@ export const saveData = async (data:  z.infer<typeof investmentSchema>): Promise
             }
         }
     });
+    revalidatePath('/overview')
+    revalidatePath('/')
     return {success: "Investment erfolgreich gespeichert!"}
 }
 

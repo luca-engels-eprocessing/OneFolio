@@ -27,6 +27,7 @@ async function Home() {
   const averageRendite = Math.round(investments.reduce((acc, cur) => acc + Number.parseInt(cur.find(data => data.key === "Rendite (in %)")?.value || "0"), 0)/investments.length);
   console.log("SUM: ",totalSum)
   console.log("AVG: ",averageRendite)
+  console.log(investments)
 
   return (
       <main className="w-full flex flex-col gap-8 items-center justify-start pb-2">

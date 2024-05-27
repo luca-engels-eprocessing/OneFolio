@@ -3,6 +3,7 @@ import { auth } from '@/auth'
 import InvestmentCard from '@/components/InvestmentCard'
 import { Button } from '@/components/ui/button'
 import { deleteInvestmentById, getInvestmentsByUserId } from '@/utils/db'
+import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import React from 'react'
 
@@ -107,19 +108,17 @@ const View = async (props: Props) => {
           </Button>
         </div>
         :list.map((investment, index) => (
-          <InvestmentCard key={index} data={investment} deleteOnClick={deleteItem}/>
+          <InvestmentCard key={index} data={investment} deleteOnClick={async ()=>{
+            "use server"
+            await deleteInvestmentById(investment.id)
+            revalidatePath('/overview')
+            revalidatePath('/')
+          }}/>
         ))}
       </div>
         </main>
   )
 }
-
-async function deleteItem(id:string){
-  "use server"
-  deleteInvestmentById(id)
-  return null
-}
-
 
 
 export default View

@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 declare global {
   var prisma: PrismaClient | undefined;
@@ -35,6 +36,7 @@ export const getInvestmentsByUserId = async (id:string) => {
 }
 
 export const deleteInvestmentById = async (id:string) => {
+  
   try {
     const investments = await db.investment.delete({where:{id:id}})
     return investments
