@@ -184,7 +184,6 @@ export const isKeyInList = (key: string, list: {[key:string]:any}[]): boolean =>
 }
 
 export const getIndexFromKey = (key: string, list: any[][]): number => {
-  console.log(key)
   for (let i = 0; i < list.length; i++) {
     if (list[i][0] === key) {
       return i;
