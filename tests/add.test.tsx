@@ -9,6 +9,10 @@ import { ValueButton } from '@/components/addInvestment/valueButton';
 import { KeyButton } from '@/components/addInvestment/keyButton';
 import { saveData } from '@/utils/saveInvestment';
 
+jest.mock('next/cache',()=>{
+    revalidatePath:()=>null
+})
+
 const getSample = () => {
     return {
         "Title": ["TEST"],

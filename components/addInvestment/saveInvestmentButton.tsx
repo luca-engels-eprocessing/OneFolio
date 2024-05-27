@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { FormError } from "@/components/form-error"
 import { FormSuccess } from "@/components/form-success"
 import { saveData } from "@/utils/saveInvestment"
+import { revalidatePath } from "next/cache"
 
 
 
@@ -36,6 +37,8 @@ export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>v
                     setSuccess(data.success)
                 })
                 if(data.success){
+                    revalidatePath('/overview')
+                    revalidatePath('/')
                     onClick()
                 }
             }}>Speichern</button>
