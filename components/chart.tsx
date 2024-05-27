@@ -66,7 +66,6 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
         }
       }
     });
-    console.log("DATA: ",tempCharData)
     setChartData(tempCharData)
   }, [data,diagramValueX,diagramValueY]);
 
