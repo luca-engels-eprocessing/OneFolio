@@ -94,9 +94,6 @@ const config: Config = {
 		'@/auth': '<rootDir>/mocks/auth.ts',
 		'next-auth/providers/credentials': '<rootDir>/mocks/next-auth-providers-credentials.ts',
     'next-auth': '<rootDir>/mocks/next-auth.ts',
-    '@auth/prisma-adapter' : '<rootDir>/mocks/prisma-adapter.ts',
-    '@/utils/db': '<rootDir>/mocks/db.ts',
-    '@prisma/client': '<rootDir>/mocks/PrismaClient.ts',
   },
 
 
@@ -142,7 +139,8 @@ const config: Config = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  // setupFiles: [],
+  injectGlobals: true,
+  setupFilesAfterEnv: ['<rootDir>/mocks/jest.setup.ts'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   // setupFilesAfterEnv: [],

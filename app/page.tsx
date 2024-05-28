@@ -22,9 +22,9 @@ async function Home() {
       </div>
     );
   }
-  const investments = inv.map(data => data.data.data);
-  const totalSum = investments.reduce((acc, cur) => acc + Number.parseInt(cur.find(data => data.key === "Summe")?.value || "0"), 0);
-  const averageRendite = Math.round(investments.reduce((acc, cur) => acc + Number.parseInt(cur.find(data => data.key === "Rendite (in %)")?.value || "0"), 0)/investments.length);
+  const investments = inv.map((data: { data: { data: any; }; }) => data.data.data);
+  const totalSum = investments.reduce((acc: number, cur: any[]) => acc + Number.parseInt(cur.find((data: { key: string; }) => data.key === "Summe")?.value || "0"), 0);
+  const averageRendite = Math.round(investments.reduce((acc: number, cur: any[]) => acc + Number.parseInt(cur.find((data: { key: string; }) => data.key === "Rendite (in %)")?.value || "0"), 0)/investments.length);
 
 
   return (

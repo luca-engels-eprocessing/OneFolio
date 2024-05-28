@@ -7,11 +7,8 @@ import { auth } from '@/auth';
 import { afterEach } from 'node:test';
 import { ValueButton } from '@/components/addInvestment/valueButton';
 import { KeyButton } from '@/components/addInvestment/keyButton';
-import { saveData } from '@/utils/saveInvestment';
-
-jest.mock('next/cache',()=>{
-    revalidatePath:()=>null
-})
+import fetchMock from 'fetch-mock';
+import { BACKEND_URL } from "@/routes";
 
 const getSample = () => {
     return {
@@ -49,7 +46,6 @@ const getSample = () => {
 
 
 describe('Check edit Object', () => {
-
     const sample = getSample()
     
     const expected: { [key: string]: any[] } = sample
@@ -208,6 +204,7 @@ describe('Check Add Button',()=>{
 })
 
 describe('SaveInvestmentButton', () => {
+    
     afterEach(() => {
         jest.clearAllMocks();
     })
@@ -231,7 +228,25 @@ describe('SaveInvestmentButton', () => {
     });
 
     test('SaveButton displays success message on successful save', async () => {
+        fetchMock.reset() .post(BACKEND_URL+"/investments/",201)
         const successMessage = "Investment erfolgreich gespeichert!";
+        const { getByText } = render(<SaveButton data={{"Titel": "Test","Startdatum des Investments":"2023-01-01","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />);
+        const button = getByText('Speichern');
+        const mockSession = {
+            expires: new Date(Date.now() + 2 * 86400).toISOString(),
+            user: { id: "1" }
+        };
+        (auth as jest.Mock).mockReturnValue(mockSession); // Mocking auth to return the session data and authenticated status
+        await act(async () => {
+            fireEvent.click(button);
+        });
+        const successDisplay = await getByText(successMessage, { exact: false })
+        expect(successDisplay).toBeTruthy();
+    });
+
+    test('SaveButton displays server error message on failed save', async () => {
+        fetchMock.reset() .post(BACKEND_URL+"/investments/",500)
+        const successMessage = "Es gab ein Problem auf der Serverseite";
         const { getByText } = render(<SaveButton data={{"Titel": "Test","Startdatum des Investments":"2023-01-01","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />);
         const button = getByText('Speichern');
         const mockSession = {
