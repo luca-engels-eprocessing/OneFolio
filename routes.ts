@@ -24,8 +24,6 @@ export const authRoutes = [
  */
 export const apiAuthPrefix = "/api/auth"
 
-export const BACKEND_URL = "http://localhost:8000"
-
 
 /**
  * The default path for redirection after login

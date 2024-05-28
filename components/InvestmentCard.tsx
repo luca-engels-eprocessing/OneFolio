@@ -6,9 +6,9 @@ import React, { useRef, useState } from 'react'
 
 type Props = {
     title: string,
-    date?: string,
+    date: string | null,
     details: {},
-    id?:string
+    id:string
     
 }
 
