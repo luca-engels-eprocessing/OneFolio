@@ -10,7 +10,7 @@ import { Chart as ReactChart } from "react-chartjs-2";
 ChartJS.register(...registerables);
 
 interface LineProps {
-  data: {[key:string]:any}[][];
+  data: {key:string,value:string}[][];
   diagramKey:string,
   type: "bar"|"pie"|"radar",
 }
@@ -56,7 +56,7 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
           }
         }
         else{
-          const index = getIndexFromKey(diagramValueY,tempCharData)
+          const index = getIndexFromKey("Sonstige...",tempCharData)
           if(index>=0){
             tempCharData[index] = ["Sonstige...",tempCharData[index][1]+y]
           }
@@ -86,6 +86,7 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
     borderColor = generateGradientHexList("284cb3","385eff",chartData.length)
     backgroundColor = generateGradientHexList("284cb3","385eff",chartData.length,true)
   }
+
 
   const GraphData = {
     labels: chartData.map((entry: any) => entry[0]),
@@ -131,7 +132,7 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
         <ReactChart type={diagramType} width={`${window.innerWidth/2}px`} height={`${window.innerWidth/2}px`} data={GraphData} options={options} />
       </div>
       <div className="hidden xl:flex">
-        <ReactChart type={diagramType} data={GraphData} options={{...options,plugins:{legend:{position:"right"}}}}/>
+        <ReactChart type={diagramType} data={GraphData} options={{...options,plugins:{legend:{position:(diagramType=='bar')?"top":"right"}}}}/>
       </div>
     </div>
   )
