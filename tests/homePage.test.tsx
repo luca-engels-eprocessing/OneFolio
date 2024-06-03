@@ -44,16 +44,16 @@ describe('Check Gradient calculation', () => {
 
 
 
-// describe('Check Gradient calculation', () => {
-//     jest.mock('react-chartjs-2', () => ({
-//         Bar: () => null,
-//         Pie: () => null,
-//         Radar: () => null,
-//       }));
-//     test('should render the list', () => {
-//         const data = [[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"},{key:"Summe",value:"300"}],[{key:"Data",value:"TESTING"},{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"}],[{key:"Data",value:"TEST"},{key:"Summe",value:"300"}],[{key:"Data",value:"TEST"}],[{key:"Data2",value:"Stuff"}],[{key:"Summe",value:"300"}],[]]
-//         const {getByText} = render(<MarketChart data={data} diagramKey={'Data'} type={'bar'}/>)
-//         const text = getByText("Deine Data")
-//         expect(text).toBeTruthy()
-//     });
-// });
+describe('Check Gradient calculation', () => {
+    jest.mock('react-chartjs-2', () => ({
+        Bar: () => null,
+        Pie: () => null,
+        Radar: () => null,
+      }));
+    test('should render the list', () => {
+        const data = [[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"},{key:"Summe",value:"300"}],[{key:"Data",value:"TESTING"},{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"}],[{key:"Data",value:"TEST"},{key:"Summe",value:"300"}],[{key:"Data",value:"TEST"}],[{key:"Data2",value:"Stuff"}],[{key:"Summe",value:"300"}],[]]
+        const {getByText} = render(<MarketChart data={data} diagramKey={'Data'} type={'bar'}/>)
+        const text = getByText("Deine Data")
+        expect(text).toBeTruthy()
+    });
+});

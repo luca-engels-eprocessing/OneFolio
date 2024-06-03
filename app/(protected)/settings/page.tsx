@@ -45,7 +45,6 @@ async function Settings({}: Props) {
     return <p>Loading...</p>
   }
   const userData = await getUserById(session.user.id)
-  const data = userData
   if(!userData){
     return  <p>ERROR</p>
   }

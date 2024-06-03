@@ -1,10 +1,9 @@
 "use server"
 
 import { auth } from "@/auth"
-import {createInvestment} from "@/utils/db"
+import {db, getUserById} from "@/utils/db"
 import { investmentSchema } from "./zod"
 import * as z from "zod"
-import { ObjectId } from "bson";
 
 export const saveData = async (data:  z.infer<typeof investmentSchema>): Promise<{success?:string, error?:string}>=> {
     const validatedFields = investmentSchema.safeParse(data);
@@ -26,17 +25,16 @@ export const saveData = async (data:  z.infer<typeof investmentSchema>): Promise
     if(!session||!session.user||!session.user.id){
         return {error: "Es gab einen Fehler beim laden der Nutzerdaten!"}
     }
-    const response = await createInvestment({
-        userId:session.user.id,
-        data:{
-            title,
-            date,
-            data:valueData
+    await db.investment.create({
+        data: {
+            userId:session.user.id,
+            data:{
+                title,
+                date,
+                data:valueData
+            }
         }
     });
-    if(response.ok){
-        return {success: "Investment erfolgreich gespeichert!"}
-    }
-    return {error: "Es gab ein Problem auf der Serverseite"}
+    return {success: "Investment erfolgreich gespeichert!"}
 }
 

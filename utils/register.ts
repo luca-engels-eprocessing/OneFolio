@@ -1,7 +1,7 @@
 "use server"
 
 import bcrypt from 'bcryptjs';
-import {createUser, getUserByEmail} from "@/utils/db"
+import {db, getUserByEmail} from "@/utils/db"
 import * as z from "zod"
 import { signUpSchema } from "@/utils/zod"
 
@@ -20,19 +20,21 @@ export const register = async (values: z.infer<typeof signUpSchema>)=> {
     if(existingUser){
       return {error: "Diese E-Mail wird bereits benutzt."}
     }
-    await createUser({
-        name: { firstname, lastname },
-        email: email.toLowerCase(),
-        password: hashedPassword,
-        address: { 
-            street: street || undefined, 
-            streetnumber: streetnumber || undefined, 
-            zip:zip || undefined, 
-            city: city || undefined, 
-            country:country || undefined, 
-            phone:phone || undefined, 
+    await db.user.create({
+        data: {
+            name: { firstname, lastname },
+            email: email.toLowerCase(),
+            password: hashedPassword,
+            address: { 
+                street: street || null, 
+                streetnumber: streetnumber || null, 
+                zip:zip || null, 
+                city: city || null, 
+                country:country || null, 
+                phone:phone || null, 
+            }
         }
     });
 
-    return {success: "JETZT ANMELDEN!"}
+    return {success: "Bestätigungsemail gesendet!"}
 }
