@@ -44,6 +44,24 @@ export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>v
             }}>Speichern</button>
             <FormError message={error}/>
             <FormSuccess message={success}/>
+            <input type="file" accept=".csv" onChange={handleFileUpload} />
         </>
     )
 }
+
+
+const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+            const text = e.target?.result;
+            if (typeof text === 'string') {
+                const data = text.split('\n').map(row => row.split(','));
+                console.log('CSV Data:', data);
+                // Process CSV data here or update state
+            }
+        };
+        reader.readAsText(file);
+    }
+};

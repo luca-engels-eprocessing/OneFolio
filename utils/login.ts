@@ -20,7 +20,6 @@ export const login = async (values: z.infer<typeof signInSchema>)=> {
 
     } catch (error) {
         if(error instanceof AuthError) {
-            console.error({"HERE":error})
             switch (error.type){
                 case "CredentialsSignin":
                     return {error:"E-Mail oder Password falsch!"}
