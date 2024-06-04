@@ -132,6 +132,7 @@ export const Table = (props: Props) => {
                 return;
             }
             deleteFromSelection(node,modifyableList,selectionList)
+            console.log("Category",(e.target as HTMLFormElement)['newCategory'])
             const newCat = (e.target as HTMLFormElement)['newCategory'].value as string;
             const type = e.target['inputType']?e.target['inputType'].value as string:undefined
             if(newCat == ''){
@@ -257,6 +258,7 @@ const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>,setCSVList:
                 const data = text.split('\n').map(row => row.replace("\r","").split(','));
                 if(data.length >=2){
                     const categories = data[0]
+                    console.log(categories)
                     const returnData:{}[] = []
                     for (let index = 1; index < data.length; index++) {
                         const element = data[index];
