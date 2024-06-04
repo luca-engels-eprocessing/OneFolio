@@ -2,7 +2,6 @@
 import { auth } from '@/auth'
 import InvestmentCard from '@/components/InvestmentCard'
 import { Button } from '@/components/ui/button'
-import { investment } from '@/models/model'
 import { deleteInvestmentById, getInvestmentsByUserId } from '@/utils/db'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
@@ -70,12 +69,12 @@ const View = async (props: Props) => {
   if(!session || !session.user ||!session.user.id){
     return <p>Loading...</p>
   }
-  const investmentData:investment[] = await getInvestmentsByUserId(session.user.id)
+  const investmentData = await getInvestmentsByUserId(session.user.id)
   if(!investmentData){
     return  <p>ERROR</p>
   }
   const list = investmentData.map((data)=>{
-    const id = data._id
+    const id = data.id
     const {title,date,data:det} = data.data
     let details = {}
     det.map((e)=> {
@@ -111,7 +110,7 @@ const View = async (props: Props) => {
         :list.map((investment, index) => (
           <InvestmentCard key={index} data={investment} deleteOnClick={async ()=>{
             "use server"
-            await deleteInvestmentById(investment.id||"")
+            await deleteInvestmentById(investment.id)
             revalidatePath('/overview')
             revalidatePath('/')
           }}/>
