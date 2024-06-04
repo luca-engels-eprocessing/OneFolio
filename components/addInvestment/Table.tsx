@@ -1,10 +1,12 @@
 "use client"
-import React, { useEffect, ReactNode, useState} from 'react'
+import React, { useEffect, ReactNode, useState, useRef} from 'react'
 import { cn } from '@/lib/utils';
 import { AddButton } from '@/components/addInvestment/addCategoryButton';
 import { SaveButton } from '@/components/addInvestment/saveInvestmentButton';
 import { KeyButton } from '@/components/addInvestment/keyButton';
 import { ValueButton } from '@/components/addInvestment/valueButton';
+import { Button } from '../ui/button';
+import { IconEdit,IconTrash } from '@tabler/icons-react';
 type Props = {
     items: {},
     className?: string;
@@ -76,6 +78,9 @@ export const Table = (props: Props) => {
     const [displayed, setDisplayed] = useState<boolean>(false)
     const [selectionList, setselectionList] = useState<{}>({})
     const [modifyableList, setModifyableList] = useState<{}>(props.items)
+    const [CSVList,setCSVList] = useState<{}[]>([])
+    const [CSVListElements,setCSVListElements] = useState<ReactNode[]>([])
+    const [CSVDisplayed,setCSVDisplayed] = useState(false)
     
     useEffect(() => {
     
@@ -127,7 +132,6 @@ export const Table = (props: Props) => {
                 return;
             }
             deleteFromSelection(node,modifyableList,selectionList)
-            console.log("Category",(e.target as HTMLFormElement)['newCategory'])
             const newCat = (e.target as HTMLFormElement)['newCategory'].value as string;
             const type = e.target['inputType']?e.target['inputType'].value as string:undefined
             if(newCat == ''){
@@ -197,6 +201,21 @@ export const Table = (props: Props) => {
         
     }, [selectionList, modifyableList, keyButtonList, valueButtonList])
 
+
+    useEffect(()=>{
+        let finalData:ReactNode[] = []
+        CSVList.map((element)=>{
+            let data:ReactNode[] = []
+            Object.entries(element).map(([key,value],index)=>{
+                data.push(<div className={"flex flex-col"} key={index}><p className={"text-sm"}>{key}</p><p className={"text-xl"}>{value as string}</p></div>)
+            })
+            finalData.push(<div className={"bg-prim border-def rounded-lg flex flex-row p-4"}><div className='grid grid-cols-3 px-4 py-8 w-full'>{data}</div><div className='flex flex-col gap-2 justify-center'><IconTrash /><IconEdit /></div></div>)
+        })
+        if(finalData.length>=1){
+            setCSVDisplayed(true)
+        }
+        setCSVListElements(finalData)
+    },[CSVList])
     
     const clearList = () => {
         setselectionList({})
@@ -205,18 +224,58 @@ export const Table = (props: Props) => {
         setvalueButtonList([])
         setkeyButtonList([])
     }
-    
     return (
         <div className=' w-[80vw] flex xl:flex-row flex-col gap-8 overflow-hidden'>
-                <div className={  cn(displayed && " max-h-[calc(50%-32px)]", " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-[calc(50%-32px)] items-center xl:max-h-full xl:h-fit",props.className)}>
+                <div className={cn(displayed && " max-h-[calc(50%-32px)]", " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-[calc(50%-32px)] items-center xl:max-h-full xl:h-fit",props.className)}>
                     {keyButtonList}
                     <SaveButton data={selectionList} onClick={clearList} />
+                    <input type="file" accept=".csv" onChange={(e) => {
+                        handleFileUpload(e,setCSVList);
+                    }} />
                 </div>
                 {displayed && 
                     <div className={cn("flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-1/2 items-center xl:max-h-full xl:h-fit h-fit max-h-[50%]",props.className)}>
                         {valueButtonList}
                     </div>
                 }
+                {CSVDisplayed&&<div className={"absolute w-4/5 p-16 flex flex-col gap-4 bg-sec border-def"}>
+                    {CSVListElements}
+                    <Button className='btn-nav w-full rounded-xl text-xl font-semibold py-8'>Speichern</Button>
+                </div>}
         </div>
     )
 }
+
+
+const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>,setCSVList:(arg0: {}[])=>void) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+            const text = e.target?.result;
+            if (typeof text === 'string') {
+                const data = text.split('\n').map(row => row.replace("\r","").split(','));
+                if(data.length >=2){
+                    const categories = data[0]
+                    const returnData:{}[] = []
+                    for (let index = 1; index < data.length; index++) {
+                        const element = data[index];
+                        let dataList = {}
+                        for (let j = 0; j < categories.length; j++) {
+                            if(element[j]!=''){
+                                dataList = {...dataList,[categories[j]]:element[j]}
+                            }
+                        }
+                        returnData.push(dataList)
+                    }
+
+                    // const list: {}[] = []
+                    // data.map(e=>list.push())
+                    // Process CSV data here or update state
+                    setCSVList(returnData)
+                }
+            }
+        };
+        reader.readAsText(file);
+    }
+};
