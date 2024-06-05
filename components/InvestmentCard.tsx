@@ -42,7 +42,7 @@ return (
             </h1>
                 {props.date&&
                 <div className='pb-8'>
-                    <p className={"xl:text-sm text-xs font-light"}>Erstellt:</p>
+                    <p className={"xl:text-sm text-xs font-light"}>Start Datum des Investments:</p>
                     <p className={"xl:text-2xl text-lg font-normal"}>{props.date}</p>
                 </div>
                 }

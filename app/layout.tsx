@@ -12,8 +12,10 @@ const inter = Roboto({ subsets: ["latin"], weight: ["100","300","400","500","700
 export const metadata: Metadata = {
   title: "OneFolio",
   description: "OneFolio ermöglicht das einfache Managen ihrer Investment über alle platformen. So halten sie den Überblick",
-  appleWebApp: true,
-  
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default"
+  },
   icons: {
     shortcut: "/images/favicon.ico",
     apple: "/images/logo512.png",
