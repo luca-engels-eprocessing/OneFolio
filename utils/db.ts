@@ -49,6 +49,18 @@ export const createInvestment = async (investmentData:investment) => {
   return response
 }
 
+
+export const createMultipleInvestment = async (investmentData:investment[]) => {
+  const response = await fetch(BACKEND_URL+"/investments/addMany",{
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(investmentData)
+  })
+  return response
+}
+
 export const getInvestmentsByUserId = async (id:string) => {
   try {
     const response = await fetch(BACKEND_URL+"/users/investments/"+id)

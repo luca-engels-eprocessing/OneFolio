@@ -25,9 +25,9 @@ export const authRoutes = [
 export const apiAuthPrefix = "/api/auth"
 
 
-export const BACKEND_URL_DEV = "http://localhost:8000"
+export const BACKEND_URL = "http://localhost:8000"
 
-export const BACKEND_URL = "https://backend.onefolio.de"
+// export const BACKEND_URL = "https://backend.onefolio.de"
 
 
 /**

@@ -2,7 +2,7 @@
 import React, { useEffect, ReactNode, useState, useRef} from 'react'
 import { cn } from '@/lib/utils';
 import { AddButton } from '@/components/addInvestment/addCategoryButton';
-import { SaveButton } from '@/components/addInvestment/saveInvestmentButton';
+import { SaveButton,SaveCSVButton } from '@/components/addInvestment/saveInvestmentButton';
 import { KeyButton } from '@/components/addInvestment/keyButton';
 import { ValueButton } from '@/components/addInvestment/valueButton';
 import { Button } from '../ui/button';
@@ -81,7 +81,7 @@ export const Table = (props: Props) => {
     const [CSVList,setCSVList] = useState<{}[]>([])
     const [CSVListElements,setCSVListElements] = useState<ReactNode[]>([])
     const [CSVDisplayed,setCSVDisplayed] = useState(false)
-    const [CSVIsEditing,setCSVIsEditing] = useState<{}|undefined>()
+    const [CSVIsEditing,setCSVIsEditing] = useState<{}>()
     
     useEffect(() => {
     
@@ -205,13 +205,18 @@ export const Table = (props: Props) => {
 
     
     useEffect(()=>{
+        console.log(CSVIsEditing)
         let finalData:ReactNode[] = []
         CSVList.map((element,indx)=>{
+            let newElement:{} = element
             let data:ReactNode[] = []
             Object.entries(element).map(([key,value],index)=>{
                 data.push(<div key={index} className={"flex flex-col"}>
                             <p className={"text-sm"}>{key}</p>
-                            {CSVIsEditing==element?<input type={'text'} onChange={(e)=>{const newValue = e.target.value}} placeholder={value as string} className='w-full text-left text-3xl p-2 border-0 bg-transparent' />:<p className={"text-xl"}>{value as string}</p>}
+                            {CSVIsEditing==element?<input type={'text'} onChange={(e)=>{
+                                const newValue = e.target.value as string
+                                newElement = {...newElement,[key]:newValue}
+                            }} placeholder={value as string} className='w-full text-left text-2xl p-2 border-0 bg-transparent' />:<p className={"text-2xl"}>{value as string}</p>}
                         </div>)
             })
             finalData.push(<div key={indx} className={"bg-prim border-def rounded-lg flex flex-row p-4"}>
@@ -225,13 +230,12 @@ export const Table = (props: Props) => {
                         <IconTrash />
                     </Button>
                     <Button onClick={()=>{
-                        // Make every p to an input. Make a save button appear in the div and make it change the CSVList based on the new values.
-                        console.log(CSVIsEditing)
                         if(CSVIsEditing){
                             setCSVIsEditing(undefined)
+                            CSVList[indx] = newElement
+                            setCSVList([...CSVList])
                         }
                         else{
-                            console.log(2)
                             setCSVIsEditing(element)
                         }
                     }}>
@@ -269,7 +273,7 @@ export const Table = (props: Props) => {
                 }
                 {CSVDisplayed&&CSVListElements.length>0&&<div className={"absolute w-4/5 p-16 flex flex-col gap-4 bg-sec border-def"}>
                     {CSVListElements}
-                    <Button className='btn-nav w-full rounded-xl text-xl font-semibold py-8'>Speichern</Button>
+                    <SaveCSVButton data={CSVList} onClick={()=>{}} />
                 </div>}
         </div>
     )
@@ -286,18 +290,24 @@ const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>,setCSVList:
                 const data = text.split('\n').map(row => row.replace("\r","").split(','));
                 if(data.length >=2){
                     const categories = data[0]
-                    const returnData:{}[] = []
-                    for (let index = 1; index < data.length; index++) {
-                        const element = data[index];
-                        let dataList = {}
-                        for (let j = 0; j < categories.length; j++) {
-                            if(element[j]!=''){
-                                dataList = {...dataList,[categories[j]]:element[j]}
+                    console.log(data[0])
+                    if(categories.includes('Titel')){
+                        const returnData:{}[] = []
+                        for (let index = 1; index < data.length-1; index++) {
+                            const element = data[index];
+                            let dataList = {}
+                            for (let j = 0; j < categories.length; j++) {
+                                if(element[j]!=''){
+                                    dataList = {...dataList,[categories[j]]:element[j]}
+                                }
                             }
+                            returnData.push(dataList)
                         }
-                        returnData.push(dataList)
+                        setCSVList(returnData)
                     }
-                    setCSVList(returnData)
+                    else{
+                        alert("Die Datei beinhaltet keinen Titel. Bitte füge einen Titel zu der CSV Datei hinzu")
+                    }
                 }
             }
         };
