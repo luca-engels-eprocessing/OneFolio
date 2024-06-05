@@ -5,6 +5,14 @@ import React from 'react'
 
 const sList = {
   "Titel": ['string'],
+  "Summe": ["number",
+    {"10":{"Währung":["text","Euro","US-Dollar","Yen","Pfund"]}},
+    {"20":{"Währung":["text","Euro","US-Dollar","Yen","Pfund"]}},
+    {"50":{"Währung":["text","Euro","US-Dollar","Yen","Pfund"]}},
+    {"100":{"Währung":["text","Euro","US-Dollar","Yen","Pfund"]}},
+    {"200":{"Währung":["text","Euro","US-Dollar","Yen","Pfund"]}},
+    {"500":{"Währung":["text","Euro","US-Dollar","Yen","Pfund"]}},
+  ],
   // "Laufzeit (in Jahren)": ['number',1, 2, 3, 4, 5, 10, 15, 30, 40, 50, 99],
   // "Mehr...":['text'],
   //     "Branche":['text',
@@ -32,14 +40,9 @@ const sList = {
     {"Kündigung": {"Kündigung": ["text","Kündbar", "Unkündbar"]}},
     {"Sicherheit": {"Sicherheit": ["text","Sicher", "Unsicher"]}},
     {"Steuer": {"Steuer": ["text","Steuerfrei", "Steuerpflichtig"]}},
-    {"Summe": {"Summe": ["number",
-      {"100":{"Währung":["text","Euro","Dollar","Yen","Pfund"]}},
-      {"200":{"Währung":["text","Euro","Dollar","Yen","Pfund"]}},
-      {"300":{"Währung":["text","Euro","Dollar","Yen","Pfund"]}},
-    ]}},
     {"Rendite": {"Rendite (in %)": ["number",5,7,10,15,20]}},
     {"Risikoklasse": {"Risikoklasse 1 < 5": ["number",1,2,3,4,5]}},
-    {"Währung": {"Währung": ["text","Euro", "Dollar", "Yen", "Pfund"]}},
+    {"Währung": {"Währung": ["text","Euro", "US-Dollar", "Yen", "Pfund"]}},
     {"Zahlung": {"Zahlung": ["text","Monatlich", "Jährlich"]}},
     {"Zinsen": {"Zinsen": ["text","Festzins", "Variabel"]}}
   ]

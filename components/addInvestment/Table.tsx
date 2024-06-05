@@ -6,7 +6,7 @@ import { SaveButton } from '@/components/addInvestment/saveInvestmentButton';
 import { KeyButton } from '@/components/addInvestment/keyButton';
 import { ValueButton } from '@/components/addInvestment/valueButton';
 import { Button } from '../ui/button';
-import { IconEdit,IconTrash } from '@tabler/icons-react';
+import { IconEdit,IconTrash,IconDeviceFloppy } from '@tabler/icons-react';
 type Props = {
     items: {},
     className?: string;
@@ -81,6 +81,7 @@ export const Table = (props: Props) => {
     const [CSVList,setCSVList] = useState<{}[]>([])
     const [CSVListElements,setCSVListElements] = useState<ReactNode[]>([])
     const [CSVDisplayed,setCSVDisplayed] = useState(false)
+    const [CSVIsEditing,setCSVIsEditing] = useState<{}|undefined>()
     
     useEffect(() => {
     
@@ -202,20 +203,48 @@ export const Table = (props: Props) => {
     }, [selectionList, modifyableList, keyButtonList, valueButtonList])
 
 
+    
     useEffect(()=>{
         let finalData:ReactNode[] = []
-        CSVList.map((element)=>{
+        CSVList.map((element,indx)=>{
             let data:ReactNode[] = []
             Object.entries(element).map(([key,value],index)=>{
-                data.push(<div className={"flex flex-col"} key={index}><p className={"text-sm"}>{key}</p><p className={"text-xl"}>{value as string}</p></div>)
+                data.push(<div key={index} className={"flex flex-col"}>
+                            <p className={"text-sm"}>{key}</p>
+                            {CSVIsEditing==element?<input type={'text'} onChange={(e)=>{const newValue = e.target.value}} placeholder={value as string} className='w-full text-left text-3xl p-2 border-0 bg-transparent' />:<p className={"text-xl"}>{value as string}</p>}
+                        </div>)
             })
-            finalData.push(<div className={"bg-prim border-def rounded-lg flex flex-row p-4"}><div className='grid grid-cols-3 px-4 py-8 w-full'>{data}</div><div className='flex flex-col gap-2 justify-center'><IconTrash /><IconEdit /></div></div>)
+            finalData.push(<div key={indx} className={"bg-prim border-def rounded-lg flex flex-row p-4"}>
+                <div className='grid grid-cols-3 px-4 py-8 w-full'>{data}</div>
+                <div className='flex flex-col gap-2 justify-center'>
+                    <Button onClick={()=>{
+                        const index = CSVList.indexOf(element)
+                        CSVList.splice(index,1)
+                        setCSVList([...CSVList])
+                    }}>
+                        <IconTrash />
+                    </Button>
+                    <Button onClick={()=>{
+                        // Make every p to an input. Make a save button appear in the div and make it change the CSVList based on the new values.
+                        console.log(CSVIsEditing)
+                        if(CSVIsEditing){
+                            setCSVIsEditing(undefined)
+                        }
+                        else{
+                            console.log(2)
+                            setCSVIsEditing(element)
+                        }
+                    }}>
+                        {CSVIsEditing?<IconDeviceFloppy />:<IconEdit />}
+                    </Button>
+                </div>
+            </div>)
         })
         if(finalData.length>=1){
             setCSVDisplayed(true)
         }
         setCSVListElements(finalData)
-    },[CSVList])
+    },[CSVList,CSVIsEditing])
     
     const clearList = () => {
         setselectionList({})
@@ -238,7 +267,7 @@ export const Table = (props: Props) => {
                         {valueButtonList}
                     </div>
                 }
-                {CSVDisplayed&&<div className={"absolute w-4/5 p-16 flex flex-col gap-4 bg-sec border-def"}>
+                {CSVDisplayed&&CSVListElements.length>0&&<div className={"absolute w-4/5 p-16 flex flex-col gap-4 bg-sec border-def"}>
                     {CSVListElements}
                     <Button className='btn-nav w-full rounded-xl text-xl font-semibold py-8'>Speichern</Button>
                 </div>}
@@ -268,10 +297,6 @@ const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>,setCSVList:
                         }
                         returnData.push(dataList)
                     }
-
-                    // const list: {}[] = []
-                    // data.map(e=>list.push())
-                    // Process CSV data here or update state
                     setCSVList(returnData)
                 }
             }
