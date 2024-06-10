@@ -258,24 +258,26 @@ export const Table = (props: Props) => {
         setkeyButtonList([])
     }
     return (
-        <div className=' w-[80vw] flex xl:flex-row flex-col gap-8 overflow-hidden'>
-                <div className={cn(displayed && " max-h-[calc(50%-32px)]", " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-[calc(50%-32px)] items-center xl:max-h-full xl:h-fit",props.className)}>
-                    {keyButtonList}
-                    <SaveButton data={selectionList} onClick={clearList} />
-                    <input type="file" accept=".csv" onChange={(e) => {
-                        handleFileUpload(e,setCSVList);
-                    }} />
-                </div>
-                {displayed && 
-                    <div className={cn("flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-1/2 items-center xl:max-h-full xl:h-fit h-fit max-h-[50%]",props.className)}>
-                        {valueButtonList}
+        <>
+            <div className=' w-[80vw] flex xl:flex-row flex-col gap-8 overflow-y-scroll'>
+                    <div className={cn(displayed && " max-h-[calc(50%-32px)]", " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-[calc(50%-32px)] items-center xl:max-h-full xl:h-fit",props.className)}>
+                        {keyButtonList}
+                        <SaveButton data={selectionList} onClick={clearList} />
+                        <input type="file" accept=".csv" onChange={(e) => {
+                            handleFileUpload(e,setCSVList);
+                        }} />
                     </div>
-                }
-                {CSVDisplayed&&CSVListElements.length>0&&<div className={"absolute w-4/5 p-16 flex flex-col gap-4 bg-sec border-def"}>
-                    {CSVListElements}
-                    <SaveCSVButton data={CSVList} onClick={()=>{}} />
-                </div>}
-        </div>
+                    {displayed && 
+                        <div className={cn("flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-1/2 items-center xl:max-h-full xl:h-fit h-fit max-h-[50%]",props.className)}>
+                            {valueButtonList}
+                        </div>
+                    }
+            </div>
+            {CSVDisplayed&&CSVListElements.length>0&&<div className={"absolute w-[80vw] h-[90vh] p-16 flex flex-col gap-4 bg-sec border-def overflow-y-scroll"}>
+                {CSVListElements}
+                <SaveCSVButton data={CSVList} onClick={()=>{}} />
+            </div>}
+        </>
     )
 }
 

@@ -32,6 +32,7 @@
     "next-auth-http-adapter": "^0.3.0",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
+    "react-chatbot-kit": "^2.2.2",
     "react-dom": "^18",
     "react-hook-form": "^7.51.3",
     "tailwind-merge": "^2.3.0",
