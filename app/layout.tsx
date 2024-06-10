@@ -34,7 +34,7 @@ export default function RootLayout({
           <body className={inter.className}>
             <Providers>
               <LoginButton className={"xl:flex hidden absolute z-10 top-10 right-10 btn-nav p-4 rounded-lg h-16 w-auto gap-2"} title={true}/>
-              {/* <CB className={"right-0 bottom-0 w-80 z-10 sticky float-end"}/> */}
+              <CB className={"right-0 bottom-0 w-80 z-10 sticky float-end"}/>
               <div className={"flex xl:flex-row-reverse sm:flex-col flex-col justify-evenly h-[calc(100dvh)]"}>
                 <div className={"w-full xl:h-full xl:pb-8 h-[80dvh] pt-16 overflow-y-scroll"}>
                   {children}
