@@ -74,7 +74,7 @@ async function Settings({}: Props) {
                   </div>
                 </Plaid>
               {accessToken&&globalThis.TransactionData}
-              {globalThis.TransactionData.length>0&& 
+              {globalThis.TransactionData&&globalThis.TransactionData.length>0&& 
               <div className="flex flex-col border-def bg-prim rounded-2xl p-4 ">
                 <div className="flex flex-col">
                     <p className="text-xs text-textLight/70 dark:text-textDark/50">Kategorie & Parteien zu % richtig: </p>
