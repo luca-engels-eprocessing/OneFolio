@@ -13,6 +13,7 @@ export type user = {
         country?: string,
         phone?: string
     }
+    accessToken?:string
 }
 
 export type investment = {

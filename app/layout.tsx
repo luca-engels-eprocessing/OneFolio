@@ -5,8 +5,10 @@ import Navbar from "@/components/Navbar";
 import React from "react";
 import Providers from "@/components/auth/provider";
 import {LoginButton} from "@/components/auth/LoginButton"
+import { investment, user } from "@/models/model";
 
 const inter = Roboto({ subsets: ["latin"], weight: ["100","300","400","500","700","900"]});
+
 
 
 export const metadata: Metadata = {

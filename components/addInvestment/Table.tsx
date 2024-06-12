@@ -271,7 +271,7 @@ export const Table = (props: Props) => {
                         {valueButtonList}
                     </div>
                 }
-                {CSVDisplayed&&CSVListElements.length>0&&<div className={"absolute w-4/5 p-16 flex flex-col gap-4 bg-sec border-def"}>
+                {CSVDisplayed&&CSVListElements.length>0&&<div className={"absolute w-4/5 h-4/5 p-16 flex flex-col gap-4 bg-sec border-def overflow-y-scroll overflow-x-hidden rounded-lg"}>
                     {CSVListElements}
                     <SaveCSVButton data={CSVList} onClick={()=>{}} />
                 </div>}

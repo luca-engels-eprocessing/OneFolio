@@ -70,7 +70,7 @@ const View = async (props: Props) => {
   if(!session || !session.user ||!session.user.id){
     return <p>Loading...</p>
   }
-  const investmentData:investment[] = await getInvestmentsByUserId(session.user.id)
+  const investmentData = await getInvestmentsByUserId(session.user.id)
   if(!investmentData){
     return  <p>ERROR</p>
   }

@@ -2,7 +2,9 @@
 
 import { auth } from "@/auth";
 import {MarketChart} from "@/components/chart"
-import { getInvestmentsByUserId } from "@/utils/db";
+import { getInvestmentsByUserId, getUserById } from "@/utils/db";
+
+
 async function Home() {
   const session = await auth()
 
@@ -13,6 +15,12 @@ async function Home() {
       </div>
     )
   }
+
+  const userData = await getUserById(session.user.id)
+  if(!userData){
+    return  <p>ERROR</p>
+  }
+  
 
   const inv = await getInvestmentsByUserId(session.user.id);
   if (!inv) {
@@ -25,7 +33,6 @@ async function Home() {
   const investments = inv.map((data: { data: { data: any; }; }) => data.data.data);
   const totalSum = investments.reduce((acc: number, cur: any[]) => acc + Number.parseInt(cur.find((data: { key: string; }) => data.key === "Summe")?.value || "0"), 0);
   const averageRendite = Math.round(investments.reduce((acc: number, cur: any[]) => acc + Number.parseInt(cur.find((data: { key: string; }) => data.key === "Rendite (in %)")?.value || "0"), 0)/investments.length);
-
 
   return (
       <main className="w-full flex flex-col gap-8 items-center justify-start pb-2">

@@ -25,7 +25,7 @@ export const authRoutes = [
 export const apiAuthPrefix = "/api/auth"
 
 
-export const BACKEND_URL = process.env.BACKEND_URL
+export const BACKEND_URL = (process.env.NODE_ENV !== "production")? "http://127.0.0.1:8000" : "https://backend.onefolio.de"
 
 
 /**

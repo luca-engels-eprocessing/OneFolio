@@ -2,9 +2,42 @@ import { investment, user } from "@/models/model";
 import { BACKEND_URL } from "@/routes";
 
 
+
 export const getUserByEmail = async (email:string) => {
   try {
     const response = await fetch(BACKEND_URL+"/users/email/"+email)
+    const user = await response.json()
+    return user
+  } catch (e){
+    console.error(e)
+    return null
+  }
+}
+export const updateUser = async (id:string,update:{}) => {
+  try {
+    const response = await fetch(BACKEND_URL+"/users/"+id+"/", {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(update)
+    })
+    const user = await response.json()
+    return user
+  } catch (e){
+    console.error(e)
+    return null
+  }
+}
+export const removeFromUser = async (id:string,update:{}) => {
+  try {
+    const response = await fetch(BACKEND_URL+"/users/"+id+"/", {
+      method: "PATCH",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(update)
+    })
     const user = await response.json()
     return user
   } catch (e){
@@ -22,14 +55,14 @@ export const getUserById = async (id:string) => {
     return null
   }
 }
-export const createUser = async (userData:user) => {
+export const createUser = async (data:user) => {
   try {
     const response = await fetch(BACKEND_URL+"/users/",{
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(userData)
+      body: JSON.stringify(data)
     })
     const user = await response.json()
     return user
@@ -84,4 +117,36 @@ export const deleteInvestmentById = async (id:string) => {
     return null
     
   }
+}
+
+
+export const getLatestCursorOrUndefined = async (userId:string): Promise<string | undefined> => {
+  try {
+    const response = await fetch(BACKEND_URL+"/users/"+userId+"/cursor")
+    const data = await response.json()
+    console.log(data)
+    if(data)return data
+    return undefined
+  } catch (e){
+    console.error(e)
+    return undefined
+  }
+}
+
+export const updateTransactions = async (userId:string,update:{}) => {
+  try {
+    const response = await fetch(BACKEND_URL+"/users/"+userId,{
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(update)
+    })
+    const transaction = await response.json()
+    return transaction
+  } catch (e){
+    console.error(e)
+    return null
+  }
+
 }

@@ -4,7 +4,6 @@ import { auth } from "@/auth"
 import {createInvestment,createMultipleInvestment} from "@/utils/db"
 import { investmentSchema } from "./zod"
 import * as z from "zod"
-import { ObjectId } from "bson";
 
 export const saveData = async (data:  z.infer<typeof investmentSchema>): Promise<{success?:string, error?:string}>=> {
     const validatedFields = investmentSchema.safeParse(data);
@@ -64,7 +63,6 @@ export const saveMultipleData = async (data:  z.infer<typeof investmentSchema>[]
         }
         valueDatas.push({userId:session.user?.id,data:{title,date,data:valueData}})
     })
-    console.log(valueDatas)
     const response = await createMultipleInvestment(valueDatas);
     if(response.ok){
         return {success: "Investment erfolgreich gespeichert!"}

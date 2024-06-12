@@ -1,42 +1,22 @@
 "use server"
-import React from 'react'
+import React, { ReactNode } from 'react'
 import  {LogoutButton,UserInformaiton} from '@/components/auth/LogoutButton'
 import {auth} from "@/auth"
-import { getUserById } from '@/utils/db'
-import { cn } from '@/lib/utils'
+import { getUserById, removeFromUser } from '@/utils/db'
+import Plaid from '@/components/plaid/plaid'
+import { createLinkToken, exchangeToken, removeAccessToken} from '@/utils/plaid'
+import { getTransactionCards } from '@/components/plaid/transactionList'
+import { revalidatePath } from 'next/cache'
+
+
+declare global{
+  var TransactionData:ReactNode[]
+}
+
 type Props = {}
 
-const bankData = {
-  IBAN: 'DE12345678912345678912',
-  BIC: 'ABCDEF12345',
-  Bank: 'Musterbank',
-  Bankleitzahl: '12345678',
-  "Tracking Starten": 'Läuft...',
-  "Gesammelte Daten": 'Einsehen...',
-  "News über ihre Investments erhalten": "Ja",
-  "Konto Löschen": "Jetzt löschen..."
-
-}
 
 
-
-const liItem = (key: string,value:string, item:number) => {
-  // return (
-  //   <li className='p-4 btn-nav my-2 font-light text-sm rounded-2xl' key={item}>{key + ":"}
-  //   <br></br>
-  //     <span className='font-normal text-xl'>{value}</span>
-  //   </li>
-  // )
-  if(value.length>18){
-    value = value.substring(0,14)+"..."
-  }
-  return (
-    
-    <div className='lg:p-4 p-2 btn-nav xl:my-2 my-1 font-light xl:text-sm text-xs xl:rounded-2xl rounded-md'><p className="text-textLight/70 dark:text-textDark/50" key={item}>{key + ":"}</p>
-      <span className={cn(value?'text-textLight dark:text-textDark':'text-textLight/50 dark:text-textDark/50','font-normal xl:text-xl lg:text-lg text-sm')}>{value?value:"Jetzt hinzufügen!"}</span>
-    </div>
-  )
-}
 
 
 async function Settings({}: Props) {
@@ -44,15 +24,26 @@ async function Settings({}: Props) {
   if(!session || !session.user ||!session.user.id){
     return <p>Loading...</p>
   }
-  const userData = await getUserById(session.user.id)
-  const data = userData
+  const id = session.user!.id!
+  const userData = await getUserById(id)
   if(!userData){
     return  <p>ERROR</p>
   }
-  const {name,email,address} = userData
+  const {name,email,address,accessToken} = userData
   
 
   const user = {name,email,address}
+
+  // get Transaction Link if currently none exists
+  var linkToken
+  if(!accessToken){
+    const response = await createLinkToken({id,name,address}); 
+    linkToken=response.link_token
+    if(!linkToken){
+      // RETURN ERROR
+      return <div>ERROR</div>
+    }
+  }
 
   return (
     <main className="h-full w-full flex flex-col gap-8 items-center justify-start pb-2">
@@ -67,17 +58,35 @@ async function Settings({}: Props) {
           </div>
           <div className='xl:w-1/2 w-full px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>
             <h2 className='text-accent h2 font-semibold'>Bankdaten</h2>
-            <ul className=''>
-              {
-                Object.entries(bankData).map(([key, value],index) => {
-                  return liItem(key,value,index)
-                })
-              }
+            <ul className='flex flex-col gap-4'>
+              
+              <Plaid user={{id:session.user.id,name,address}} token={linkToken!} removeAccessToken={(arg)=>{"use server";removeAccessToken(arg),globalThis.TransactionData=[]}} convertToken={async(arg:string)=>{
+                      "use server"
+                      const response = await exchangeToken(arg)
+                      return response.access_token}} accessToken={accessToken}>
+                  <div className='flex flex-col justify-center items-center'>
+                    <form action={async()=>{"use server"; await removeFromUser(id,{"cursor":""}); globalThis.TransactionData = await getTransactionCards(accessToken,id);revalidatePath("/settings")}} >
+                      <button className='text-lg underline text-textLight/70 dark:text-textDark/50'>Alte daten neu laden</button>
+                    </form>
+                    <form action={async()=>{"use server"; globalThis.TransactionData = await getTransactionCards(accessToken,id); revalidatePath("/settings")}} >
+                      <button className='text-3xl underline text-textLight dark:text-textDark/70'>Neue Daten laden</button>
+                    </form>
+                  </div>
+                </Plaid>
+              {accessToken&&globalThis.TransactionData}
+              {globalThis.TransactionData.length>0&& 
+              <div className="flex flex-col border-def bg-prim rounded-2xl p-4 ">
+                <div className="flex flex-col">
+                    <p className="text-xs text-textLight/70 dark:text-textDark/50">Kategorie & Parteien zu % richtig: </p>
+                    <div className="flex flex-row gap-4">
+                      <p className='text-sm text-green-500'>Grün: {'>'}90%</p> <p className='text-sm text-red-500'>Rot: {'<'}90%</p> 
+                    </div>
+                  </div>
+              </div>}
             </ul>
           </div>
         </div>
     </main>
   )
 }
-
 export default Settings
