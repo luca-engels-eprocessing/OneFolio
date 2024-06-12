@@ -78,7 +78,7 @@ const View = async (props: Props) => {
     const id = data._id
     const {title,date,data:det} = data.data
     let details = {}
-    det.map((e)=> {
+    det.map((e:any)=> {
       details = {...details,[e.key]:e.value}
     })
     const ret = {title,date,details,id}
