@@ -108,7 +108,7 @@ const View = async (props: Props) => {
             </Link>
           </Button>
         </div>
-        :list.map((investment, index) => (
+        :list.map((investment:any, index:number) => (
           <InvestmentCard key={index} data={investment} deleteOnClick={async ()=>{
             "use server"
             await deleteInvestmentById(investment.id||"")
