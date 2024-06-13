@@ -44,6 +44,9 @@ async function Settings({}: Props) {
       return <div>ERROR</div>
     }
   }
+  else{
+    globalThis.TransactionData = await getTransactionCards(accessToken,id);
+  }
 
   return (
     <main className="h-full w-full flex flex-col gap-8 items-center justify-start pb-2">

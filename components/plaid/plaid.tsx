@@ -28,7 +28,7 @@ const Plaid = (props: Props) => {
         const accessToken = await props.convertToken(publicToken)
         updateUser(props.user.id,{accessToken:accessToken})
         router.refresh()
-      }, []);
+      }, [props, router]);
       const onExit = useCallback<PlaidLinkOnExit>((publicToken, metadata) => {
         // send public_token to your server
         // https://plaid.com/docs/api/tokens/#token-exchange-flow
