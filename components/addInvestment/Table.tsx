@@ -205,7 +205,6 @@ export const Table = (props: Props) => {
 
     
     useEffect(()=>{
-        console.log(CSVIsEditing)
         let finalData:ReactNode[] = []
         CSVList.map((element,indx)=>{
             let newElement:{} = element

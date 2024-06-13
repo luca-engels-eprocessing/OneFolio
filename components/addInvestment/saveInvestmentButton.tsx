@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import { FormError } from "@/components/form-error"
 import { FormSuccess } from "@/components/form-success"
 import { saveData,saveMultipleData } from "@/utils/saveInvestment"
-import { revalidatePath } from "next/cache"
 import { useRouter } from "next/navigation"
 
 

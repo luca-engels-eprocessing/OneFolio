@@ -1,14 +1,22 @@
 import {describe, expect,test,jest} from '@jest/globals';
 import {editObject,deleteFromSelection, Table} from '@/components/addInvestment/Table'
 import { AddButton } from '@/components/addInvestment/addCategoryButton';
-import { screen,render, fireEvent, act } from '@testing-library/react';
-import { SaveButton } from '@/components/addInvestment/saveInvestmentButton';
+import { screen,render, fireEvent, act, cleanup } from '@testing-library/react';
+import { SaveButton, SaveCSVButton } from '@/components/addInvestment/saveInvestmentButton';
 import { auth } from '@/auth';
 import { afterEach } from 'node:test';
 import { ValueButton } from '@/components/addInvestment/valueButton';
 import { KeyButton } from '@/components/addInvestment/keyButton';
 import fetchMock from 'fetch-mock';
 import { BACKEND_URL } from "@/routes";
+import { AppRouterContextProviderMock } from '@/mocks/app-router-context-provider-mock';
+import { ReactNode } from 'react';
+
+const createRender= (node:React.JSX.Element) => {
+    const refresh = jest.fn();
+    return <AppRouterContextProviderMock router={{ refresh }}>{node}</AppRouterContextProviderMock>
+}
+  
 
 const getSample = () => {
     return {
@@ -205,20 +213,19 @@ describe('Check Add Button',()=>{
 
 describe('SaveInvestmentButton', () => {
     
-    afterEach(() => {
-        jest.clearAllMocks();
-    })
-
-    const mockData = { title: 'Test Investment', date: '2023-01-01', data: { data: "Test" } }
+    afterEach(cleanup)
+    
     test('SaveButton renders correctly', () => {
-        const { getByText } = render(<SaveButton data={{}} onClick={() => {}} />);
-        const button = getByText('Speichern');
+        
+        render(createRender(<SaveButton data={{}} onClick={() => {}} />));
+        const button = screen.getByText('Speichern');
         expect(button).toBeTruthy();
     });
 
     test('SaveButton displays error message on failed save', async () => {
         const errorMessage = "Bitte füge einen Titel für dein Investment ein";
-        const { getByText } = render(<SaveButton data={{}} onClick={() => {}} />);
+        
+        const { getByText } = render(createRender(<SaveButton data={{}} onClick={() => {}} />));
         const button = getByText('Speichern');
         await act(async () => {
             fireEvent.click(button);
@@ -230,7 +237,8 @@ describe('SaveInvestmentButton', () => {
     test('SaveButton displays success message on successful save', async () => {
         fetchMock.reset() .post(BACKEND_URL+"/investments/",201)
         const successMessage = "Investment erfolgreich gespeichert!";
-        const { getByText } = render(<SaveButton data={{"Titel": "Test","Startdatum des Investments":"2023-01-01","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />);
+        
+        const { getByText } = render(createRender(<SaveButton data={{"Titel": "Test","Startdatum des Investments":"2023-01-01","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />));
         const button = getByText('Speichern');
         const mockSession = {
             expires: new Date(Date.now() + 2 * 86400).toISOString(),
@@ -247,7 +255,8 @@ describe('SaveInvestmentButton', () => {
     test('SaveButton displays server error message on failed save', async () => {
         fetchMock.reset() .post(BACKEND_URL+"/investments/",500)
         const successMessage = "Es gab ein Problem auf der Serverseite";
-        const { getByText } = render(<SaveButton data={{"Titel": "Test","Startdatum des Investments":"2023-01-01","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />);
+        
+        const { getByText } = render(createRender(<SaveButton data={{"Titel": "Test","Startdatum des Investments":"2023-01-01","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />));
         const button = getByText('Speichern');
         const mockSession = {
             expires: new Date(Date.now() + 2 * 86400).toISOString(),
@@ -263,7 +272,25 @@ describe('SaveInvestmentButton', () => {
 
     test('SaveButton displays error if no UserID', async () => {
         const errorMessage = "Es gab einen Fehler beim laden der Nutzerdaten";
-        const { getByText } = render(<SaveButton data={{"Titel": "Test","Startdatum des Investments":"2023-01-01","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />);
+        
+        const { getByText } = render(createRender(<SaveButton data={{"Titel": "Test","Startdatum des Investments":"2023-01-01","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />));
+        const button = getByText('Speichern');
+        const mockSession = {
+            expires: new Date(Date.now() + 2 * 86400).toISOString(),
+            user: {}
+        };
+        (auth as jest.Mock).mockReturnValue(mockSession); // Mocking auth to return the session data and authenticated status
+        await act(async () => {
+            fireEvent.click(button);
+        });
+        const errorDisplay = await getByText(errorMessage, { exact: false })
+        expect(errorDisplay).toBeTruthy();
+    });
+
+    test('SaveButton displays error if no UserID', async () => {
+        const errorMessage = "Es gab einen Fehler beim laden der Nutzerdaten";
+        
+        const { getByText } = render(createRender(<SaveCSVButton data={[{"Titel": "Test","Startdatum des Investments":"2023-01-01","Daten": "Test","Daten2": "Test"}]} onClick={() => {}} />));
         const button = getByText('Speichern');
         const mockSession = {
             expires: new Date(Date.now() + 2 * 86400).toISOString(),
@@ -286,8 +313,9 @@ describe('Table rendering and fuctionality', () => {
         "TestObject": ['string',{'Object':{'ObjectCategory':['number',1,2]}},{'Object2':{'ObjectCategory2':['number',1,2]}}]
         
     }
+
     test('test save button click works', async () => {
-        const {getByText} = render(<Table items={{}} />)
+        const {getByText} = render(createRender(<Table items={{}} />))
         const button = getByText("Speichern"); // Mocking auth to return the session data and authenticated status
         await act(async () => {
             fireEvent.click(button)
@@ -296,7 +324,7 @@ describe('Table rendering and fuctionality', () => {
         expect(value).toBeTruthy()
     })
     test('test category button to open values', async () => {
-        const {getByText} = render(<Table items={{}} />)
+        const {getByText} = render(createRender(<Table items={{}} />))
         const button = getByText("Mehr..."); // Mocking auth to return the session data and authenticated status
         await act(async () => {
             fireEvent.click(button)
@@ -305,7 +333,7 @@ describe('Table rendering and fuctionality', () => {
         expect(value).toBeTruthy()
     })
     test('test add button to add category from Mehr...', async () => {
-        const {getByText,getByPlaceholderText} = render(<Table items={{}} />)
+        const {getByText,getByPlaceholderText} = render(createRender(<Table items={{}} />))
         const button = getByText("Mehr..."); // Mocking auth to return the session data and authenticated status
         await act(async () => {
             fireEvent.click(button)
@@ -321,7 +349,7 @@ describe('Table rendering and fuctionality', () => {
         expect(valueInCategory).toBeTruthy()
     })
     test('test add button to add category from TextList', async () => {
-        const {getByText,getByPlaceholderText} = render(<Table items={sList} />)
+        const {getByText,getByPlaceholderText} = render(createRender(<Table items={sList} />))
         const button = getByText("Titel"); // Mocking auth to return the session data and authenticated status
         await act(async () => {
             fireEvent.click(button)
@@ -337,7 +365,7 @@ describe('Table rendering and fuctionality', () => {
         expect(valueInCategory).toBeTruthy()
     })
     test('test add button to add category from ObjectList', async () => {
-        const {getByText,getByPlaceholderText} = render(<Table items={sList} />)
+        const {getByText,getByPlaceholderText} = render(createRender(<Table items={sList} />))
         const button = getByText("TestObject"); // Mocking auth to return the session data and authenticated status
         await act(async () => {
             fireEvent.click(button)
@@ -367,7 +395,7 @@ describe('Table rendering and fuctionality', () => {
         expect(newCategoryAdded2).toBeTruthy()
     })
     test('Test add value to values button', async () => {
-        const {getByText,getByPlaceholderText} = render(<Table items={sList} />)
+        const {getByText,getByPlaceholderText} = render(createRender(<Table items={sList} />))
         const button = getByText("TestObject"); // Mocking auth to return the session data and authenticated status
         await act(async () => {
             fireEvent.click(button)
