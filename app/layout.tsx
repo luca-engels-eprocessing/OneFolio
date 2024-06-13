@@ -32,6 +32,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
+          <head>
+            <link rel="manifest" href="/manifest.json" />  
+          </head>
           <body className={inter.className}>
             <Providers>
               <LoginButton className={"xl:flex hidden absolute z-10 top-10 right-10 btn-nav p-4 rounded-lg h-16 w-auto gap-2"} title={true}/>

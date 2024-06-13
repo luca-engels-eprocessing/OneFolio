@@ -262,7 +262,7 @@ export const Table = (props: Props) => {
                 <div className={cn(displayed && " max-h-[calc(50%-32px)]", " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-scroll scroll-light dark:scroll-dark rounded-md xl:w-[calc(50%-32px)] items-center xl:max-h-full xl:h-fit",props.className)}>
                     {keyButtonList}
                     <SaveButton data={selectionList} onClick={clearList} />
-                    <input type="file" accept=".csv" onChange={(e) => {
+                    <input type="file" accept=".csv" className='text-medium' onChange={(e) => {
                         handleFileUpload(e,setCSVList);
                     }} />
                 </div>
