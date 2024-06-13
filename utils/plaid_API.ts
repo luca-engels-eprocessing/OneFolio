@@ -1,23 +1,29 @@
 import { Configuration, CountryCode, CreditAccountSubtype, DepositoryAccountSubtype, LinkTokenCreateRequest, LinkTokenCreateResponse, PlaidApi, PlaidEnvironments, Products } from 'plaid';
-import {user} from "@/models/model"
-import { BACKEND_URL } from '@/routes';
 
 declare global {
   var plaidClient: PlaidApi | undefined;
 }
 
-const configuration = new Configuration({
+const configuration_sandbox = new Configuration({
   basePath: PlaidEnvironments.sandbox,
   baseOptions: {
     headers: {
       'PLAID-CLIENT-ID': process.env.PLAID_CLIENT_ID,
-      'PLAID-SECRET': process.env.PLAID_SECRET,
-      // 'Access-Control-Allow-Origin':"https://sandbox.plaid.com/link/token/create"
+      'PLAID-SECRET': process.env.PLAID_SECRET_SANDBOX,
+    },
+  },
+});
+const configuration_production = new Configuration({
+  basePath: PlaidEnvironments.production,
+  baseOptions: {
+    headers: {
+      'PLAID-CLIENT-ID': process.env.PLAID_CLIENT_ID,
+      'PLAID-SECRET': process.env.PLAID_SECRET_PRODUCTION,
     },
   },
 });
 
-const plaidClient = globalThis.plaidClient || new PlaidApi(configuration);
+const plaidClient = globalThis.plaidClient || (process.env.NODE_ENV !== "production")? new PlaidApi(configuration_production): new PlaidApi(configuration_sandbox);
 
 if (process.env.NODE_ENV !== "production") globalThis.plaidClient = plaidClient;
 
@@ -29,7 +35,7 @@ export const createLinkToken = async (user: {id:string,name:{firstname:string,la
     },
     client_name: 'OneFolio',
     products: ['transactions'] as Products[],
-    country_codes: ["DE", "NL"] as CountryCode[],
+    country_codes: ["DE"] as CountryCode[],
     language: 'de',
     account_filters: {
       depository: {

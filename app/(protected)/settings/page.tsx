@@ -65,10 +65,10 @@ async function Settings({}: Props) {
               
               <Plaid user={{id:session.user.id,name,address}} token={linkToken!} removeAccessToken={removeAccess } convertToken={convertToken} accessToken={accessToken}>
                   <div className='flex flex-col justify-center items-center'>
-                    <form action={async()=>{refreshTransactions(id,accessToken,true)}} >
+                    <form action={async()=>{"use server";refreshTransactions(id,accessToken,true)}} >
                       <button className='text-lg underline text-textLight/70 dark:text-textDark/50'>Alle Transaktionen laden</button>
                     </form>
-                    <form action={async()=>{refreshTransactions(id,accessToken,false)}} >
+                    <form action={async()=>{"use server";refreshTransactions(id,accessToken,false)}} >
                       <button className='text-3xl underline text-textLight dark:text-textDark/70'>Neue Transaktionen laden</button>
                     </form>
                   </div>
