@@ -4,7 +4,7 @@ import  {LogoutButton,UserInformaiton} from '@/components/auth/LogoutButton'
 import {auth} from "@/auth"
 import { getUserById, removeFromUser } from '@/utils/db'
 import Plaid from '@/components/plaid/plaid'
-import { createLinkToken, exchangeToken, removeAccessToken} from '@/utils/plaid'
+import { createLinkToken, exchangeToken, removeAccessToken} from '@/utils/plaid_API'
 import { getTransactionCards } from '@/components/plaid/transactionList'
 import { revalidatePath } from 'next/cache'
 
@@ -63,16 +63,13 @@ async function Settings({}: Props) {
             <h2 className='text-accent h2 font-semibold'>Bankdaten</h2>
             <ul className='flex flex-col gap-4'>
               
-              <Plaid user={{id:session.user.id,name,address}} token={linkToken!} removeAccessToken={(arg)=>{"use server";removeAccessToken(arg),globalThis.TransactionData=[]}} convertToken={async(arg:string)=>{
-                      "use server"
-                      const response = await exchangeToken(arg)
-                      return response.access_token}} accessToken={accessToken}>
+              <Plaid user={{id:session.user.id,name,address}} token={linkToken!} removeAccessToken={removeAccess } convertToken={convertToken} accessToken={accessToken}>
                   <div className='flex flex-col justify-center items-center'>
-                    <form action={async()=>{"use server"; await removeFromUser(id,{"cursor":""}); globalThis.TransactionData = await getTransactionCards(accessToken,id);revalidatePath("/settings")}} >
-                      <button className='text-lg underline text-textLight/70 dark:text-textDark/50'>Alte daten neu laden</button>
+                    <form action={async()=>{refreshTransactions(id,accessToken,true)}} >
+                      <button className='text-lg underline text-textLight/70 dark:text-textDark/50'>Alle Transaktionen laden</button>
                     </form>
-                    <form action={async()=>{"use server"; globalThis.TransactionData = await getTransactionCards(accessToken,id); revalidatePath("/settings")}} >
-                      <button className='text-3xl underline text-textLight dark:text-textDark/70'>Neue Daten laden</button>
+                    <form action={async()=>{refreshTransactions(id,accessToken,false)}} >
+                      <button className='text-3xl underline text-textLight dark:text-textDark/70'>Neue Transaktionen laden</button>
                     </form>
                   </div>
                 </Plaid>
@@ -93,3 +90,27 @@ async function Settings({}: Props) {
   )
 }
 export default Settings
+
+const removeAccess= (accessToken:string) =>{
+  "use server"
+  removeAccessToken(accessToken)
+  globalThis.TransactionData = []
+  revalidatePath("/settings")
+}
+
+const convertToken = async (publicToken:string) => {
+  "use server"
+  const response = await exchangeToken(publicToken)
+  return response.access_token
+}
+
+const refreshTransactions = async (userId:string,accessToken:string,dontIncludeCursor:boolean) => {
+  "use server"
+  if(dontIncludeCursor) await removeFromUser(userId,{"cursor":""})
+  globalThis.TransactionData = await getTransactionCards(accessToken,userId);
+  revalidatePath("/settings")
+}
+
+const deleteAccount = async (userId:string) => {
+  throw {error:"not jet supported"}
+}

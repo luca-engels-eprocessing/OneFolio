@@ -132,21 +132,3 @@ export const getLatestCursorOrUndefined = async (userId:string): Promise<string 
     return undefined
   }
 }
-
-export const updateTransactions = async (userId:string,update:{}) => {
-  try {
-    const response = await fetch(BACKEND_URL+"/users/"+userId,{
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(update)
-    })
-    const transaction = await response.json()
-    return transaction
-  } catch (e){
-    console.error(e)
-    return null
-  }
-
-}

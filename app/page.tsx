@@ -16,12 +16,6 @@ async function Home() {
     )
   }
 
-  const userData = await getUserById(session.user.id)
-  if(!userData){
-    return  <p>ERROR</p>
-  }
-  
-
   const inv = await getInvestmentsByUserId(session.user.id);
   if (!inv) {
     return (

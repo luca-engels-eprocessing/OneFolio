@@ -1,7 +1,6 @@
 
 "use client"
 import { removeFromUser, updateUser } from '@/utils/db';
-import { exchangeToken} from '@/utils/plaid';
 import { useRouter } from 'next/navigation'
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 import { usePlaidLink, PlaidLinkOnSuccess, PlaidLinkOnExit, PlaidLinkOnEvent } from 'react-plaid-link';

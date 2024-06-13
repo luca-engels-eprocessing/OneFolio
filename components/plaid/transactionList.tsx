@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { getLatestCursorOrUndefined, updateUser } from "@/utils/db";
-import { transactionSync } from "@/utils/plaid";
+import { transactionSync } from "@/utils/plaid_API";
 import { RemovedTransaction, Transaction, TransactionCounterparty } from "plaid";
 import { ReactNode } from "react";
 

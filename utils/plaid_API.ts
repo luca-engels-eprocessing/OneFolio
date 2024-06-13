@@ -56,7 +56,7 @@ export const createLinkToken = async (user: {id:string,name:{firstname:string,la
   }
 };
 
-export const exchangeToken = async (token: string,) => {
+export const exchangeToken = async (token: string) => {
   "use server"
   try {
     const response = await plaidClient.itemPublicTokenExchange({ public_token: token });

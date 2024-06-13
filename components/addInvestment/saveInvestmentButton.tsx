@@ -3,13 +3,14 @@ import { FormError } from "@/components/form-error"
 import { FormSuccess } from "@/components/form-success"
 import { saveData,saveMultipleData } from "@/utils/saveInvestment"
 import { revalidatePath } from "next/cache"
-import { DatasetController } from "chart.js"
+import { useRouter } from "next/navigation"
 
 
 
 export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>void}) => {
     const [success, setSuccess] = useState<string|undefined>("")  
     const [error, setError] = useState<string|undefined>("")
+    const router = useRouter()
 
     let prepData : {title:string,date:string,data:{}}
         Object.entries(data).map(([key,value])=>{
@@ -37,8 +38,7 @@ export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>v
                     setSuccess(data.success)
                 })
                 if(success!=''){
-                    revalidatePath('/overview')
-                    revalidatePath('/')
+                    router.refresh()
                     onClick()
                 }
             }}>Speichern</button>
@@ -51,6 +51,7 @@ export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>v
 export const SaveCSVButton = ({data,onClick}:{data:{}[],onClick:()=>void}) => {
     const [success, setSuccess] = useState<string|undefined>("")  
     const [error, setError] = useState<string|undefined>("")
+    const router = useRouter()
 
     const prepDataList : {title:string,date:any,data:any}[] = []
 
@@ -83,8 +84,7 @@ export const SaveCSVButton = ({data,onClick}:{data:{}[],onClick:()=>void}) => {
                     setSuccess(datas.success)
                 })
                 if(success!=""){
-                    revalidatePath('/overview')
-                    revalidatePath('/')
+                    router.refresh()
                     onClick()
                 }
             }}>Speichern</button>
