@@ -20,9 +20,9 @@ export const LogoutButton = (props:Props) => {
     if (status === "authenticated" && session && session.user) {
         return (
             <div className="flex flex-col my-2" key={"-1"}>
-                <button className="lg:p-4 p-2 btn-nav xl:my-2 my-1 font-light xl:text-sm text-xs xl:rounded-2xl rounded-md" onClick={() => signOut()}>
+                <button className="lg:p-4 p-2 btn-nav xl:my-2 my-1 font-light text-small xl:rounded-2xl rounded-md" onClick={() => signOut()}>
                     <p className="text-textLight/70 dark:text-textDark/70">Sie sind eingeloggt.</p>
-                    <span className="font-normal text-xl">Ausloggen?</span>
+                    <span className="font-normal text-big">Ausloggen?</span>
                 </button>
             </div>
         )
@@ -30,7 +30,7 @@ export const LogoutButton = (props:Props) => {
     return (
         <span onClick={onClick} className="cursor-pointer">
             <div className="flex flex-col">
-                <button className="lg:p-4 p-0 btn-nav font-normal text-xl rounded-2xl text-center">Laden...</button>
+                <button className="lg:p-4 p-0 btn-nav font-normal text-big rounded-2xl text-center">Laden...</button>
               </div>
         </span>
     )
@@ -114,8 +114,8 @@ const LiItem = ({name:key,value:value,index:index}:{name: string,value:any,index
             value = value.substring(0,14)+"..."
         }
     return (
-        <div className='lg:p-4 p-2 btn-nav xl:my-2 my-1 font-light xl:text-sm text-xs xl:rounded-2xl rounded-md'><p className="text-textLight/70 dark:text-textDark/50" key={index}>{key + ":"}</p>
-            <span className={cn(value?'text-textLight dark:text-textDark':'text-textLight/50 dark:text-textDark/50','font-normal xl:text-xl lg:text-lg text-sm')}>{value?value:(
+        <div className='lg:p-4 p-2 btn-nav xl:my-2 my-1 font-light text-small xl:rounded-2xl rounded-md'><p className="text-textLight/70 dark:text-textDark/50" key={index}>{key + ":"}</p>
+            <span className={cn(value?'text-textLight dark:text-textDark':'text-textLight/50 dark:text-textDark/50','font-normal text-big')}>{value?value:(
                 (size?.width && size.width < 410)?"Jetzt +":"Jetzt Hinzufügen!"
             )}</span>
         </div>

@@ -24,11 +24,11 @@ export const AddButton = ({node,onSubmit,inputType}:{node?:string,onSubmit:(e:Fo
     return (
         <form className='border-def bg-prim rounded-md flex flex-col justify-center px-4 group p-2 w-full' onSubmit={onSubmit}>
             <div className="xl:flex-row flex-col flex gap-4 justify-start items-center">
-                <input type={(inputType)?inputType:'text'} className='w-full text-left xl:text-3xl text-lg p-2 border-0 bg-transparent' aria-label='newCategory' name='newCategory' placeholder='Wert hinzufügen ...' />
+                <input type={(inputType)?inputType:'text'} className='w-full text-left text-big p-2 border-0 bg-transparent' aria-label='newCategory' name='newCategory' placeholder='Wert hinzufügen ...' />
          
                 {node == "Mehr..."&&
                 <div className='h-full text-start flex flex-col items-start'>
-                    <label className='text-sm' >Als:</label>
+                    <label className='text-small' >Als:</label>
                     <select name="inputType" id="inputType" className='bg-prim'>
                         <option value="text">Texte</option>
                         <option value="number">Nummern</option>
@@ -36,17 +36,17 @@ export const AddButton = ({node,onSubmit,inputType}:{node?:string,onSubmit:(e:Fo
                     </select>
                 </div>
                 }
-                <div className='flex flex-row text-3xl gap-8 items-center text-center w-full xl:w-auto'>
+                <div className='flex flex-row text-big gap-8 items-center text-center w-full xl:w-auto'>
                     <button type='submit'  aria-label='add-button' className='w-full btn-nav p-4 rounded-lg flex flex-row justify-center gap-2 content-center items-center'>
-                        <p className="xl:text-md text-sm h-full">Hinzufügen</p> <IconPlus size={32} />
+                        <p className="text-medium h-full">Hinzufügen</p> <IconPlus size={32} />
                     </button>
                 </div>
             </div>
             <div className='hidden' ref={expandDivRef!}>
 
                 {node != "Titel" && node != "Mehr..." && <div className='flex gap-2 flex-row justify-start content-bottom' >
-                    <input type='text' className='w-full text-left text-3xl p-2 border-0 bg-transparent' name='subCategory' placeholder='Sub-Kategorie ...' />    
-                    <div className='text-center text-xl flex flex-row justify-center items-center'>
+                    <input type='text' className='w-full text-left text-big p-2 border-0 bg-transparent' name='subCategory' placeholder='Sub-Kategorie ...' />    
+                    <div className='text-center text-big flex flex-row justify-center items-center'>
                         <label>Als:</label>
                         <select name="inputType" id="inputType" className='bg-prim'>
                             <option value="text">Texte</option>

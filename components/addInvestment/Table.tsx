@@ -212,11 +212,11 @@ export const Table = (props: Props) => {
             let data:ReactNode[] = []
             Object.entries(element).map(([key,value],index)=>{
                 data.push(<div key={index} className={"flex flex-col"}>
-                            <p className={"text-sm"}>{key}</p>
+                            <p className={"text-small"}>{key}</p>
                             {CSVIsEditing==element?<input type={'text'} onChange={(e)=>{
                                 const newValue = e.target.value as string
                                 newElement = {...newElement,[key]:newValue}
-                            }} placeholder={value as string} className='w-full text-left text-2xl p-2 border-0 bg-transparent' />:<p className={"text-2xl"}>{value as string}</p>}
+                            }} placeholder={value as string} className='w-full text-left text-big p-2 border-0 bg-transparent' />:<p className={"text-big"}>{value as string}</p>}
                         </div>)
             })
             finalData.push(<div key={indx} className={"bg-prim border-def rounded-lg flex flex-row p-4"}>

@@ -1,4 +1,5 @@
 import { Configuration, CountryCode, CreditAccountSubtype, DepositoryAccountSubtype, LinkTokenCreateRequest, LinkTokenCreateResponse, PlaidApi, PlaidEnvironments, Products } from 'plaid';
+import { removeFromUser } from './db';
 
 declare global {
   var plaidClient: PlaidApi | undefined;
@@ -23,7 +24,8 @@ const configuration_production = new Configuration({
   },
 });
 
-const plaidClient = globalThis.plaidClient || (process.env.NODE_ENV !== "production")? new PlaidApi(configuration_production): new PlaidApi(configuration_sandbox);
+const plaidClient = globalThis.plaidClient || new PlaidApi(configuration_sandbox); 
+// const plaidClient = globalThis.plaidClient || (process.env.NODE_ENV == "production")? new PlaidApi(configuration_production): new PlaidApi(configuration_sandbox);
 
 if (process.env.NODE_ENV !== "production") globalThis.plaidClient = plaidClient;
 
@@ -31,7 +33,6 @@ export const createLinkToken = async (user: {id:string,name:{firstname:string,la
   const request: LinkTokenCreateRequest = {
     user: {
       client_user_id: user.id,
-
     },
     client_name: 'OneFolio',
     products: ['transactions'] as Products[],
@@ -80,7 +81,7 @@ export const exchangeToken = async (token: string) => {
   }
 };
 
-export const transactionSync = async (accessToken: string,cursor:string|undefined) =>  {
+export const transactionSync = async (accessToken: string,userId:string,cursor:string|undefined) =>  {
   // const request = { access_token: accessToken,options:{include_original_description:true} }
   const request = { access_token: accessToken,cursor:cursor,options:{include_original_description:true} }
   try {
@@ -89,6 +90,11 @@ export const transactionSync = async (accessToken: string,cursor:string|undefine
   } catch (err: any) {
     if (err.response) {
       // Plaid API error
+      
+      if(err.response.data.error_code=="INVALID_ACCESS_TOKEN"){
+        removeFromUser(userId,{"access_token":""})
+        removeFromUser(userId,{"cursor":cursor})
+      }
       console.error("Plaid API error:", err.response);
     } else {
       // Other error

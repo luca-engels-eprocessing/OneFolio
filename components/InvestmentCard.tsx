@@ -37,13 +37,13 @@ const InvestmentCard = ({data:props,deleteOnClick}:{data:Props,deleteOnClick:()=
 return (
     <div className={"btn-nav rounded-md flex xl:flex-row flex-col xl:gap-8 px-4 group h-full"}>
         <button onClick={onClickExpand} className={"flex xl:flex-col flex-row justify-between xl:w-1/2 w-full items-end text-right h-full gap-4"}>
-            <h1 className={"pt-8 text-accentLight dark:text-accentDark xl:text-5xl md:text-2xl text-xl font-semibold pb-8 group-hover:text-accentTextLight group-focus:text-accentTextLight dark:group-hover:text-accentTextDark dark:group-focus:text-accentTextDark"}>
+            <h1 className={"pt-8 h1 font-semibold pb-8 group-hover:text-accentTextLight group-focus:text-accentTextLight dark:group-hover:text-accentTextDark dark:group-focus:text-accentTextDark"}>
                 {props.title}
             </h1>
                 {props.date&&
                 <div className='pb-8'>
-                    <p className={"xl:text-sm text-xs font-light"}>Start Datum des Investments:</p>
-                    <p className={"xl:text-2xl text-lg font-normal"}>{props.date}</p>
+                    <p className={"text-small font-light"}>Start Datum des Investments:</p>
+                    <p className={"text-big font-normal"}>{props.date}</p>
                 </div>
                 }
         </button>
@@ -56,14 +56,14 @@ return (
             <div className={"grid gap-4  items-center text-start xl:grid-rows-2 xl:grid-cols-2 grid-cols-1 w-full"} ref={gridRef}>
                 {Object.entries(props.details).slice(0, 3).map(([key, value], index) => (
                     <div key={index} className={index >= 3 ? 'hidden' : ''}>
-                        <p className={"xl:text-sm text-xs font-light"}>{key}</p>
-                        <p className={"xl:text-2xl text-lg font-normal"}>{value as string}</p>
+                        <p className={"text-small font-light"}>{key}</p>
+                        <p className={"text-big font-normal"}>{value as string}</p>
                     </div>
                 ))}
                 {Object.entries(props.details).slice(3).map(([key, value], index) => (
                     <div key={index + 3} className='hidden'>
-                        <p className={"xl:text-sm text-xs font-light"}>{key}</p>
-                        <p className={"xl:text-2xl text-lg font-normal"}>{value as string}</p>
+                        <p className={"text-small font-light"}>{key}</p>
+                        <p className={"text-big font-normal"}>{value as string}</p>
                     </div>
                 ))}
                 <a onClick={onClickExpand} className='cursor-pointer'>Mehr ...</a>

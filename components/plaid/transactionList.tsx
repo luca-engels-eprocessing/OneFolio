@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
-import { getLatestCursorOrUndefined, updateUser } from "@/utils/db";
-import { transactionSync } from "@/utils/plaid_API";
+import { getLatestCursorOrUndefined, removeFromUser, updateUser } from "@/utils/db";
+import { removeAccessToken, transactionSync } from "@/utils/plaid_API";
+import { useRouter } from "next/navigation";
 import { RemovedTransaction, Transaction, TransactionCounterparty } from "plaid";
 import { ReactNode } from "react";
 
@@ -20,44 +21,51 @@ type TransactionCardProps = {
   
   const TransactionCard = (props: TransactionCardProps) => {
     "use client"
-    var trimString = props.categoryDetailed
-    const length = 75
-    if(props.categoryDetailed&&props.categoryDetailed.length>length){
-        trimString = props.categoryDetailed.substring(0, length);
-        trimString = trimString+"..."
+    var width=1000
+    if(typeof window != "undefined"&&window&&window.innerWidth){
+      width=window.innerWidth;
     }
-    const categoryDetailElement = <p className={cn("text-lg",(props.categoryConfidence === 'HIGH' || props.categoryConfidence === 'VERY_HIGH')?"text-green-500":"text-red-500")}>{trimString}</p>
+    var trimString = props.categoryDetailed
+    if(trimString){
+      trimString = trimString.replaceAll("_"," ")
+    }
+    // const length = 50
+    // if(props.categoryDetailed&&props.categoryDetailed.length>length){
+    //     trimString = props.categoryDetailed.substring(0, length);
+    //     trimString = trimString+"..."
+    // }
+    const categoryDetailElement = <p className={cn("xl:text-2xl lg:text-base text-xs",(props.categoryConfidence === 'HIGH' || props.categoryConfidence === 'VERY_HIGH')?"text-green-200":"text-red-200")}>{trimString?.toLocaleLowerCase()}</p>
     const parties:ReactNode[] =[]
     props.counterParties?.forEach((data,index) => {
 
-        const counterPartiesElement = <p key={index} className={cn("text-lg",(data.confidence_level === 'HIGH' || data.confidence_level === 'VERY_HIGH')?"text-green-500":"text-red-500")}>{data.name}</p>
+        const counterPartiesElement = <p key={index} className={cn("xl:text-2xl lg:text-base text-xs",(data.confidence_level === 'HIGH' || data.confidence_level === 'VERY_HIGH')?"text-green-200":"text-red-200")}>{data.name}</p>
         parties.push(counterPartiesElement)
     })
     
     return (
       <div className="flex flex-col border-def bg-prim rounded-2xl p-4 ">
-        <div className="flex flex-row gap-8 w-full justify-between pr-8">
-            <div className="flex flex-col basis-1/4">
-                <p className="text-sm text-textLight/70 dark:text-textDark/50">Umsatz: </p>
-                <div className="flex flex-row gap-1">
-                    <p className={cn("text-lg",props.amount<0?"text-red-500":"text-green-500")}>{props.amount>0?"+":""}{props.amount.toLocaleString()}</p>
-                    <p className="text-lg">{props.currency}</p>
-                </div>
-            </div>
-            <div className="flex flex-col justify-center text-center basis-1/2">
-                <p className="text-sm text-textLight/70 dark:text-textDark/50">Bescheibung: </p>
-                <p className="text-lg">{props.description}</p>
-            </div>
-            
-        <div className="flex flex-col justify-end text-end basis-1/4">
-            <p className="text-sm text-textLight/70 dark:text-textDark/50">Von: </p>
-            <div className="flex flex-row gap-4 justify-end">
-            {parties}
-            </div>
-        </div>
+        <div className="xl:flex xl:flex-row grid grid-cols-2 xl:gap-8 gap-2 w-full justify-between xl:pr-8">
+          <div className="flex flex-col basis-1/4">
+              <p className="text-small text-textLight/70 dark:text-textDark/50">Umsatz: </p>
+              <div className="flex flex-row gap-1 items-end">
+                  <p className={cn("xl:text-2xl lg:text-base text-xs",props.amount<0?"text-red-500":"text-green-500")}>{props.amount>0?"+":""}{props.amount.toLocaleString()}</p>
+                  <p className="text-medium ">{props.currency}</p>
+              </div>
+          </div>
+          <div className="flex flex-col justify-center text-center basis-1/2">
+              <p className="text-small text-textLight/70 dark:text-textDark/50">Bescheibung: </p>
+              <p className="xl:text-2xl lg:text-base text-xs">{props.description}</p>
+          </div>
+          <div className="flex flex-col justify-start xl:text-end basis-1/4">
+
+              {parties.length>0&&<><p className="text-small text-textLight/70 dark:text-textDark/50">Von/An: </p>
+              <div className="flex flex-row gap-4 xl:justify-end">
+              {parties}
+              </div></>}
+          </div>
         </div>
         <div className="flex flex-col ">
-            <p className="text-sm text-textLight/70 dark:text-textDark/50">Kategorie: </p>
+            <p className="text-small text-textLight/70 dark:text-textDark/50">Kategorie: </p>
             <div className="flex flex-row gap-4">
                 {categoryDetailElement}
             </div>
@@ -73,11 +81,8 @@ type TransactionCardProps = {
     let removed: Array<RemovedTransaction> = [];
     let hasMore = true;
     let cursor = await getLatestCursorOrUndefined(userId);
-    console.log("cursor:",cursor)
-    console.log("userId:",userId)
-  
     while(hasMore){
-      const data = await transactionSync(token,cursor)
+    const data = await transactionSync(token,userId,cursor)
       added = added.concat(data.added);
       modified = modified.concat(data.modified);
       removed = removed.concat(data.removed);  

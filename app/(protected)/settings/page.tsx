@@ -6,7 +6,7 @@ import { getUserById, removeFromUser } from '@/utils/db'
 import Plaid from '@/components/plaid/plaid'
 import { createLinkToken, exchangeToken, removeAccessToken} from '@/utils/plaid_API'
 import { getTransactionCards } from '@/components/plaid/transactionList'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 
 
 declare global{
@@ -45,41 +45,41 @@ async function Settings({}: Props) {
     }
   }
   else{
-    globalThis.TransactionData = await getTransactionCards(accessToken,id);
+    const data = await getTransactionCards(accessToken,id);
+    globalThis.TransactionData = data
   }
-
   return (
     <main className="h-full w-full flex flex-col gap-8 items-center justify-start pb-2">
         <div>
           <h1 className={"h1"}>Ihre Einstellungen</h1>
         </div>
-        <div className="flex w-[80vw] h-[100%] border-def bg-sec xl:flex-row gap-y-4 flex-col rounded-md overflow-hidden">
-          <div className='xl:w-1/2 w-full px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>
+        <div className="flex w-[80vw] h-[100%] border-def bg-sec xl:flex-row gap-y-4 flex-col rounded-md xl:overflow-hidden overflow-y-scroll">
+          <div className='xl:w-1/2 w-full px-16 py-8 xl:overflow-y-scroll scroll-light dark:scroll-dark basis-1/2'>
             <h2 className='text-accent h2 font-semibold'>Nutzer Informationen</h2>
               <UserInformaiton info={user} key={1}/>
               <LogoutButton key={2}/>
           </div>
-          <div className='xl:w-1/2 w-full px-16 py-8 overflow-y-scroll scroll-light dark:scroll-dark'>
+          <div className='xl:w-1/2 w-full px-16 py-8 xl:overflow-y-scroll scroll-light dark:scroll-dark basis-1/2'>
             <h2 className='text-accent h2 font-semibold'>Bankdaten</h2>
             <ul className='flex flex-col gap-4'>
               
-              <Plaid user={{id:session.user.id,name,address}} token={linkToken!} removeAccessToken={removeAccess } convertToken={convertToken} accessToken={accessToken}>
-                  <div className='flex flex-col justify-center items-center'>
-                    <form action={async()=>{"use server";refreshTransactions(id,accessToken,true)}} >
-                      <button className='text-lg underline text-textLight/70 dark:text-textDark/50'>Alle Transaktionen laden</button>
+              <Plaid user={{id:session.user.id,name,address}} token={linkToken!} removeAccessToken={removeAccess } convertToken={convertToken} accessToken={accessToken} />
+                
+                <div className='flex flex-row justify-center items-center gap-4'>
+                    <form action={async()=>{"use server";await refreshTransactions(id,accessToken,true);}} >
+                      <button className='text-medium underline text-accentLight dark:text-accentDark  bg-prim p-4 rounded-xl border-def'>Bereits überprüfte Transaktionen laden</button>
                     </form>
-                    <form action={async()=>{"use server";refreshTransactions(id,accessToken,false)}} >
-                      <button className='text-3xl underline text-textLight dark:text-textDark/70'>Neue Transaktionen laden</button>
+                    <form action={async()=>{"use server";await refreshTransactions(id,accessToken,false); }} >
+                      <button className='text-medium underline text-accentLight dark:text-accentDark bg-prim p-4 rounded-xl border-def'>Neue Transaktionen laden</button>
                     </form>
                   </div>
-                </Plaid>
               {accessToken&&globalThis.TransactionData}
               {globalThis.TransactionData&&globalThis.TransactionData.length>0&& 
               <div className="flex flex-col border-def bg-prim rounded-2xl p-4 ">
                 <div className="flex flex-col">
-                    <p className="text-xs text-textLight/70 dark:text-textDark/50">Kategorie & Parteien zu % richtig: </p>
+                    <p className="text-tiny text-textLight/70 dark:text-textDark/50">Kategorie & Parteien zu % richtig: </p>
                     <div className="flex flex-row gap-4">
-                      <p className='text-sm text-green-500'>Grün: {'>'}90%</p> <p className='text-sm text-red-500'>Rot: {'<'}90%</p> 
+                      <p className='text-small text-green-200'>Grün: {'>'}90%</p> <p className='text-small text-red-200'>Rot: {'<'}90%</p> 
                     </div>
                   </div>
               </div>}
@@ -95,7 +95,7 @@ const removeAccess= (accessToken:string) =>{
   "use server"
   removeAccessToken(accessToken)
   globalThis.TransactionData = []
-  revalidatePath("/settings")
+  revalidateTag("settings")
 }
 
 const convertToken = async (publicToken:string) => {
@@ -107,8 +107,7 @@ const convertToken = async (publicToken:string) => {
 const refreshTransactions = async (userId:string,accessToken:string,dontIncludeCursor:boolean) => {
   "use server"
   if(dontIncludeCursor) await removeFromUser(userId,{"cursor":""})
-  globalThis.TransactionData = await getTransactionCards(accessToken,userId);
-  revalidatePath("/settings")
+  revalidateTag("settings")
 }
 
 const deleteAccount = async (userId:string) => {

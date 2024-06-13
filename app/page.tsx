@@ -35,7 +35,7 @@ async function Home() {
           </div>
           <div className="flex xl:flex-row-reverse flex-col gap-8">
             <div className="p-4 xl:w-[10vw] w-auto border-def rounded-xl bg-sec flex flex-col justify-between border-l-borderLight dark:border-l-borderDark border-l-2">
-              <p className="text-sm">Das könnte sie interessieren</p>
+              <p className="text-small">Das könnte sie interessieren</p>
               <p>Werbung</p>
             </div>
             <div

@@ -30,7 +30,7 @@ export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>v
         }
     })
     return (<>
-            <button className='btn-nav w-full rounded-xl text-xl font-semibold py-8' onClick={(e) => {
+            <button className='btn-nav w-full rounded-xl text-big font-semibold py-8' onClick={(e) => {
                 setError("")
                 setSuccess("")
                 saveData(prepData).then((data)=> {
@@ -76,7 +76,7 @@ export const SaveCSVButton = ({data,onClick}:{data:{}[],onClick:()=>void}) => {
         prepDataList.push(prepData!)
     })
     return (<>
-            <button className='btn-nav w-full rounded-xl text-xl font-semibold py-8' onClick={(e) => {
+            <button className='btn-nav w-full rounded-xl text-big font-semibold py-8' onClick={(e) => {
                 setError("")
                 setSuccess("")
                 saveMultipleData(prepDataList).then((datas)=> {

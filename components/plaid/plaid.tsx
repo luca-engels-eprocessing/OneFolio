@@ -12,7 +12,7 @@ type Props = {
   accessToken:string|undefined,
   convertToken:(publicToken: string) => Promise<string>
   removeAccessToken:(arg:string)=>void,
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const Plaid = (props: Props) => {
@@ -62,19 +62,19 @@ const Plaid = (props: Props) => {
               router.refresh()
             }
             }}>
-              <p className='text-lg text-textLight/70 dark:text-textDark/50'>Bankverbindung wieder auflösen?</p>
-              <p className='text-3xl underline text-textLight dark:text-textDark/70'> Hier Klicken</p>
+              <p className='text-medium text-textLight/70 dark:text-textDark/50'>Bankverbindung wieder auflösen?</p>
+              <p className='text-big underline text-textLight dark:text-textDark/70'> Hier Klicken</p>
           </button>
           {props.children}
         </div>
         :
         <button className='w-full' onClick={() =>{open()}} disabled={!ready}>
-            <p className='text-lg text-textLight/70 dark:text-textDark/50'>Noch keine Bankdaten vorhanden</p>
-            <p className='text-3xl underline text-green-500/50'> Jetzt Bankkonto verbinden</p>
-            <p className='text-xs'>Sandbox-Daten:</p>
-            <p className='text-xs'>username: &apos;user_good&apos;</p>
-            <p className='text-xs'>password: &apos;pass_good&apos;</p>
-            <p className='text-xs'>auth_code: &apos;1234&apos;</p>
+            <p className='text-medium text-textLight/70 dark:text-textDark/50'>Noch keine Bankdaten vorhanden</p>
+            <p className='text-big underline text-green-500/50'> Jetzt Bankkonto verbinden</p>
+            <p className='text-tiny'>Sandbox-Daten:</p>
+            <p className='text-tiny'>username: &apos;user_good&apos;</p>
+            <p className='text-tiny'>password: &apos;pass_good&apos;</p>
+            <p className='text-tiny'>auth_code: &apos;1234&apos;</p>
         </button>
       }
     </div>

@@ -30,6 +30,7 @@
     "next": "14.1.4",
     "next-auth": "^5.0.0-beta.17",
     "next-auth-http-adapter": "^0.3.0",
+    "next-pwa": "^5.6.0",
     "plaid": "^24.0.0",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",

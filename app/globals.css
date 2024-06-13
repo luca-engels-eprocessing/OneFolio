@@ -27,6 +27,21 @@
   .text-accent{
     @apply text-accentLight dark:text-accentDark group-hover:text-accentTextLight group-focus:text-accentTextLight dark:group-hover:text-accentTextDark dark:group-focus:text-accentTextDark;
   };
+  .text-giant{
+    @apply xl:text-4xl lg:text-2xl text-lg;
+  };
+  .text-big{
+    @apply xl:text-2xl lg:text-lg text-base;
+  };
+  .text-medium{
+    @apply xl:text-base lg:text-sm text-xs;
+  }
+  .text-small{
+    @apply xl:text-sm lg:text-xs text-xs;
+  }
+  .text-tiny{
+    @apply xl:text-xs lg:text-xs text-xs;
+  }
 }
 
 /* width */

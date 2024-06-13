@@ -14,7 +14,7 @@ type Props = {
 export const Header = (props:Props) => {
     return (
     <div className="w-full flex flex-col gap-y-4 items-center justify-center">
-        <h1 className={cn("text-2xl font-semibold",font.className)}>
+        <h1 className={cn("text-big font-semibold",font.className)}>
             {props.label}
         </h1>
     </div>

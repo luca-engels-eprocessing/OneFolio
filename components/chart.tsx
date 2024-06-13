@@ -112,16 +112,16 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
 
   return(
     <div className="xl:w-full max-w-[50vw] flex flex-col justify-center items-start gap-y-4">
-      <p className={"xl:text-2xl text-lg font-medium"}>{"Deine "+diagramValueX}</p>
+      <p className={"text-big font-medium"}>{"Deine "+diagramValueX}</p>
       <div className="flex xl:flex-row flex-col gap-2 w-[40%]">
-        <select name="inputType" id="inputType" className='bg-prim xl:text-xl text-xs' defaultValue={diagramValueX} onChange={(e)=>onChange(e,'x')}>
+        <select name="inputType" id="inputType" className='bg-prim text-medium' defaultValue={diagramValueX} onChange={(e)=>onChange(e,'x')}>
           {listKeys.map((valueKey,index)=>{
             return(<option key={index} value={valueKey}>{valueKey}</option>)
           })}
         </select>
         <div className="flex flex-row gap-2">
-          <p className="xl:text-lg text-xs">Diagramm:</p>
-          <select name="ChartType" id="ChartType" className='bg-prim xl:text-lg text-xs' defaultValue={diagramType} onChange={(e)=>onChange(e,'type')}>
+          <p className="text-medium">Diagramm:</p>
+          <select name="ChartType" id="ChartType" className='bg-prim text-medium' defaultValue={diagramType} onChange={(e)=>onChange(e,'type')}>
             <option value="bar">Bar</option>
             <option value="pie">Kreis</option>
             <option value="radar">Netz</option>
