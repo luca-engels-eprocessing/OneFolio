@@ -62,8 +62,8 @@ const Plaid = (props: Props) => {
               router.refresh()
             }
             }}>
-              <p className='text-medium text-textLight/70 dark:text-textDark/50'>Bankverbindung wieder auflösen?</p>
-              <p className='text-big underline text-textLight dark:text-textDark/70'> Hier Klicken</p>
+              <p className='text-medium text-textLight/70 dark:text-textDark/50'>Sie sind mit ihrem Bankkonto verbunden</p>
+              <p className='text-big text-textLight dark:text-textDark/70'> Bankverbindung wieder auflösen?</p>
           </button>
           {props.children}
         </div>
