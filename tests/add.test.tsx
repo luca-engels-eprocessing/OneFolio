@@ -234,7 +234,7 @@ describe('SaveInvestmentButton', () => {
         expect(errorDisplay).toBeTruthy();
     });
 
-    test('SaveButton displays success message on successful save', async () => {
+    test('2.1 SUCESSFUL SAVE: SaveButton displays success message on successful save', async () => {
         fetchMock.reset() .post(BACKEND_URL+"/investments/",201)
         const successMessage = "Investment erfolgreich gespeichert!";
         
@@ -268,6 +268,12 @@ describe('SaveInvestmentButton', () => {
         });
         const successDisplay = await getByText(successMessage, { exact: false })
         expect(successDisplay).toBeTruthy();
+        const lastCall = fetchMock.lastCall()!
+        expect(lastCall[1]).toBeTruthy();
+        expect(lastCall[1]!.body).toContain('"userId":"1"')
+        expect(lastCall[1]!.body).toContain('"title":"Test"')
+        expect(lastCall[1]!.body).toContain('"date":"2023-01-01"')
+        expect(lastCall[1]!.body).toContain('{\"key\":\"Daten\",\"value\":\"Test\"}')
     });
 
     test('SaveButton displays error if no UserID', async () => {
@@ -314,9 +320,9 @@ describe('Table rendering and fuctionality', () => {
         
     }
 
-    test('test save button click works', async () => {
+    test('2.2 NO TITLE ENTERED. test save button click needs a Title', async () => {
         const {getByText} = render(createRender(<Table items={{}} />))
-        const button = getByText("Speichern"); // Mocking auth to return the session data and authenticated status
+        const button = getByText("Speichern");
         await act(async () => {
             fireEvent.click(button)
         })
