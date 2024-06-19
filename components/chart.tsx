@@ -5,6 +5,8 @@ import {
 } from "chart.js/auto";
 import React, { useEffect, useState, ChangeEvent } from "react";
 import { Chart as ReactChart } from "react-chartjs-2";
+import { Select, SelectItem, SelectTrigger } from "./ui/select";
+import { SelectContent, SelectGroup, SelectLabel, SelectValue } from "@radix-ui/react-select";
 
 // Register ChartJS components using ChartJS.register
 ChartJS.register(...registerables);
@@ -114,14 +116,27 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
     <div className="xl:w-full max-w-[50vw] flex flex-col justify-center items-start gap-y-4">
       <p className={"text-big font-medium"}>{"Deine "+diagramValueX}</p>
       <div className="flex xl:flex-row flex-col gap-2 w-[40%]">
-        <select name="inputType" id="inputType" className='bg-prim text-medium' defaultValue={diagramValueX} onChange={(e)=>onChange(e,'x')}>
+        <Select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Kategorie?"/>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup className="bg-prim rounded-md w-[400px]">
+              <SelectLabel>Kategorien</SelectLabel>
+              {listKeys.map((valueKey,index)=>{
+                return(<SelectItem key={index} value={valueKey}>{valueKey}</SelectItem>)
+              })}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        {/* <select name="inputType" id="inputType" className='bg-prim text-medium text-textLight' defaultValue={diagramValueX} onChange={(e)=>onChange(e,'x')}>
           {listKeys.map((valueKey,index)=>{
             return(<option key={index} value={valueKey}>{valueKey}</option>)
           })}
-        </select>
+        </select> */}
         <div className="flex flex-row gap-2">
           <p className="text-medium">Diagramm:</p>
-          <select name="ChartType" id="ChartType" className='bg-prim text-medium' defaultValue={diagramType} onChange={(e)=>onChange(e,'type')}>
+          <select name="ChartType" id="ChartType" className='bg-prim text-medium text-textLight' defaultValue={diagramType} onChange={(e)=>onChange(e,'type')}>
             <option value="bar">Bar</option>
             <option value="pie">Kreis</option>
             <option value="radar">Netz</option>
