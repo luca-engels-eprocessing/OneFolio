@@ -25,36 +25,37 @@ async function Home() {
     );
   }
   const investments = inv.map((data: { data: { data: any; }; }) => data.data.data);
-  const totalSum = investments.reduce((acc: number, cur: any[]) => acc + Number.parseInt(cur.find((data: { key: string; }) => data.key === "Summe")?.value || "0"), 0);
-  const averageRendite = Math.round(investments.reduce((acc: number, cur: any[]) => acc + Number.parseInt(cur.find((data: { key: string; }) => data.key === "Rendite (in %)")?.value || "0"), 0)/investments.length);
+  const totalSum = investments.reduce((acc: number, cur: any[]) => acc + Number.parseInt(cur.find((data: { key: string; }) => (data.key as string).toLowerCase().includes("summe"))?.value || "0"), 0);
+  const totalRendite = investments.reduce((acc: number, cur: any[]) => acc + (cur.find((data: { key: string; }) => (data.key as string).toLowerCase().includes("rendite"))?1:0), 0)
+  const averageRendite = Math.round(investments.reduce((acc: number, cur: any[]) => acc + Number.parseInt(cur.find((data: { key: string; }) => (data.key as string).toLowerCase().includes("rendite"))?.value || "0"), 0)/totalRendite);
 
   return (
-      <main className="w-full flex flex-col gap-8 items-center justify-start pb-2 px-4 xl:py-0">
-          <div>
-              <h1 className={"h1"}>Dein Portfolio im Überblick</h1>
+    <main className="w-full flex flex-col gap-8 items-center justify-start pb-2 px-4 xl:py-0">
+        <div>
+          <h1 className={"h1"}>Dein Portfolio im Überblick</h1>
+        </div>
+        <div className="flex xl:flex-row-reverse flex-col gap-8 w-full xl:w-[80vw] ">
+          <div className="p-4 xl:w-[10vw] w-auto border-def rounded-xl bg-sec flex flex-col justify-between">
+            <p className="text-small">Das könnte sie interessieren</p>
+            <p>Werbung</p>
           </div>
-          <div className="flex xl:flex-row-reverse flex-col gap-8 w-full xl:w-[80vw] ">
-            <div className="p-4 xl:w-[10vw] w-auto border-def rounded-xl bg-sec flex flex-col justify-between">
-              <p className="text-small">Das könnte sie interessieren</p>
-              <p>Werbung</p>
+          <div className="xl:w-[60vw] border-def rounded-xl bg-sec p-8 xl:grid grid-flow-row-dense xl:grid-rows-2 xL:grid-cols-2 flex flex-col gap-16 items-center content-center justify-around">
+            <div className={"row-start-1 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
+              Gesamtinvestition: {totalSum}€<br/>
+              Durchschnittsrendite: ~{averageRendite}% über {totalRendite} {totalRendite!=1?" Investments ":" Investment "}verteilt
             </div>
-            <div
-                className="xl:w-[60vw] border-def rounded-xl bg-sec p-8 xl:grid grid-flow-row-dense xl:grid-rows-2 xL:grid-cols-2 flex flex-col gap-16 items-center content-center justify-around">
-                <div className={"row-start-1 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
-                      HARD FACTS <br/> Durchschnittsrendite <br/> Gesamtinvestition 
-                </div>
-                <div className={"row-start-1 col-start-2 flex flex-col p-4 content-center justify-center text-center"}>
-                      Durchschnittsrendite: ~{averageRendite}%
-                </div>
-                <div className={"row-start-2 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
-                      <MarketChart type="pie" data={investments} diagramKey="Branche"/>
-                </div>
-                <div className={"row-start-2 col-start-2 flex flex-col p-4 content-center justify-center text-center"}>
-                      Gesamtinvestition: {totalSum}€
-                </div>
+            <div className={"row-start-1 col-start-2 flex flex-col p-4 content-center justify-center text-center"}>
+              <MarketChart type="pie" forKey={"ret"} data={investments}/>
+            </div>
+            <div className={"row-start-2 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
+              <MarketChart type="pie" forKey={"sum"} data={investments}/>
+            </div>
+            <div className={"row-start-2 col-start-2 flex flex-col p-4 content-center justify-center text-center"}>
+              <MarketChart type="pie" forKey={"risk"} data={investments}/>
             </div>
           </div>
-      </main>
+        </div>
+    </main>
   );
 }
 

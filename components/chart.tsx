@@ -5,10 +5,11 @@ import {
 } from "chart.js/auto";
 import React, { useEffect, useState } from "react";
 import { Chart as ReactChart } from "react-chartjs-2";
-import * as s from "./ui/select";
-import { Button } from "./ui/button";
-import * as p from "./ui/popover";
-import * as c from "./ui/command"
+import * as s from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import {Progress } from "@/components/ui/progress"
+import * as p from "@/components/ui/popover";
+import * as c from "@/components/ui/command"
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
@@ -18,16 +19,14 @@ ChartJS.register(...registerables);
 
 interface LineProps {
   data: {key:string,value:string}[][];
-  diagramKey:string,
   type: "bar"|"pie"|"radar",
+  forKey:"sum"|"ret"|"risk"
 }
 
-export const MarketChart = ({type,data,diagramKey}:LineProps) => {
-  const [diagramValueX,setDiagramValueX] = useState<string>(diagramKey);
-  
+export const MarketChart = ({type,data,forKey}:LineProps) => {
+  const [diagramValueX,setDiagramValueX] = useState<string>("Eine Kategorie auswählen");
   const {theme} = useTheme()
-
-  const [diagramValueY,setDiagramValueY] = useState<string>("Summe");
+  const diagramValueY = forKey=="sum"?"summe":forKey=="ret"?"rendite":"risiko";
   const [diagramType,setDiagramType] = useState<"bar"|"pie"|"radar">(type);
   const [chartData, setChartData] = useState<any[][]>();
   const [open, setOpen] = React.useState(false)
@@ -37,44 +36,63 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
       setDiagramValueX(e)
     }
     else if(direction=="y"){
-      setDiagramValueY(e)
     }
     else{
       setDiagramType(e as "bar"|"pie"|"radar")
     }
   }
   useEffect(() => {
-    const tempCharData:any[][] = []
+    let tempCharData:any[][] = []
 
-    //! ONLY WORKS FOR BAR AND PIE Graphs with number values
+    //! ONLY WORKS FOR BAR AND PIE Graphs and SUM
     data.forEach((item) => {
+      //check if SUM,RETURN or RISK is present in investment
       if(isKeyInList(diagramValueY,item)){
-        const x = getKeyFromList(diagramValueX,item)
+        // gets the value of the Category
+        let x = getKeyFromList(diagramValueX,item)
+        // if the category is not present in the investment add as Sonstige...
+        if (!x) x="Sonstige..."
+        // gets the value of SUM,RETURN or RISK
         const y = Number.parseInt(getKeyFromList(diagramValueY,item))
-        if(x && y){
-          const index = getIndexFromKey(x,tempCharData)
-          if(index>=0){
-            tempCharData[index] = [x,tempCharData[index][1]+y]
-          }
-          else{
-            tempCharData.push([x,y])
+          // gets the index if category is already present in the list
+        const index = getIndexFromKey(x,tempCharData)
+        if(index >=0){
+          // Overrides current entry for Category
+          switch (diagramValueY) {
+            case "summe":
+                tempCharData[index] = [x,tempCharData[index][1]+y]
+              break;
+            case "rendite":
+                tempCharData[index] = [x,tempCharData[index][1]+y,tempCharData[index][2]+1]
+              break;
+            case "risiko":
+              tempCharData[index] = [x,tempCharData[index][1]+1]
+              break;
           }
         }
         else{
-          const index = getIndexFromKey("Sonstige...",tempCharData)
-          if(index>=0){
-            tempCharData[index] = ["Sonstige...",tempCharData[index][1]+y]
-          }
-          else{
-            tempCharData.push(["Sonstige...",y])
+          // Adds the Category and value to the templist
+          switch (diagramValueY) {
+            case "summe":
+              tempCharData.push([x,y])
+              break;
+            case "rendite":
+              tempCharData.push([x,y,1])
+              break;
+            case "risiko":
+              tempCharData.push([x,1])
+              break;
           }
         }
-      }
+      } 
     });
+    if(diagramValueY=="rendite"){
+      tempCharData=tempCharData.map(data=>{return [data[0],(data[1]/data[2])]})
+    }
     setChartData(tempCharData)
   }, [data,diagramValueX,diagramValueY]);
 
-  if (!chartData) {
+  if (!chartData||!theme) {
     return (
       <div className="flex items-center justify-center">
         <div className="animate-spin rounded-full border-4 border-solid border-current border-r-transparent h-12 w-12"></div>
@@ -82,13 +100,14 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
     );
   }
 
-
   const GraphData = {
     labels: chartData.map((entry: any) => entry[0]),
     datasets: [
       {
         label: diagramValueX,
         data: chartData.map((entry: any) => entry[1]),
+        borderColor: theme=="light"?createPatternArray(chartData.length,"#00aaff","#002bff"):createPatternArray(chartData.length,"#ff6a00","#ffea00"),
+        backgroundColor: theme=="light"?createPatternArray(chartData.length,"#00aaff80","#0011ff80"):createPatternArray(chartData.length,"#ff6a0080","#ffea0080"),
         borderWidth: 1,
       },
     ],
@@ -96,7 +115,7 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
   const listKeys:string[] = []
   data.forEach(item => {
     item.forEach(keys => {
-      if(!listKeys.includes(keys.key)){
+      if(!listKeys.includes(keys.key)&&keys.key.toLowerCase()!="summe"){
         listKeys.push(keys.key)
       }
     })
@@ -104,8 +123,8 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
   listKeys.sort((a,b)=>a.localeCompare(b))
 
   return(
-    <div className="xl:w-full max-w-[50vw] flex flex-col justify-center items-start gap-y-4">
-      <p className={"text-big font-medium"}>{"Deine "+diagramValueX}</p>
+    <div className="xl:w-full max-w-[70vw] flex flex-col justify-center items-start gap-y-4">
+      <p className={"text-big font-medium"}>{"Deine "}{forKey=="sum"?"Investitionssummen":forKey=="ret"?"Durchschnitsrendite":"Risikoklassenverteilung"}</p>
       <div className="flex xl:flex-row flex-col gap-2">
         <div>
           <p.Popover open={open} onOpenChange={setOpen}>
@@ -134,20 +153,6 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
 
             </p.PopoverContent>
           </p.Popover>
-
-          {/* <s.Select onValueChange={(e)=>onChange(e,'x')} defaultValue={diagramValueX}>
-            <s.SelectTrigger className="w-[180px] border-def">
-              <s.SelectValue/>
-            </s.SelectTrigger>
-            <s.SelectContent>
-              <s.SelectGroup className="bg-sec border-def rounded-md h-[200px] overflow-y-auto ">
-                <s.SelectLabel>Kategorien</s.SelectLabel>
-                {listKeys.map((valueKey,index)=>{
-                  return(<s.SelectItem key={index} value={valueKey} >{valueKey}</s.SelectItem>)
-                })}
-              </s.SelectGroup>
-            </s.SelectContent>
-          </s.Select> */}
         </div>
         <p className="text-medium">Diagramm:</p>
         <div>
@@ -165,10 +170,10 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
         </div>
       </div>
       <div className="xl:hidden flex">
-        <ReactChart type={diagramType} width={`${window.innerWidth/2}px`} height={`${window.innerWidth/2}px`} data={GraphData} options={options} />
+        <ReactChart type={diagramType} width={`${window.innerWidth/2}px`} height={`${window.innerHeight/2}px/`} data={GraphData} options={{...options,indexAxis:'y' as const}} />
       </div>
       <div className="hidden xl:flex">
-        <ReactChart type={diagramType} data={GraphData} options={{...options,plugins:{legend:{position:(diagramType=='bar')?"top":"right"}}}}/>
+        {diagramValueX!="Eine Kategorie auswählen"&&<ReactChart type={diagramType} width={`${window.innerWidth/5}px`} height={`${window.innerHeight/5}px/`} data={GraphData} options={{...options,plugins:{legend:{position:(diagramType=='bar')?"bottom":"right"}}}}/>}
       </div>
     </div>
   )
@@ -216,8 +221,16 @@ export function generateGradientHexList(startColor: string, endColor: string, st
   });
 }
 
+export const createPatternArray = (n:number,a:string,b:string) => {
+  const res:string[] = []
+  for(let i=0;i<n;i++){
+    res.push(i%2=== 0? a: b);
+  }
+  return res
+}
+
 export const isKeyInList = (key: string, list: {[key:string]:any}[]): boolean => {
-  return list.some((item) => item.key === key);
+  return list.some((item) => (item.key as string).toLowerCase().includes(key.toLowerCase()));
 }
 
 export const getIndexFromKey = (key: string, list: any[][]): number => {
@@ -230,6 +243,6 @@ export const getIndexFromKey = (key: string, list: any[][]): number => {
 }
 
 export const getKeyFromList = (key: string, list: {[key:string]:any}[]): string => {
-  return list.find((item) => item.key === key)?.value;
+  return list.find((item) => (item.key as string).toLowerCase().includes(key.toLowerCase()))?.value;
 }
 

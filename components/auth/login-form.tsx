@@ -48,7 +48,7 @@ export const LoginForm = () => {
                         <FormItem>
                             <FormLabel className="p-2">E-mail</FormLabel>
                             <FormControl className=" border-def rounded-lg">
-                                <Input {...field} disabled={isPending} placeholder="email@example.com" type="email" className="text-black" />
+                                <Input {...field} disabled={isPending} placeholder="email@example.com" type="email" className="text-input" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>)} />
@@ -56,7 +56,7 @@ export const LoginForm = () => {
                         <FormItem>
                             <FormLabel className="p-2">Password</FormLabel>
                             <FormControl className=" border-def rounded-lg">
-                                <Input {...field} disabled={isPending} placeholder="********" type="password" className="text-black" />
+                                <Input {...field} disabled={isPending} placeholder="********" type="password" className="text-input" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>)} />

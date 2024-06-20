@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import {IconHome,IconSquarePlus,IconClipboardList,IconUserCircle} from "@tabler/icons-react";
 import { LoginButton } from "@/components/auth/LoginButton";
 import { cn } from "@/lib/utils";
-import { ModeToggle } from "./themeButton";
 import { useTheme } from "next-themes";
 
 export default function Navbar() {
@@ -15,9 +14,11 @@ export default function Navbar() {
 
     return (
         <div className={"sticky top-0 flex flex-row xl:flex-col justify-center items-center xl:h-screen h-[10vh] sm:p-2 bg-sec xl:bg-transparent xl:border-0 border-t-accent border-t-2"}>
-            {theme=="light"?
+            {theme==="light"?
             <Image priority src={"/OneFoliogo.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute h-auto w-3/4 xl:top-8 hidden sm:flex"}/>:
-            <Image priority src={"/OneFoliogo_big.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute h-auto w-3/4 xl:top-8 hidden sm:flex"}/>
+            theme==="dark"?
+            <Image priority src={"/OneFoliogo_big.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute h-auto w-3/4 xl:top-8 hidden sm:flex"}/>:
+            <Image priority src={"/OneFoliogo.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute h-auto w-3/4 xl:top-8 hidden sm:flex"}/>
             }
             
             <div
@@ -34,7 +35,6 @@ export default function Navbar() {
                 <Link href={"/settings"} onClick={()=>setCurrNav("settings")} className={cn("btn-nav text-center md:p-4 p-1 rounded-3xl w-full",currNav=="settings"&&"text-accent")}>
                     <IconUserCircle size={32} />
                 </Link>
-                <ModeToggle/>
                 <LoginButton className={" btn-nav text-center md:p-4 p-1 rounded-3xl w-full flex xl:hidden"}/>
             </div>
         </div>

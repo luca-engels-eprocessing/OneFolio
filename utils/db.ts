@@ -110,8 +110,7 @@ export const deleteInvestmentById = async (id:string) => {
     const response = await fetch(BACKEND_URL+"/investments/"+id,{
       method: "DELETE",
     })
-    const investments = await response.json()
-    return investments
+    return response
   } catch (e) {
     console.error(e)
     return null
