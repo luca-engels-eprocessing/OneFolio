@@ -86,7 +86,7 @@ const View = async (props: Props) => {
   })
 
   return (
-    <main className="h-full w-full flex flex-col gap-8 items-center justify-start  pb-2">
+    <main className="h-full w-full flex flex-col gap-8 items-center justify-start px-4 xl:px-0 pb-2">
         <h1 className={"h1"}>Ihre Investments im Überblick</h1>
         
         {/*
@@ -97,7 +97,7 @@ const View = async (props: Props) => {
           //TODO expand the investment card on click of the card
           //TODO add functionality to the Anpassen button 
         */}
-      <div className={"w-[80vw] flex gap-2 border-def bg-sec p-4 flex-col scroll-light dark:scroll-dark rounded-md overflow-y-scroll"}>
+      <div className={"w-full xl:w-[80vw] flex gap-2 border-def bg-sec p-4 flex-col rounded-md overflow-y-auto"}>
         {(Array.isArray(list) && list.length === 0)?
         <div className='flex flex-col justify-center'>
           <h1 className={"text-4xl text-center"}>Keine Investments vorhanden</h1>

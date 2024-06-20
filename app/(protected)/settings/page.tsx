@@ -49,17 +49,17 @@ async function Settings({}: Props) {
     globalThis.TransactionData = data
   }
   return (
-    <main className="h-full w-full flex flex-col gap-8 items-center justify-start pb-2">
+    <main className="h-full w-full flex flex-col gap-8 items-center justify-start pb-2 px-4 xl:px-0">
         <div>
           <h1 className={"h1"}>Ihre Einstellungen</h1>
         </div>
-        <div className="flex w-[80vw] h-[100%] border-def bg-sec xl:flex-row gap-y-4 flex-col rounded-md xl:overflow-hidden overflow-y-scroll">
-          <div className='xl:w-1/2 w-full px-16 py-8 xl:overflow-y-scroll scroll-light dark:scroll-dark basis-1/2'>
+        <div className="flex w-full xl:w-[80vw] h-[100%] border-def bg-sec xl:flex-row gap-y-4 flex-col rounded-md xl:overflow-hidden overflow-y-auto">
+          <div className='xl:w-1/2 w-full px-16 py-8 xl:overflow-y-auto basis-1/2'>
             <h2 className='text-accent h2 font-semibold'>Nutzer Informationen</h2>
               <UserInformaiton info={user} key={1}/>
               <LogoutButton key={2}/>
           </div>
-          <div className='xl:w-1/2 w-full px-16 py-8 xl:overflow-y-scroll scroll-light dark:scroll-dark basis-1/2'>
+          <div className='xl:w-1/2 w-full px-16 py-8 xl:overflow-y-auto basis-1/2'>
             <h2 className='text-accent h2 font-semibold'>Bankdaten</h2>
             <ul className='flex flex-col gap-4'>
               
@@ -67,17 +67,17 @@ async function Settings({}: Props) {
                 
                 <div className='flex flex-row justify-center items-center gap-4'>
                     <form action={async()=>{"use server";await refreshTransactions(id,accessToken,true);}} >
-                      <button className='text-medium underline text-accentLight dark:text-accentDark  bg-prim p-4 rounded-xl border-def basis-1/2'>Bereits überprüfte Transaktionen laden</button>
+                      <button className='btn-nav text-medium underline p-4 rounded-xl basis-1/2'>Bereits überprüfte Transaktionen laden</button>
                     </form>
                     <form action={async()=>{"use server";await refreshTransactions(id,accessToken,false); }} >
-                      <button className='text-medium underline text-accentLight dark:text-accentDark bg-prim p-4 rounded-xl border-def basis-1/2'>Neue Transaktionen laden</button>
+                      <button className='btn-nav text-medium underline p-4 rounded-xl basis-1/2'>Neue Transaktionen laden</button>
                     </form>
                   </div>
               {accessToken&&globalThis.TransactionData}
               {globalThis.TransactionData&&globalThis.TransactionData.length>0&& 
               <div className="flex flex-col border-def bg-prim rounded-2xl p-4 ">
                 <div className="flex flex-col">
-                    <p className="text-tiny text-textLight/70 dark:text-textDark/50">Kategorie & Parteien zu % richtig: </p>
+                    <p className="text-tiny text-primary-foreground/70 ">Kategorie & Parteien zu % richtig: </p>
                     <div className="flex flex-row gap-4">
                       <p className='text-small text-green-200'>Grün: {'>'}90%</p> <p className='text-small text-red-200'>Rot: {'<'}90%</p> 
                     </div>

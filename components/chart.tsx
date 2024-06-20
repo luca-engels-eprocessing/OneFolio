@@ -5,8 +5,13 @@ import {
 } from "chart.js/auto";
 import React, { useEffect, useState } from "react";
 import { Chart as ReactChart } from "react-chartjs-2";
-import { Select, SelectItem, SelectTrigger } from "./ui/select";
-import { SelectContent, SelectGroup, SelectLabel, SelectValue } from "@radix-ui/react-select";
+import * as s from "./ui/select";
+import { Button } from "./ui/button";
+import * as p from "./ui/popover";
+import * as c from "./ui/command"
+import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 
 // Register ChartJS components using ChartJS.register
 ChartJS.register(...registerables);
@@ -19,13 +24,13 @@ interface LineProps {
 
 export const MarketChart = ({type,data,diagramKey}:LineProps) => {
   const [diagramValueX,setDiagramValueX] = useState<string>(diagramKey);
-  let isDarkTheme =false
-  if(typeof window != "undefined"&&window&&window.matchMedia){
-    isDarkTheme=window.matchMedia("(prefers-color-scheme: dark)").matches;
-  }
+  
+  const {theme} = useTheme()
+
   const [diagramValueY,setDiagramValueY] = useState<string>("Summe");
   const [diagramType,setDiagramType] = useState<"bar"|"pie"|"radar">(type);
   const [chartData, setChartData] = useState<any[][]>();
+  const [open, setOpen] = React.useState(false)
 
   const onChange=(e:string,direction:"x"|"y"|"type") => {
     if(direction=="x"){
@@ -103,35 +108,60 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
       <p className={"text-big font-medium"}>{"Deine "+diagramValueX}</p>
       <div className="flex xl:flex-row flex-col gap-2">
         <div>
-          <Select onValueChange={(e)=>onChange(e,'x')} defaultValue={diagramValueX}>
-            <SelectTrigger className="w-[180px] border-def">
-              <SelectValue/>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup className="bg-sec border-def rounded-md h-[200px] overflow-y-scroll ">
-                <SelectLabel>Kategorien</SelectLabel>
+          <p.Popover open={open} onOpenChange={setOpen}>
+            <p.PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="w-[200px] justify-between"
+              >
+                {diagramValueX}
+              </Button>
+            </p.PopoverTrigger>
+            <p.PopoverContent>
+              <c.Command>
+                <c.CommandInput placeholder="Nach Kategorie suchen" />
+                <c.CommandList>
+                  <c.CommandEmpty>Noch keine Investmens erstellt</c.CommandEmpty>
+                  <c.CommandGroup>
+                    {listKeys.map((valueKey,index)=>{
+                      return(<c.CommandItem key={index} value={valueKey} onSelect={(e)=>{onChange(e,'x');setOpen(false)}}><Check className={cn("mr-2 h-4 w-4",diagramValueX==valueKey?"opacity-100":"opacity-0")} />{valueKey}</c.CommandItem>)
+                    })}
+                  </c.CommandGroup>
+                </c.CommandList>
+              </c.Command>
+
+            </p.PopoverContent>
+          </p.Popover>
+
+          {/* <s.Select onValueChange={(e)=>onChange(e,'x')} defaultValue={diagramValueX}>
+            <s.SelectTrigger className="w-[180px] border-def">
+              <s.SelectValue/>
+            </s.SelectTrigger>
+            <s.SelectContent>
+              <s.SelectGroup className="bg-sec border-def rounded-md h-[200px] overflow-y-auto ">
+                <s.SelectLabel>Kategorien</s.SelectLabel>
                 {listKeys.map((valueKey,index)=>{
-                  return(<SelectItem key={index} value={valueKey} >{valueKey}</SelectItem>)
+                  return(<s.SelectItem key={index} value={valueKey} >{valueKey}</s.SelectItem>)
                 })}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+              </s.SelectGroup>
+            </s.SelectContent>
+          </s.Select> */}
         </div>
         <p className="text-medium">Diagramm:</p>
         <div>
-          <Select onValueChange={(e)=>onChange(e,'type')} defaultValue="pie">
-            <SelectTrigger className="w-[180px] border-def">
-              <SelectValue/>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup className="bg-sec border-def rounded-md max-h-[200px] overflow-y-scroll ">
-                <SelectLabel className="p-4">Diagramme</SelectLabel>
-                <SelectItem value="bar">Bar</SelectItem>
-                <SelectItem value="pie">Kreis</SelectItem>
-                <SelectItem value="radar">Netz</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <s.Select onValueChange={(e)=>onChange(e,'type')} defaultValue="pie">
+            <s.SelectTrigger>
+              <s.SelectValue/>
+            </s.SelectTrigger>
+            <s.SelectContent>
+              <s.SelectGroup>
+                <s.SelectItem value="bar">Säulen</s.SelectItem>
+                <s.SelectItem value="pie">Kreis</s.SelectItem>
+              </s.SelectGroup>
+            </s.SelectContent>
+          </s.Select>
         </div>
       </div>
       <div className="xl:hidden flex">

@@ -51,7 +51,7 @@ const sList = {
 
 async function AddNew() {
   return (
-    <main className="h-full w-full flex flex-col gap-8 items-center justify-start  pb-2">
+    <main className="h-full w-full flex flex-col gap-8 items-center justify-start pb-2 px-4 xl:py-0">
         <h1 className={"h1"}>Fügen sie neue Investments hinzu</h1>
         <Table items={sList} />
     </main>

@@ -24,7 +24,7 @@ export const AddButton = ({node,onSubmit,inputType}:{node?:string,onSubmit:(e:Fo
     return (
         <form className='border-def bg-prim rounded-md flex flex-col justify-center px-4 group p-2 w-full' onSubmit={onSubmit}>
             <div className="xl:flex-row flex-col flex gap-4 justify-start items-center">
-                <input type={(inputType)?inputType:'text'} className='w-full text-left text-big p-2 border-0 bg-transparent text-textLight dark:text-textDark' aria-label='newCategory' name='newCategory' placeholder='Wert hinzufügen ...' />
+                <input type={(inputType)?inputType:'text'} className='w-full text-left text-big p-2 border-0 bg-transparent text-primary-foreground' aria-label='newCategory' name='newCategory' placeholder='Wert hinzufügen ...' />
          
                 {node == "Mehr..."&&
                 <div className='h-full text-start flex flex-col items-start'>

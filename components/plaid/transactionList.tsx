@@ -4,6 +4,8 @@ import { removeAccessToken, transactionSync } from "@/utils/plaid_API";
 import { useRouter } from "next/navigation";
 import { RemovedTransaction, Transaction, TransactionCounterparty } from "plaid";
 import { ReactNode } from "react";
+import { Button } from "../ui/button";
+import { ModeToggle } from "../themeButton";
 
 
 
@@ -43,29 +45,40 @@ type TransactionCardProps = {
     })
     
     return (
-      <div className="flex flex-col border-def bg-prim rounded-2xl p-4 ">
+      <div className="flex flex-col border-def bg-prim rounded-2xl p-4 text-primary-foreground">
+        <div className="flex flex-row gap-2 w-full justify-end" >
+          <Button>
+            ADD
+          </Button>
+          <Button>
+            CHANGE
+          </Button>
+          <Button>
+            DEL
+          </Button>
+        </div>
         <div className="xl:flex xl:flex-row grid grid-cols-2 xl:gap-8 gap-2 w-full justify-between xl:pr-8">
           <div className="flex flex-col basis-1/4">
-              <p className="text-small text-textLight/70 dark:text-textDark/50">Umsatz: </p>
+              <p className="text-small text-primary-foreground/70 dark:text-primary-foreground/50">Umsatz: </p>
               <div className="flex flex-row gap-1 items-end">
                   <p className={cn("xl:text-2xl lg:text-base text-xs",props.amount<0?"text-red-500":"text-green-500")}>{props.amount>0?"+":""}{props.amount.toLocaleString()}</p>
                   <p className="text-medium ">{props.currency}</p>
               </div>
           </div>
           <div className="flex flex-col justify-center text-center basis-1/2">
-              <p className="text-small text-textLight/70 dark:text-textDark/50">Bescheibung: </p>
+              <p className="text-small text-primary-foreground/70 dark:text-primary-foreground/50">Bescheibung: </p>
               <p className="xl:text-2xl lg:text-base text-xs">{props.description}</p>
           </div>
           <div className="flex flex-col justify-start xl:text-end basis-1/4">
 
-              {parties.length>0&&<><p className="text-small text-textLight/70 dark:text-textDark/50">Von/An: </p>
+              {parties.length>0&&<><p className="text-small text-primary-foreground/70 dark:text-primary-foreground/50">Von/An: </p>
               <div className="flex flex-row gap-4 xl:justify-end">
               {parties}
               </div></>}
           </div>
         </div>
         <div className="flex flex-col ">
-            <p className="text-small text-textLight/70 dark:text-textDark/50">Kategorie: </p>
+            <p className="text-small text-primary-foreground/70 dark:text-primary-foreground/50">Kategorie: </p>
             <div className="flex flex-row gap-4">
                 {categoryDetailElement}
             </div>

@@ -6,6 +6,7 @@ import React from "react";
 import Providers from "@/components/auth/provider";
 import {LoginButton} from "@/components/auth/LoginButton"
 import { investment, user } from "@/models/model";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Roboto({ subsets: ["latin"], weight: ["100","300","400","500","700","900"]});
 
@@ -37,13 +38,15 @@ export default function RootLayout({
           </head>
           <body className={inter.className}>
             <Providers>
-              <LoginButton className={"xl:flex hidden absolute z-10 top-10 right-10 btn-nav p-4 rounded-lg h-16 w-auto gap-2"} title={true}/>
-              <div className={"flex xl:flex-row-reverse sm:flex-col flex-col justify-evenly h-[calc(100dvh)]"}>
-                <div className={"w-full xl:h-full xl:pb-8 h-[80dvh] pt-16 overflow-y-scroll"}>
-                  {children}
+              <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+                <LoginButton className={"xl:flex hidden absolute z-10 top-10 right-10 btn-nav p-4 rounded-lg h-16 w-auto gap-2"} title={true}/>
+                <div className={"flex xl:flex-row-reverse sm:flex-col flex-col xl:justify-evenly justify-between h-[calc(100dvh)]"}>
+                  <div className={"w-full xl:h-full xl:pb-8 h-[90dvh] pt-16 overflow-y-auto"}>
+                    {children}
+                  </div>
+                  <Navbar/>
                 </div>
-                <Navbar/>
-              </div>
+              </ThemeProvider>
             </Providers>
           </body>
         </html>

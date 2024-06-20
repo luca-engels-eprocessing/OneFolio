@@ -1,100 +1,117 @@
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
+  @tailwind components;
+  @tailwind utilities;
 
-@layer components{
-  .border-def{
-    @apply border-2 border-borderLight  dark:border-borderDark transition-colors;
-  };
-  .border-def-hover{
-    @apply border-def hover:border-accentBorderLight hover:dark:border-accentBorderDark;
-  };
-  .bg-sec{
-    @apply transition-colors bg-secLight dark:bg-secDark
-  }
-  .bg-prim{
-    @apply transition-colors bg-primLight dark:bg-primDark
-  }
-  .btn-nav{
-    @apply border-def-hover transition-colors hover:bg-accentLight hover:text-accentTextLight  text-textLight bg-primLight hover:dark:bg-accentDark hover:dark:text-accentTextDark dark:text-textDark dark:bg-primDark focus:bg-accentLight dark:focus:bg-accentDark;
-  };
-  .h1{
-    @apply xl:text-5xl md:text-2xl text-xl font-bold text-primLight dark:text-accentDark;
-  };
-  .h2{
-    @apply xl:text-3xl md:text-xl text-inherit font-bold text-primLight dark:text-primDark hover:text-accentLight dark:hover:text-accentDark;
-  };
-  .text-accent{
-    @apply text-accentLight dark:text-accentDark group-hover:text-accentTextLight group-focus:text-accentTextLight dark:group-hover:text-accentTextDark dark:group-focus:text-accentTextDark;
-  };
-  .text-giant{
-    @apply xl:text-4xl lg:text-2xl text-lg;
-  };
-  .text-big{
-    @apply xl:text-2xl lg:text-lg text-base;
-  };
-  .text-medium{
-    @apply xl:text-base lg:text-sm text-xs;
-  }
-  .text-small{
-    @apply xl:text-sm lg:text-xs text-xs;
-  }
-  .text-tiny{
-    @apply xl:text-xs lg:text-xs text-xs;
-  }
-}
 
-/* width */
-::-webkit-scrollbar {
-  width: 10px;
-}
+  @layer base {
+    :root {
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #00000000;
-  border-radius: 5px;
-}
+      --background: 0 0% 100%;
+      --foreground: 0 0% 3.9%;
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #1a4ab0;
-  border-radius: 5px;
-}
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #ffaa00;
-}
-  
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 255, 255, 255;
-  --background-end-rgb: 230,238,255;
-}
+      --card: 0 0% 100%;
+      --card-foreground: 0 0% 3.9%;
 
-@media (prefers-color-scheme: dark) {
+      --popover: 0 0% 100%;
+      --popover-foreground: 0 0% 3.9%;
 
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #cc8800;
-    border-radius: 5px;
+      --primary: 221 73% 40%;
+      --primary-foreground: 221 73% 98%;
+
+      --secondary: 221 100% 95%;
+      --secondary-foreground: 221 100% 9%;
+
+      --muted: 0 0% 96.1%;
+      --muted-foreground: 0 0% 45.1%;
+
+      --accent: 40 100% 50%;
+      --accent-foreground: 0 100% 100%;
+
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 0 0% 98%;
+
+      --border: 221 100% 80%;
+      --input: 0 0% 0%;
+      --ring: 0 0% 3.9%;
+
+      --radius: 0.5rem;
+    }
+
+    .dark {
+      --background: 0 0% 3.9%;
+      --foreground: 0 0% 98%;
+
+      --card: 0 0% 3.9%;
+      --card-foreground: 0 0% 98%;
+
+      --popover: 0 0% 3.9%;
+      --popover-foreground: 0 0% 98%;
+
+      --primary: 0 0% 21%;
+      --primary-foreground: 0 0% 100%;
+
+      --secondary: 0 0% 12%;
+      --secondary-foreground: 0 0% 98%;
+
+      --muted: 0 0% 14.9%;
+      --muted-foreground: 0 0% 63.9%;
+
+      --accent: 40 100% 40%;
+      --accent-foreground: 0 0% 0%;
+
+      --destructive: 0 62.8% 30.6%;
+      --destructive-foreground: 0 0% 98%;
+
+      --border: 0 0% 31%;
+      --input: 0 0% 100%;
+      --ring: 0 0% 83.1%;
+    }
   }
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #ccb87a;
+
+  @layer base {
+    * {
+      @apply border-border;
+    }
+    body {
+      @apply bg-background text-foreground;
+    }
   }
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 18,18,18;
-    --background-end-rgb: 18,18,18;
+
+  @layer components{
+    .border-def{
+      @apply border-2 border-border transition-colors;
+    };
+    .border-def-hover{
+      @apply border-def hover:border-accent;
+    };
+    .bg-sec{
+      @apply transition-colors bg-secondary;
+    }
+    .bg-prim{
+      @apply transition-colors bg-primary;
+    }
+    .btn-nav{
+      @apply border-def-hover transition-colors hover:bg-accent hover:text-accent-foreground text-primary-foreground bg-primary;
+    };
+    .h1{
+      @apply xl:text-5xl md:text-2xl text-xl font-bold text-input;
+    };
+    .h2{
+      @apply xl:text-3xl md:text-xl text-base font-bold text-input hover:text-accent;
+    };
+    .text-giant{
+      @apply xl:text-4xl lg:text-2xl text-lg;
+    };
+    .text-big{
+      @apply xl:text-2xl lg:text-lg text-base;
+    };
+    .text-medium{
+      @apply xl:text-base lg:text-sm text-xs;
+    }
+    .text-small{
+      @apply xl:text-sm lg:text-xs text-xs;
+    }
+    .text-tiny{
+      @apply xl:text-xs lg:text-xs text-xs;
+    }
   }
-}
-body {
-  overflow: hidden;
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}

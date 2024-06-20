@@ -37,7 +37,7 @@ const InvestmentCard = ({data:props,deleteOnClick}:{data:Props,deleteOnClick:()=
 return (
     <div className={"btn-nav rounded-md flex xl:flex-row flex-col xl:gap-8 px-4 group h-full"}>
         <button onClick={onClickExpand} className={"flex xl:flex-col flex-row justify-between xl:w-1/2 w-full items-end text-right h-full gap-4"}>
-            <h1 className={"pt-8 h1 font-semibold pb-8 group-hover:text-accentTextLight group-focus:text-accentTextLight dark:group-hover:text-accentTextDark dark:group-focus:text-accentTextDark"}>
+            <h1 className={"pt-8 h1 text-accent font-semibold pb-8 group-hover:text-accent-foreground group-focus:text-accent-foreground"}>
                 {props.title}
             </h1>
                 {props.date&&
@@ -49,7 +49,7 @@ return (
         </button>
         <div className='xl:py-4 h-full'>
             <div
-                className={"border-r-2 h-full border-accentLight dark:border-accentDark group-hover:border-accentBorderLight group-focus:border-accentBorderLight dark:group-hover:border-accentBorderDark dark:group-focus:border-accentBorderDark"}
+                className={"border-r-2 h-full border-accent group-hover:border-accent-foreground group-focus:border-border-accent-foreground"}
             />
         </div>
         <div className='p-8 h-full xl:w-1/2 w-full'>

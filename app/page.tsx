@@ -29,17 +29,17 @@ async function Home() {
   const averageRendite = Math.round(investments.reduce((acc: number, cur: any[]) => acc + Number.parseInt(cur.find((data: { key: string; }) => data.key === "Rendite (in %)")?.value || "0"), 0)/investments.length);
 
   return (
-      <main className="w-full flex flex-col gap-8 items-center justify-start pb-2">
+      <main className="w-full flex flex-col gap-8 items-center justify-start pb-2 px-4 xl:py-0">
           <div>
               <h1 className={"h1"}>Dein Portfolio im Überblick</h1>
           </div>
-          <div className="flex xl:flex-row-reverse flex-col gap-8">
-            <div className="p-4 xl:w-[10vw] w-auto border-def rounded-xl bg-sec flex flex-col justify-between border-l-borderLight dark:border-l-borderDark border-l-2">
+          <div className="flex xl:flex-row-reverse flex-col gap-8 w-full xl:w-[80vw] ">
+            <div className="p-4 xl:w-[10vw] w-auto border-def rounded-xl bg-sec flex flex-col justify-between">
               <p className="text-small">Das könnte sie interessieren</p>
               <p>Werbung</p>
             </div>
             <div
-                className="w-[60vw] border-def rounded-xl bg-sec p-8 xl:grid grid-flow-row-dense xl:grid-rows-2 xL:grid-cols-2 flex flex-col gap-16 items-center content-center justify-around">
+                className="xl:w-[60vw] border-def rounded-xl bg-sec p-8 xl:grid grid-flow-row-dense xl:grid-rows-2 xL:grid-cols-2 flex flex-col gap-16 items-center content-center justify-around">
                 <div className={"row-start-1 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
                       HARD FACTS <br/> Durchschnittsrendite <br/> Gesamtinvestition 
                 </div>
