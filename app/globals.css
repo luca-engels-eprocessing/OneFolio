@@ -88,8 +88,6 @@
     --background-end-rgb: 18,18,18;
   }
 }
-
-
 body {
   overflow: hidden;
   color: rgb(var(--foreground-rgb));

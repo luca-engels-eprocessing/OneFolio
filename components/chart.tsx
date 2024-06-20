@@ -3,8 +3,10 @@ import {
   Chart as ChartJS,
   registerables
 } from "chart.js/auto";
-import React, { useEffect, useState, ChangeEvent } from "react";
+import React, { useEffect, useState } from "react";
 import { Chart as ReactChart } from "react-chartjs-2";
+import { Select, SelectItem, SelectTrigger } from "./ui/select";
+import { SelectContent, SelectGroup, SelectLabel, SelectValue } from "@radix-ui/react-select";
 
 // Register ChartJS components using ChartJS.register
 ChartJS.register(...registerables);
@@ -25,17 +27,15 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
   const [diagramType,setDiagramType] = useState<"bar"|"pie"|"radar">(type);
   const [chartData, setChartData] = useState<any[][]>();
 
-  const onChange=(e:ChangeEvent,direction:"x"|"y"|"type") => {
-    e.preventDefault()
-    const selectedValue = (e.target as HTMLSelectElement).value
+  const onChange=(e:string,direction:"x"|"y"|"type") => {
     if(direction=="x"){
-      setDiagramValueX(selectedValue)
+      setDiagramValueX(e)
     }
     else if(direction=="y"){
-      setDiagramValueY(selectedValue)
+      setDiagramValueY(e)
     }
     else{
-      setDiagramType(selectedValue as "bar"|"pie"|"radar")
+      setDiagramType(e as "bar"|"pie"|"radar")
     }
   }
   useEffect(() => {
@@ -76,16 +76,6 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
       </div>
     );
   }
-  let borderColor
-  let backgroundColor
-  if(isDarkTheme){
-    borderColor = generateGradientHexList("c68700","ffcf00",chartData.length)
-    backgroundColor = generateGradientHexList("c68700","ffcf00",chartData.length,true)
-  }
-  else{
-    borderColor = generateGradientHexList("284cb3","385eff",chartData.length)
-    backgroundColor = generateGradientHexList("284cb3","385eff",chartData.length,true)
-  }
 
 
   const GraphData = {
@@ -94,8 +84,6 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
       {
         label: diagramValueX,
         data: chartData.map((entry: any) => entry[1]),
-        borderColor: borderColor,
-        backgroundColor: backgroundColor,
         borderWidth: 1,
       },
     ],
@@ -113,19 +101,37 @@ export const MarketChart = ({type,data,diagramKey}:LineProps) => {
   return(
     <div className="xl:w-full max-w-[50vw] flex flex-col justify-center items-start gap-y-4">
       <p className={"text-big font-medium"}>{"Deine "+diagramValueX}</p>
-      <div className="flex xl:flex-row flex-col gap-2 w-[40%]">
-        <select name="inputType" id="inputType" className='bg-prim text-medium' defaultValue={diagramValueX} onChange={(e)=>onChange(e,'x')}>
-          {listKeys.map((valueKey,index)=>{
-            return(<option key={index} value={valueKey}>{valueKey}</option>)
-          })}
-        </select>
-        <div className="flex flex-row gap-2">
-          <p className="text-medium">Diagramm:</p>
-          <select name="ChartType" id="ChartType" className='bg-prim text-medium' defaultValue={diagramType} onChange={(e)=>onChange(e,'type')}>
-            <option value="bar">Bar</option>
-            <option value="pie">Kreis</option>
-            <option value="radar">Netz</option>
-          </select>
+      <div className="flex xl:flex-row flex-col gap-2">
+        <div>
+          <Select onValueChange={(e)=>onChange(e,'x')} defaultValue={diagramValueX}>
+            <SelectTrigger className="w-[180px] border-def">
+              <SelectValue/>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup className="bg-sec border-def rounded-md h-[200px] overflow-y-scroll ">
+                <SelectLabel>Kategorien</SelectLabel>
+                {listKeys.map((valueKey,index)=>{
+                  return(<SelectItem key={index} value={valueKey} >{valueKey}</SelectItem>)
+                })}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        <p className="text-medium">Diagramm:</p>
+        <div>
+          <Select onValueChange={(e)=>onChange(e,'type')} defaultValue="pie">
+            <SelectTrigger className="w-[180px] border-def">
+              <SelectValue/>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup className="bg-sec border-def rounded-md max-h-[200px] overflow-y-scroll ">
+                <SelectLabel className="p-4">Diagramme</SelectLabel>
+                <SelectItem value="bar">Bar</SelectItem>
+                <SelectItem value="pie">Kreis</SelectItem>
+                <SelectItem value="radar">Netz</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
       </div>
       <div className="xl:hidden flex">
