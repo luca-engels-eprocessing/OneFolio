@@ -4,8 +4,9 @@ import { removeAccessToken, transactionSync } from "@/utils/plaid_API";
 import { useRouter } from "next/navigation";
 import { RemovedTransaction, Transaction, TransactionCounterparty } from "plaid";
 import { ReactNode } from "react";
-import { Button } from "../ui/button";
-import { ModeToggle } from "../themeButton";
+import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/themeButton";
+import * as T from "@/components/ui/tooltip"
 
 
 
@@ -47,15 +48,38 @@ type TransactionCardProps = {
     return (
       <div className="flex flex-col border-def bg-prim rounded-2xl p-4 text-primary-foreground">
         <div className="flex flex-row gap-2 w-full justify-end" >
-          <Button>
-            ADD
-          </Button>
-          <Button>
-            CHANGE
-          </Button>
-          <Button>
-            DEL
-          </Button>
+          <T.TooltipProvider>
+            <T.Tooltip>
+              <T.TooltipTrigger>
+                <Button>
+                  Neu
+                </Button>
+              </T.TooltipTrigger>
+              <T.TooltipContent>
+                Erstelle ein neues Investment für diese Transaktion
+              </T.TooltipContent>
+            </T.Tooltip>
+            <T.Tooltip>
+              <T.TooltipTrigger>
+                <Button>
+                  Hinzufügen
+                </Button>
+              </T.TooltipTrigger>
+              <T.TooltipContent>
+                Füge diese Transaktion einem besthehenden Investment hinzu.
+              </T.TooltipContent>
+            </T.Tooltip>
+            <T.Tooltip>
+              <T.TooltipTrigger>
+                <Button>
+                  Ignorieren
+                </Button>
+              </T.TooltipTrigger>
+              <T.TooltipContent>
+                Ignoriere diese Transaktion
+              </T.TooltipContent>
+            </T.Tooltip>
+          </T.TooltipProvider>
         </div>
         <div className="xl:flex xl:flex-row grid grid-cols-2 xl:gap-8 gap-2 w-full justify-between xl:pr-8">
           <div className="flex flex-col basis-1/4">

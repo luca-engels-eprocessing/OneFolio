@@ -15,10 +15,8 @@ export default function Navbar() {
     return (
         <div className={"sticky top-0 flex flex-row xl:flex-col justify-center items-center xl:h-screen h-[10vh] sm:p-2 bg-sec xl:bg-transparent xl:border-0 border-t-accent border-t-2"}>
             {theme==="light"?
-            <Image priority src={"/OneFoliogo.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute h-auto w-3/4 xl:top-8 hidden sm:flex"}/>:
-            theme==="dark"?
-            <Image priority src={"/OneFoliogo_big.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute h-auto w-3/4 xl:top-8 hidden sm:flex"}/>:
-            <Image priority src={"/OneFoliogo.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute h-auto w-3/4 xl:top-8 hidden sm:flex"}/>
+            <Image priority src={"/OneFoliogo_blue.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute h-auto w-full xl:top-8 xl:left-8 hidden sm:flex"}/>:
+            <Image priority src={"/OneFoliogo_white.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute h-auto w-full xl:top-8 xl:left-8 hidden sm:flex"}/>
             }
             
             <div
