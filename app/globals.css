@@ -106,7 +106,7 @@
       @apply xl:text-2xl lg:text-lg text-base;
     };
     .text-medium{
-      @apply xl:text-base lg:text-sm text-xs;
+      @apply xl:text-lg lg:text-sm text-xs;
     }
     .text-small{
       @apply xl:text-sm lg:text-xs text-xs;

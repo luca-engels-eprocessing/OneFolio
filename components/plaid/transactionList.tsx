@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { RemovedTransaction, Transaction, TransactionCounterparty } from "plaid";
 import { ReactNode, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/themeButton";
+import {IconIndentIncrease,IconVariablePlus,IconEyeOff} from "@tabler/icons-react"
 import * as T from "@/components/ui/tooltip"
 import Link from "next/link";
 
@@ -41,11 +41,11 @@ type TransactionCardProps = {
     //     trimString = props.categoryDetailed.substring(0, length);
     //     trimString = trimString+"..."
     // }
-    const categoryDetailElement = <p className={cn("xl:text-2xl lg:text-base text-xs",(props.categoryConfidence === 'HIGH' || props.categoryConfidence === 'VERY_HIGH')?"text-green-200":"text-red-200")}>{trimString?.toLocaleLowerCase()}</p>
+    const categoryDetailElement = <p className={cn("text-medium",(props.categoryConfidence === 'HIGH' || props.categoryConfidence === 'VERY_HIGH')?"text-green-200":"text-red-200")}>{trimString?.toLocaleLowerCase()}</p>
     const parties:ReactNode[] =[]
     const router = useRouter()
     props.counterParties?.forEach((data,index) => {
-        const counterPartiesElement = <p key={index} className={cn("xl:text-2xl lg:text-base text-xs",(data.confidence_level === 'HIGH' || data.confidence_level === 'VERY_HIGH')?"text-green-200":"text-red-200")}>{data.name}</p>
+        const counterPartiesElement = <p key={index} className={cn("text-medium",(data.confidence_level === 'HIGH' || data.confidence_level === 'VERY_HIGH')?"text-green-200":"text-red-200")}>{data.name}</p>
         parties.push(counterPartiesElement)
     })
     
@@ -55,9 +55,13 @@ type TransactionCardProps = {
           <T.TooltipProvider>
             <T.Tooltip>
               <T.TooltipTrigger>
-                <Link href={{pathname:'/add',query:{data:JSON.stringify(props)}}}>
-                  Neu
-                </Link>
+                <Button onClick={()=>{
+                  const params=new URLSearchParams()
+                  params.set('data',JSON.stringify(props))
+                  router.push("/add"+'?'+params.toString())
+                }}>
+                  <IconVariablePlus />
+                </Button>
               </T.TooltipTrigger>
               <T.TooltipContent>
                 Erstelle ein neues Investment für diese Transaktion
@@ -65,9 +69,13 @@ type TransactionCardProps = {
             </T.Tooltip>
             <T.Tooltip>
               <T.TooltipTrigger>
-                <Link href={{pathname:'/overview',query:{data:JSON.stringify(props)}}}>
-                  Hinzufügen
-                </Link>
+                <Button onClick={()=>{
+                  const params=new URLSearchParams()
+                  params.set('data',JSON.stringify(props))
+                  router.push("/overview"+'?'+params.toString())
+                }}>
+                  <IconIndentIncrease />
+                </Button>
               </T.TooltipTrigger>
               <T.TooltipContent>
                 Füge diese Transaktion einem besthehenden Investment hinzu.
@@ -81,7 +89,7 @@ type TransactionCardProps = {
                     toHideRef.current.style.display="none"
                   }
                 }}>
-                  Ignorieren
+                  <IconEyeOff />
                 </Button>
               </T.TooltipTrigger>
               <T.TooltipContent>
@@ -90,36 +98,36 @@ type TransactionCardProps = {
             </T.Tooltip>
           </T.TooltipProvider>
         </div>
-        <div className="xl:flex xl:flex-row grid grid-cols-2 xl:gap-8 gap-2 w-full justify-between xl:pr-8">
-          <div className="flex flex-col basis-1/4">
+        <div className="xl:flex xl:flex-row grid grid-cols-2 xl:gap-8 gap-2 w-full justify-between">
+          <div className="flex flex-col basis-1/4 w-full">
               <p className="text-small text-primary-foreground/70 dark:text-primary-foreground/50">Umsatz: </p>
               <div className="flex flex-row gap-1 items-end">
-                  <p className={cn("xl:text-2xl lg:text-base text-xs",props.amount<0?"text-red-500":"text-green-500")}>{props.amount>0?"+":""}{props.amount.toLocaleString()}</p>
-                  <p className="text-medium ">{props.currency}</p>
+                  <p className={cn("text-medium",props.amount<0?"text-red-500":"text-green-500")}>{props.amount>0?"+":""}{props.amount.toLocaleString()}</p>
+                  <p className="text-small ">{props.currency}</p>
               </div>
           </div>
-          <div className="flex flex-col justify-center text-center basis-1/2">
+          <div className="flex flex-col basis-1/2 w-full">
               <p className="text-small text-primary-foreground/70 dark:text-primary-foreground/50">Bescheibung: </p>
-              <p className="xl:text-2xl lg:text-base text-xs">{props.description}</p>
+              <p className="text-medium">{props.description}</p>
           </div>
-          <div className="flex flex-col justify-start xl:text-end basis-1/4">
+          <div className="flex flex-col basis-1/4 w-full">
 
               {parties.length>0&&<><p className="text-small text-primary-foreground/70 dark:text-primary-foreground/50">Von/An: </p>
-              <div className="flex flex-row gap-4 xl:justify-end">
+              <div className="flex flex-row gap-4 xl:justify-start">
               {parties}
               </div></>}
           </div>
         </div>
-        <div className="flex flex-row ">
-          <div className="flex flex-col ">
+        <div className="xl:flex xl:flex-row grid grid-cols-2 xl:gap-8 gap-2 w-full justify-start">
+          <div className="flex flex-col basis-3/4 w-full">
             <p className="text-small text-primary-foreground/70 dark:text-primary-foreground/50">Kategorie: </p>
             <div className="flex flex-row gap-4">
                 {categoryDetailElement}
             </div>
           </div>
-          <div className="flex flex-col ">
+          <div className="flex flex-col basis-1/4 w-full">
             <p className="text-small text-primary-foreground/70 dark:text-primary-foreground/50">Datum: </p>
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-row gap-4 text-large">
                 {props.date}
             </div>
           </div>

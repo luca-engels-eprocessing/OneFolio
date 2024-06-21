@@ -115,7 +115,7 @@ const LiItem = ({name:key,value:value,index:index}:{name: string,value:any,index
         }
     return (
         <div className='lg:p-4 p-2 btn-nav xl:my-2 my-1 font-light text-small xl:rounded-2xl rounded-md'><p className="text-primary-foreground/70" key={index}>{key + ":"}</p>
-            <span className={cn(value?'text-primary-foreground':'text-primary-foreground/50','font-normal text-big')}>{value?value:(
+            <span className={cn(value?'text-primary-foreground':'text-primary-foreground/50','font-normal text-medium')}>{value?value:(
                 (size?.width && size.width < 410)?"Jetzt +":"Jetzt Hinzufügen!"
             )}</span>
         </div>

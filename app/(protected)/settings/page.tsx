@@ -68,10 +68,10 @@ async function Settings({}: Props) {
                 
                 <div className='flex flex-row justify-center items-center gap-4'>
                     <form action={async()=>{"use server";await refreshTransactions(id,accessToken,true);}} >
-                      <button className='btn-nav text-medium underline p-4 rounded-xl basis-1/2'>Bereits überprüfte Transaktionen laden</button>
+                      <button className='btn-nav text-small underline p-4 rounded-xl basis-1/2'>Bereits überprüfte Transaktionen laden</button>
                     </form>
                     <form action={async()=>{"use server";await refreshTransactions(id,accessToken,false); }} >
-                      <button className='btn-nav text-medium underline p-4 rounded-xl basis-1/2'>Neue Transaktionen laden</button>
+                      <button className='btn-nav text-small underline p-4 rounded-xl basis-1/2'>Neue Transaktionen laden</button>
                     </form>
                   </div>
               {accessToken&&globalThis.TransactionData}
