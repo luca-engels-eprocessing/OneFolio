@@ -200,7 +200,6 @@ export const Table = (props: Props) => {
         if(JSON.stringify(buttons) !== JSON.stringify(keyButtonList)){
             setkeyButtonList(buttons)
         }
-        
     }, [selectionList, modifyableList, keyButtonList, valueButtonList])
 
 

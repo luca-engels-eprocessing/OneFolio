@@ -16,7 +16,7 @@ export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>v
         if(key === "Titel"){
             prepData = {...prepData, title: value}
         }
-        else if(key === "Startdatum des Investments"){
+        else if(key.toLocaleLowerCase().includes("start")&&key.toLocaleLowerCase().includes("datum")){
             prepData = {...prepData, date: value}
         }
         else{
