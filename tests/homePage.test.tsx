@@ -1,6 +1,6 @@
 import {describe, expect,test,jest} from '@jest/globals';
 import { MarketChart, createPatternArray, generateGradientHexList, getIndexFromKey, getKeyFromList, isKeyInList } from '@/components/chart';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 
 
 
@@ -84,16 +84,36 @@ describe('Check Gradient calculation', () => {
 
 
 
-// describe('Check Gradient calculation', () => {
-//     jest.mock('react-chartjs-2', () => ({
-//         Bar: () => null,
-//         Pie: () => null,
-//         Radar: () => null,
-//       }));
-//     test('should render the list', () => {
-//         const data = [[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"},{key:"Summe",value:"300"}],[{key:"Data",value:"TESTING"},{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"}],[{key:"Data",value:"TEST"},{key:"Summe",value:"300"}],[{key:"Data",value:"TEST"}],[{key:"Data2",value:"Stuff"}],[{key:"Summe",value:"300"}],[]]
-//         const {getByText} = render(<MarketChart data={data} diagramKey={'Data'} type={'bar'}/>)
-//         const text = getByText("Deine Data")
-//         expect(text).toBeTruthy()
-//     });
-// });
+describe('Check Gradient calculation', () => {
+    jest.mock('react-chartjs-2', () => ({
+        Bar: () => null,
+        Pie: () => null,
+      }));
+    test('should render the list with sum', () => {
+        const data = [[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"},{key:"Summe",value:"300"}],[{key:"Data",value:"TESTING"},{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"}],[{key:"Data",value:"TEST"},{key:"Summe",value:"300"}],[{key:"Data",value:"TEST"}],[{key:"Data2",value:"Stuff"}],[{key:"Summe",value:"300"}],[]]
+        const {getByText} = render(<MarketChart data={data} type={'bar'} forKey={'sum'}/>)
+        // wait for useEffect to complete befor getting text
+        waitFor(() => {
+            const text = getByText("Deine Investitionssummen");
+            expect(text).toBeTruthy();
+        });
+    });
+    test('should render the list with return', () => {
+        const data = [[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"},{key:"Summe",value:"300"}],[{key:"Data",value:"TESTING"},{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"}],[{key:"Data",value:"TEST"},{key:"Summe",value:"300"}],[{key:"Data",value:"TEST"}],[{key:"Data2",value:"Stuff"}],[{key:"Summe",value:"300"}],[]]
+        const {getByText} = render(<MarketChart data={data} type={'bar'} forKey={'ret'}/>)
+        // wait for useEffect to complete befor getting text
+        waitFor(() => {
+            const text = getByText("Deine Durchschnitsrendite");
+            expect(text).toBeTruthy();
+        });
+    });
+    test('should render the list with risk', () => {
+        const data = [[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"},{key:"Summe",value:"300"}],[{key:"Data",value:"TESTING"},{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"}],[{key:"Data",value:"TEST"},{key:"Summe",value:"300"}],[{key:"Data",value:"TEST"}],[{key:"Data2",value:"Stuff"}],[{key:"Summe",value:"300"}],[]]
+        const {getByText} = render(<MarketChart data={data} type={'bar'} forKey={'sum'}/>)
+        // wait for useEffect to complete befor getting text
+        waitFor(() => {
+            const text = getByText("Deine Risikoklassenverteilung");
+            expect(text).toBeTruthy();
+        });
+    });
+});
