@@ -1,5 +1,5 @@
 import {describe, expect,test,jest} from '@jest/globals';
-import { MarketChart, generateGradientHexList } from '@/components/chart';
+import { MarketChart, createPatternArray, generateGradientHexList, getIndexFromKey, getKeyFromList, isKeyInList } from '@/components/chart';
 import { render } from '@testing-library/react';
 
 
@@ -40,7 +40,47 @@ describe('Check Gradient calculation', () => {
         const expectedColors:string[] = []
         expect(result).toEqual(expectedColors)
     });
+    test('checkPatternList',()=>{
+        const result = createPatternArray(2,"A","B")
+        const expected = ["A","B"]
+        expect(result).toEqual(expected)
+    })
+    test('checkPatternList',()=>{
+        const result = createPatternArray(3,"A","B")
+        const expected = ["A","B","A"]
+        expect(result).toEqual(expected)
+    })
+    test('Check IsKeyInList is true',()=>{
+        const result = isKeyInList("A",[{key:"A",value:"B"}])
+        expect(result).toBeTruthy()
+    })
+    test('Check IsKeyInList is false',()=>{
+        const result = isKeyInList("A",[{key:"B",value:"B"}])
+        expect(result).toBeFalsy()
+    })
+    test('Check getIndexFromKey first',()=>{
+        const result = getIndexFromKey("A",[['A',123],['S',1234]])
+        expect(result).toEqual(0)
+    })
+    test('Check getIndexFromKey secont',()=>{
+        const result = getIndexFromKey("S",[['A',123],['S',1234]])
+        expect(result).toEqual(1)
+    })
+    test('Check getIndexFromKey none',()=>{
+        const result = getIndexFromKey("A",[])
+        expect(result).toEqual(-1)
+    })
+    test('Check getKeyFromList true',()=>{
+        const result = getKeyFromList("A",[{key:"A",value:"B"}])
+        expect(result).toEqual("B")
+    })
+    test('Check getKeyFromList false',()=>{
+        const result = getKeyFromList("A",[{key:"B",value:"B"}])
+        expect(result).toBeUndefined()
+    })
 });
+
+
 
 
 
