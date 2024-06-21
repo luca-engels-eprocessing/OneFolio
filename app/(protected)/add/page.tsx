@@ -42,18 +42,28 @@ const sList = {
     {"Steuer": {"Steuer": ["text","Steuerfrei", "Steuerpflichtig"]}},
     {"Rendite": {"Rendite (in %)": ["number",5,7,10,15,20]}},
     {"Risikoklasse": {"Risikoklasse 1 < 5": ["number",1,2,3,4,5]}},
-    {"Währung": {"Währung": ["text","Euro", "US-Dollar", "Yen", "Pfund"]}},
+    {"Währung": {"Währung": ["text","EUR", "USD", "JPY", "GBP" ]}},
     {"Zahlung": {"Zahlung": ["text","Monatlich", "Jährlich"]}},
     {"Zinsen": {"Zinsen": ["text","Festzins", "Variabel"]}}
   ]
 }
 
 
-async function AddNew() {
+async function AddNew(props:{params:{},searchParams:{[key:string]:any}}) {
+  //* useful props to automatically implement in the list are: Summe, Währung, Name, Beschreibung, date
+  
+  var newList = {}
+  var startList = {}
+  const {Titel,Summe,...rest} = sList
+  if(props.searchParams.data){
+    const investmentData = JSON.parse(props.searchParams.data)
+    newList={"Summe":['number',Math.abs(investmentData.amount)],"Währung":['text',investmentData.currency],"Transaktion":['text',investmentData.description],"Start Datum des Investments":['date',investmentData.date]}
+    startList={"Summe":Math.abs(investmentData.amount),"Währung":investmentData.currency,"Transaktion":investmentData.description,"Start Datum des Investments":investmentData.date}
+  }
   return (
     <main className="h-full w-full flex flex-col gap-8 items-center justify-start pb-2 px-4 xl:py-0">
         <h1 className={"h1"}>Fügen sie neue Investments hinzu</h1>
-        <Table items={sList} />
+        <Table items={{Titel,...newList,...rest}} startSelection={startList} />
     </main>
   )
 }

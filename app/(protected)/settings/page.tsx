@@ -2,11 +2,12 @@
 import React, { ReactNode } from 'react'
 import  {LogoutButton,UserInformaiton} from '@/components/auth/LogoutButton'
 import {auth} from "@/auth"
-import { getUserById, removeFromUser } from '@/utils/db'
+import { getLatestCursorOrUndefined, getUserById, removeFromUser, updateUser } from '@/utils/db'
 import Plaid from '@/components/plaid/plaid'
-import { createLinkToken, exchangeToken, removeAccessToken} from '@/utils/plaid_API'
-import { getTransactionCards } from '@/components/plaid/transactionList'
+import { createLinkToken, exchangeToken, removeAccessToken, transactionSync} from '@/utils/plaid_API'
+import { TransactionCard } from '@/components/plaid/transactionList'
 import { revalidatePath, revalidateTag } from 'next/cache'
+import { RemovedTransaction, Transaction } from 'plaid'
 
 
 declare global{
@@ -112,4 +113,38 @@ const refreshTransactions = async (userId:string,accessToken:string,dontIncludeC
 
 const deleteAccount = async (userId:string) => {
   throw {error:"not jet supported"}
+}
+
+
+export const getTransactionCards = async(token:string,userId:string) => {
+  let added: Array<Transaction> = [];
+  let modified: Array<Transaction> = [];
+  let addedCard: ReactNode[] = []
+  let removed: Array<RemovedTransaction> = [];
+  let hasMore = true;
+  let cursor = await getLatestCursorOrUndefined(userId);
+  while(hasMore){
+  const data = await transactionSync(token,userId,cursor)
+    added = added.concat(data.added);
+    modified = modified.concat(data.modified);
+    removed = removed.concat(data.removed);  
+    hasMore = data.has_more;
+    cursor = data.next_cursor;
+    data.added.forEach((data,index)=>{
+      addedCard.push(
+          <TransactionCard
+              key={index}
+              counterParties={data.counterparties}
+              amount={-data.amount}
+              currency={data.iso_currency_code}
+              categoryDetailed={data.personal_finance_category?.detailed}
+              categoryConfidence={data.personal_finance_category?.confidence_level}
+              description={data.original_description}
+              date={data.date}
+          />
+      );
+    })
+  }
+  updateUser(userId,{"cursor":cursor})
+  return addedCard
 }

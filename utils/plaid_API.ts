@@ -1,3 +1,4 @@
+"use server"
 import { Configuration, CountryCode, CreditAccountSubtype, DepositoryAccountSubtype, LinkTokenCreateRequest, LinkTokenCreateResponse, PlaidApi, PlaidEnvironments, Products } from 'plaid';
 import { removeFromUser } from './db';
 
@@ -64,7 +65,6 @@ export const createLinkToken = async (user: {id:string,name:{firstname:string,la
 };
 
 export const exchangeToken = async (token: string) => {
-  "use server"
   try {
     const response = await plaidClient.itemPublicTokenExchange({ public_token: token });
     return response.data

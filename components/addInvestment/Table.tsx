@@ -9,6 +9,7 @@ import { Button } from '../ui/button';
 import { IconEdit,IconTrash,IconDeviceFloppy } from '@tabler/icons-react';
 type Props = {
     items: {},
+    startSelection:{},
     className?: string;
 }
 
@@ -76,7 +77,7 @@ export const Table = (props: Props) => {
     const [keyButtonList, setkeyButtonList] = useState<ReactNode[]>([])
     const [valueButtonList, setvalueButtonList] = useState<ReactNode[]>()
     const [displayed, setDisplayed] = useState<boolean>(false)
-    const [selectionList, setselectionList] = useState<{}>({})
+    const [selectionList, setselectionList] = useState<{}>(props.startSelection)
     const [modifyableList, setModifyableList] = useState<{}>(props.items)
     const [CSVList,setCSVList] = useState<{}[]>([])
     const [CSVListElements,setCSVListElements] = useState<ReactNode[]>([])
