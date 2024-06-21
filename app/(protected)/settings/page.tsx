@@ -115,8 +115,7 @@ const deleteAccount = async (userId:string) => {
   throw {error:"not jet supported"}
 }
 
-
-export const getTransactionCards = async(token:string,userId:string) => {
+const getTransactionCards = async(token:string,userId:string) => {
   let added: Array<Transaction> = [];
   let modified: Array<Transaction> = [];
   let addedCard: ReactNode[] = []
