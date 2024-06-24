@@ -19,7 +19,7 @@ import * as t from "@/components/ui/tooltip"
 ChartJS.register(...registerables);
 
 interface LineProps {
-  data: {key:string,value:string}[][];
+  data: {[key:string]:string}[];
   type: "bar"|"pie"|"radar",
   forKey:"sum"|"ret"|"risk"
 }
@@ -27,7 +27,7 @@ interface LineProps {
 export const MarketChart = ({type,data,forKey}:LineProps) => {
   const [diagramValueX,setDiagramValueX] = useState<string>("Eine Kategorie auswählen");
   const {theme} = useTheme()
-  const diagramValueY = forKey=="sum"?"summe":forKey=="ret"?"rendite":"risiko";
+  const diagramValueY = forKey=="sum"?"Summe":forKey=="ret"?"Rendite":"Risikoklasse";
   const [diagramType,setDiagramType] = useState<"bar"|"pie"|"radar">(type);
   const [chartData, setChartData] = useState<any[][]>();
   const [open, setOpen] = React.useState(false)
@@ -44,29 +44,31 @@ export const MarketChart = ({type,data,forKey}:LineProps) => {
   }
   useEffect(() => {
     let tempCharData:any[][] = []
-
+    console.log(data)
     //! ONLY WORKS FOR BAR AND PIE Graphs and SUM
-    data.forEach((item) => {
+    data.forEach((item:{[key:string]:string}) => {
       //check if SUM,RETURN or RISK is present in investment
-      if(isKeyInList(diagramValueY,item)){
+      console.log(diagramValueY)
+      console.log(item)
+      if(item[diagramValueY]){
         // gets the value of the Category
-        let x = getKeyFromList(diagramValueX,item)
+        let x = item[diagramValueX]
         // if the category is not present in the investment add as Sonstige...
         if (!x) x="Sonstige..."
         // gets the value of SUM,RETURN or RISK
-        const y = Number.parseInt(getKeyFromList(diagramValueY,item))
+        const y = Number.parseInt(item[diagramValueY])
           // gets the index if category is already present in the list
         const index = getIndexFromKey(x,tempCharData)
         if(index >=0){
           // Overrides current entry for Category
           switch (diagramValueY) {
-            case "summe":
+            case "Summe":
                 tempCharData[index] = [x,tempCharData[index][1]+y]
               break;
-            case "rendite":
+            case "Rendite":
                 tempCharData[index] = [x,tempCharData[index][1]+y,tempCharData[index][2]+1]
               break;
-            case "risiko":
+            case "Risikoklasse":
               tempCharData[index] = [x,tempCharData[index][1]+1]
               break;
           }
@@ -74,20 +76,20 @@ export const MarketChart = ({type,data,forKey}:LineProps) => {
         else{
           // Adds the Category and value to the templist
           switch (diagramValueY) {
-            case "summe":
+            case "Summe":
               tempCharData.push([x,y])
               break;
-            case "rendite":
+            case "Rendite":
               tempCharData.push([x,y,1])
               break;
-            case "risiko":
+            case "Risikoklasse":
               tempCharData.push([x,1])
               break;
           }
         }
       } 
     });
-    if(diagramValueY=="rendite"){
+    if(diagramValueY=="Rendite"){
       tempCharData=tempCharData.map(data=>{return [data[0],(data[1]/data[2])]})
     }
     setChartData(tempCharData)
@@ -114,10 +116,11 @@ export const MarketChart = ({type,data,forKey}:LineProps) => {
     ],
   };
   const listKeys:string[] = []
-  data.forEach(item => {
-    item.forEach(keys => {
-      if(!listKeys.includes(keys.key)&&keys.key.toLowerCase()!="summe"){
-        listKeys.push(keys.key)
+  data.forEach((item:{[key:string]:string}) => {
+    Object.keys(item).forEach((key) => {
+      if(key=="date") {key="Startdatum"}
+      if(!listKeys.includes(key)&&key.toLowerCase()!="summe"&&key.toLowerCase()!="title"){
+        listKeys.push(key)
       }
     })
   })

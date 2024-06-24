@@ -9,12 +9,12 @@ export const saveData = async (data:  z.infer<typeof investmentSchema>): Promise
     const validatedFields = investmentSchema.safeParse(data);
     const session = await auth()
     if(validatedFields.error){
-        return {error: "Bitte füge einen Titel für dein Investment ein"}    
+        if(validatedFields.error.errors[0].message=='Required'&&validatedFields.error.errors[0]['expected' as keyof typeof validatedFields.error.errors[0]]=='object'){
+            return {error: "Dein Investment hat keine Daten. Füge mehr Informationen hinzu"}
+        }
+        return {error: validatedFields.error.errors[0].message}    
     }
-    let {title, date, data: fieldData} = validatedFields.data
-    if (!data&&(!fieldData||Object.keys(fieldData).length === 0)) {
-        return {error: "Dein Investment hat keine Daten. Füge mehr Informationen hinzu"}
-    }
+    let {title, date, Summe,...fieldData} = validatedFields.data
     const valueData: any[] = []
     if (fieldData) {
         Object.entries(fieldData).map(([key,value])=>{
@@ -30,7 +30,8 @@ export const saveData = async (data:  z.infer<typeof investmentSchema>): Promise
         data:{
             title,
             date,
-            data:valueData
+            Summe,
+            ...fieldData
         }
     });
     if(response.ok){
@@ -50,18 +51,24 @@ export const saveMultipleData = async (data:  z.infer<typeof investmentSchema>[]
     }
     const valueDatas :any[] = []
     fieldData.forEach((data)=>{
-        const valueData: any[] = []
-        let {title, date, data: fieldData} = data
+        let {title, date, Summe,...fieldData} = data
         if (!data&&(!fieldData||Object.keys(fieldData).length === 0)) {
             return {error: "Dein Investment hat keine Daten. Füge mehr Informationen hinzu"}
         }
+        if(!title){
+            return {error: "Bitte füge einen Titel für dein Investment ein"}    
+        }
+        if(!Summe){
+            return {error: "Bitte füge einen Summe für dein Investment ein"}    
+        }
+        const valueData: any[] = []
         if (fieldData) {
             Object.entries(fieldData).map(([key,value])=>{
                 const data = {key:key,value:String(value)}
                 valueData.push(data)
             })
         }
-        valueDatas.push({userId:session.user?.id,data:{title,date,data:valueData}})
+        valueDatas.push({userId:session.user?.id,data:{title,date,Summe,...fieldData}})
     })
     const response = await createMultipleInvestment(valueDatas);
     if(response.ok){

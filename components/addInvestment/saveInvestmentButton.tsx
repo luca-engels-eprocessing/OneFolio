@@ -11,7 +11,7 @@ export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>v
     const [error, setError] = useState<string|undefined>("")
     const router = useRouter()
 
-    let prepData : {title:string,date:string,data:{}}
+    let prepData : {title:string,date:string,Summe:string,[rest:string]:string}
         Object.entries(data).map(([key,value])=>{
         if(key === "Titel"){
             prepData = {...prepData, title: value}
@@ -20,12 +20,7 @@ export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>v
             prepData = {...prepData, date: value}
         }
         else{
-            if(prepData && prepData.data){
-                prepData = {...prepData, data: {...prepData.data, [key]:value}}
-            }
-            else{
-                prepData = {...prepData, data: {[key]:value}}
-            }
+            prepData = {...prepData, [key]:value}
         }
     })
     return (<>
@@ -52,10 +47,11 @@ export const SaveCSVButton = ({data,onClick}:{data:{}[],onClick:()=>void}) => {
     const [error, setError] = useState<string|undefined>("")
     const router = useRouter()
 
-    const prepDataList : {title:string,date:any,data:any}[] = []
+    
+    const prepDataList : {title:string,date:string,Summe:string,[rest:string]:string}[] = []
 
     data.forEach((data)=>{
-        let prepData : {title:string,date:string,data:{}}
+        let prepData : {title:string,date:string,Summe:string,[rest:string]:string}
         Object.entries(data).map(([key,value])=>{
             if (key === "Titel") {
                 prepData = {...prepData, title: value as string};
@@ -64,12 +60,7 @@ export const SaveCSVButton = ({data,onClick}:{data:{}[],onClick:()=>void}) => {
                 prepData = {...prepData, date: value as string};
             }
             else {
-                if (prepData && prepData.data) {
-                    prepData = {...prepData, data: {...prepData.data, [key]: value}};
-                }
-                else {
-                    prepData = {...prepData, data: {[key]: value}};
-                }
+                prepData = {...prepData, [key]: value as string};
             }
         })
         prepDataList.push(prepData!)
@@ -78,6 +69,7 @@ export const SaveCSVButton = ({data,onClick}:{data:{}[],onClick:()=>void}) => {
             <button className='btn-nav w-full rounded-xl text-big font-semibold py-8' onClick={(e) => {
                 setError("")
                 setSuccess("")
+                console.log(prepDataList)
                 saveMultipleData(prepDataList).then((datas)=> {
                     setError(datas.error)
                     setSuccess(datas.success)

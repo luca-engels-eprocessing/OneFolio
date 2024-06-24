@@ -24,10 +24,13 @@ async function Home() {
       </div>
     );
   }
-  const investments = inv.map((data: { data: { data: any; }; }) => data.data.data);
-  const totalSum = investments.reduce((acc: number, cur: any[]) => acc + Number.parseInt(cur.find((data: { key: string; }) => (data.key as string).toLowerCase().includes("summe"))?.value || "0"), 0);
-  const totalRendite = investments.reduce((acc: number, cur: any[]) => acc + (cur.find((data: { key: string; }) => (data.key as string).toLowerCase().includes("rendite"))?1:0), 0)
-  const averageRendite = Math.round(investments.reduce((acc: number, cur: any[]) => acc + Number.parseInt(cur.find((data: { key: string; }) => (data.key as string).toLowerCase().includes("rendite"))?.value || "0"), 0)/totalRendite);
+  const investments:{[key:string]:string}[] = inv.map((data: { data: any; }) => data.data);
+  const totalSum = investments.reduce((previous:number,current:{[key:string]:string}) => {return previous + Number.parseInt(current["Summe"] || "0");}, 0);
+  const amountRendite = investments.reduce((previous:number,current:{[key:string]:string}) => {return previous + Number.parseInt(current["Rendite"]?'1':'0');}, 0);
+  const averageRendite = Math.round(investments.reduce((previous:number,current:{[key:string]:string}) => {return previous + Number.parseInt(current["Rendite"]||'0');}, 0)/amountRendite);
+  // const totalSum = investments.reduce((acc: number, cur: any[]) => acc + Number.parseInt(cur.find((data: { key: string; }) => (data.key as string).toLowerCase().includes("summe"))?.value || "0"), 0);
+  // const totalRendite = investments.reduce((acc: number, cur: any[]) => acc + (cur.find((data: { key: string; }) => (data.key as string).toLowerCase().includes("rendite"))?1:0), 0)
+  // const averageRendite = Math.round(investments.reduce((acc: number, cur: any[]) => acc + Number.parseInt(cur.find((data: { key: string; }) => (data.key as string).toLowerCase().includes("rendite"))?.value || "0"), 0)/totalRendite);
 
   return (
     <main className="w-full flex flex-col gap-8 items-center justify-start pb-2 px-4 xl:py-0">
@@ -42,7 +45,7 @@ async function Home() {
           <div className="xl:w-[60vw] border-def rounded-xl bg-sec p-8 xl:grid grid-flow-row-dense xl:grid-rows-2 xL:grid-cols-2 flex flex-col gap-16 items-center content-center justify-around">
             <div className={"row-start-1 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
               Gesamtinvestition: {totalSum}€<br/>
-              Durchschnittsrendite: ~{averageRendite}% über {totalRendite} {totalRendite!=1?" Investments ":" Investment "}verteilt
+              Durchschnittsrendite: ~{averageRendite}% über {amountRendite} {amountRendite!=1?" Investments ":" Investment "}verteilt
             </div>
             <div className={"row-start-1 col-start-2 flex flex-col p-4 content-center justify-center text-center"}>
               <MarketChart type="pie" forKey={"ret"} data={investments}/>

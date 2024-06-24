@@ -52,9 +52,9 @@ const sList = {
 async function AddNew(props:{params:{},searchParams:{[key:string]:any}}) {
   //* useful props to automatically implement in the list are: Summe, Währung, Name, Beschreibung, date
   
-  var newList = {}
-  var startList = {}
   const {Titel,Summe,...rest} = sList
+  var newList:{} = {"Summe":Summe}
+  var startList = {}
   if(props.searchParams.data){
     const investmentData = JSON.parse(props.searchParams.data)
     newList={"Summe":['number',Math.abs(investmentData.amount)],"Währung":['text',investmentData.currency],"Transaktion":['text',investmentData.description],"Start Datum des Investments":['date',investmentData.date]}

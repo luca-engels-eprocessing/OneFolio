@@ -4,6 +4,7 @@ import {
   ColumnDef,
   ColumnFiltersState,
   SortingState,
+  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -21,23 +22,26 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import * as S from "@/components/ui/select"
 import {Input} from "@/components/ui/input"
 import { useState } from "react"
 import { IconChevronLeft, IconChevronRight, IconChevronsLeft, IconChevronsRight } from "@tabler/icons-react"
+import Link from "next/link"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  displayAddSum: boolean
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  displayAddSum,
 }: DataTableProps<TData, TValue>) {
     
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+    const [columnVisibility, setColumnVisibility] =useState<VisibilityState>({})
     
     const table = useReactTable({
         data,
@@ -48,35 +52,60 @@ export function DataTable<TData, TValue>({
         getSortedRowModel: getSortedRowModel(),
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
+        onColumnVisibilityChange: setColumnVisibility,
         state: {
             sorting,
             columnFilters,
+            columnVisibility:{addSum:displayAddSum},
         },
         initialState:{
             pagination:{
                 pageSize:4
             },
-            sorting:[
-                {
-                    id:'title',
-                    desc:true
-
-                }
-            ]
         }
     })
 
   return (
     <div>
-        <div className="flex flex-row justify-between items-center py-4">
-            <Input
-                placeholder="Such nach Titel"
-                value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-                onChange={(event) =>
-                table.getColumn("title")?.setFilterValue(event.target.value)
-                }
-                className="max-w-md"
-            />
+        <div className="flex flex-row justify-between items-center pb-4">
+            <div className="flex flex-row gap-2 w-full justify-start">
+                <Input
+                    placeholder="Such nach Titel"
+                    value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+                    onChange={(event) =>
+                    table.getColumn("title")?.setFilterValue(event.target.value)
+                    }
+                    className="max-w-md"
+                />
+                {/* <D.DropdownMenu>
+                    <D.DropdownMenuTrigger asChild>
+                        <Button variant="outline">
+                            Spalten ausblenden
+                        </Button>
+                    </D.DropdownMenuTrigger>
+                    <D.DropdownMenuContent align="end">
+                        {table
+                        .getAllColumns()
+                        .filter(
+                            (column) => column.getCanHide()
+                        )
+                        .map((column) => {
+                            return (
+                            <D.DropdownMenuCheckboxItem
+                                key={column.id}
+                                className="capitalize"
+                                checked={column.getIsVisible()}
+                                onCheckedChange={(value) =>
+                                column.toggleVisibility(!!value)
+                                }
+                            >
+                                {column.id}
+                            </D.DropdownMenuCheckboxItem>
+                            )
+                        })}
+                    </D.DropdownMenuContent>
+                </D.DropdownMenu> */}
+            </div>
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="flex w-[100px] items-center justify-center text-sm font-medium">
                 Page {table.getState().pagination.pageIndex + 1} of{" "}
@@ -127,7 +156,7 @@ export function DataTable<TData, TValue>({
                     <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
                         return (
-                        <TableHead key={header.id}>
+                        <TableHead key={header.id} className="p-0 m-0">
                             {header.isPlaceholder
                             ? null
                             : flexRender(
@@ -145,7 +174,7 @@ export function DataTable<TData, TValue>({
                     table.getRowModel().rows.map((row) => (
                     <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className="hover:bg-accent group">
                         {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
+                        <TableCell key={cell.id} className="p-0 m-0 ">
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </TableCell>
                         ))}
@@ -154,14 +183,21 @@ export function DataTable<TData, TValue>({
                 ) : (
                     <TableRow>
                     <TableCell colSpan={columns.length} className="h-24 text-center">
-                        No results.
+                    <div className='flex flex-col justify-center'>
+                        <h1 className={"text-4xl text-center"}>Keine Investments vorhanden</h1>
+                        
+                        <Button className='cursor-pointer justify-center' variant={"link"} size={"sm"} asChild>
+                            <Link href={"/add"}>
+                            <p className={"text-center text-muted-foreground"}>Fügen sie neue Investments hinzu</p>
+                            </Link>
+                        </Button>
+                        </div>
                     </TableCell>
                     </TableRow>
                 )}
                 </TableBody>
             </Table>
         </div>
-        
     </div>
   )
 }
