@@ -11,7 +11,7 @@ import {
 } from "@tabler/icons-react";
 import { deleteInvestmentById, updateInvestmentById } from "@/utils/db";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
@@ -32,7 +32,7 @@ const DeleteCellComponent = ({ row }: { row: any }) => {
   return (
     <button
       disabled={isDeleting}
-      className="w-full p-6 flex justify-center items-center"
+      className={cn("w-full p-6 flex justify-center items-center")}
       onClick={async () => {
         setIsDeleting(true);
         await deleteInvestmentById(id);
@@ -51,6 +51,10 @@ const DeleteCellComponent = ({ row }: { row: any }) => {
 const AddCellComponent = ({ row }: { row: any }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const router = useRouter();
+  useEffect(() => {
+    setIsUpdating(false)
+  }, [])
+  
   return (
     <button
       disabled={isUpdating}
@@ -59,7 +63,6 @@ const AddCellComponent = ({ row }: { row: any }) => {
         setIsUpdating(true);
         const data = {...row.original,"Summe":Number.parseInt(row.original.Summe)+Number.parseInt(row.original.addSum)}
         const {id,addSum,...useful} = data
-        console.log(useful)
         await updateInvestmentById(id, { data:useful });
         router.push("/overview");
         setIsUpdating(false);
@@ -154,7 +157,6 @@ export const columns: ColumnDef<Investment>[] = [
       return Number.parseInt(rowB.original["Summe"]) - Number.parseInt(rowA.original["Summe"]);
     },
     cell: ({ row }) => {
-      console.log("SUMME: ",row.original["Summe"])
       const sum = row.original["Summe"]
       return (
         <p className="text-center text-medium group-hover:text-accent-foreground group-focus:text-accent-foreground">
