@@ -13,6 +13,7 @@ import * as c from "@/components/ui/command"
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
+import * as t from "@/components/ui/tooltip"
 
 // Register ChartJS components using ChartJS.register
 ChartJS.register(...registerables);
@@ -123,59 +124,65 @@ export const MarketChart = ({type,data,forKey}:LineProps) => {
   listKeys.sort((a,b)=>a.localeCompare(b))
 
   return(
-    <div className="xl:w-full max-w-[70vw] flex flex-col justify-center items-start gap-y-4">
-      <p className={"text-big font-medium"}>{"Deine "}{forKey=="sum"?"Investitionssummen":forKey=="ret"?"Durchschnitsrendite":"Risikoklassenverteilung"}</p>
-      <div className="flex xl:flex-row flex-col gap-2">
-        <div>
-          <p.Popover open={open} onOpenChange={setOpen}>
-            <p.PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={open}
-                className="w-[200px] justify-between"
-              >
-                {diagramValueX}
-              </Button>
-            </p.PopoverTrigger>
-            <p.PopoverContent>
-              <c.Command>
-                <c.CommandInput placeholder="Nach Kategorie suchen" />
-                <c.CommandList>
-                  <c.CommandEmpty>Noch keine Investmens erstellt</c.CommandEmpty>
-                  <c.CommandGroup>
-                    {listKeys.map((valueKey,index)=>{
-                      return(<c.CommandItem key={index} value={valueKey} onSelect={(e)=>{onChange(e,'x');setOpen(false)}}><Check className={cn("mr-2 h-4 w-4",diagramValueX==valueKey?"opacity-100":"opacity-0")} />{valueKey}</c.CommandItem>)
-                    })}
-                  </c.CommandGroup>
-                </c.CommandList>
-              </c.Command>
+    <t.Tooltip>
+      <t.TooltipTrigger>
+        <div className="xl:w-full max-w-[70vw] flex flex-col justify-center items-start gap-y-4">
+          <p className={"text-big font-medium"}>{"Deine "}{forKey=="sum"?"Investitionssummen":forKey=="ret"?"Durchschnitsrendite":"Risikoklassenverteilung"}</p>
+          <div className="flex xl:flex-row flex-col gap-2">
+            <div>
+              <p.Popover open={open} onOpenChange={setOpen}>
+                <p.PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-[200px] justify-between"
+                  >
+                    {diagramValueX}
+                  </Button>
+                </p.PopoverTrigger>
+                <p.PopoverContent>
+                  <c.Command>
+                    <c.CommandInput placeholder="Nach Kategorie suchen" />
+                    <c.CommandList>
+                      <c.CommandEmpty>Noch keine Investmens erstellt</c.CommandEmpty>
+                      <c.CommandGroup>
+                        {listKeys.map((valueKey,index)=>{
+                          return(<c.CommandItem key={index} value={valueKey} onSelect={(e)=>{onChange(e,'x');setOpen(false)}}><Check className={cn("mr-2 h-4 w-4",diagramValueX==valueKey?"opacity-100":"opacity-0")} />{valueKey}</c.CommandItem>)
+                        })}
+                      </c.CommandGroup>
+                    </c.CommandList>
+                  </c.Command>
 
-            </p.PopoverContent>
-          </p.Popover>
+                </p.PopoverContent>
+              </p.Popover>
+            </div>
+            <p className="text-medium">Diagramm:</p>
+            <div>
+              <s.Select onValueChange={(e)=>onChange(e,'type')} defaultValue="pie">
+                <s.SelectTrigger>
+                  <s.SelectValue/>
+                </s.SelectTrigger>
+                <s.SelectContent>
+                  <s.SelectGroup>
+                    <s.SelectItem value="bar">Säulen</s.SelectItem>
+                    <s.SelectItem value="pie">Kreis</s.SelectItem>
+                  </s.SelectGroup>
+                </s.SelectContent>
+              </s.Select>
+            </div>
+          </div>
+          <div className="xl:hidden flex">
+            {diagramValueX!="Eine Kategorie auswählen"&&<ReactChart type={diagramType} width={`${window.innerWidth/2}px`} height={`${window.innerHeight/2}px/`} data={GraphData} options={{...options,indexAxis:'y' as const}} />}
+          </div>
+          <div className="hidden xl:flex">
+            {diagramValueX!="Eine Kategorie auswählen"&&<ReactChart type={diagramType} width={`${window.innerWidth/5}px`} height={`${window.innerHeight/5}px/`} data={GraphData} options={{...options,plugins:{legend:{position:(diagramType=='bar')?"bottom":"right"}}}}/>}
+          </div>
         </div>
-        <p className="text-medium">Diagramm:</p>
-        <div>
-          <s.Select onValueChange={(e)=>onChange(e,'type')} defaultValue="pie">
-            <s.SelectTrigger>
-              <s.SelectValue/>
-            </s.SelectTrigger>
-            <s.SelectContent>
-              <s.SelectGroup>
-                <s.SelectItem value="bar">Säulen</s.SelectItem>
-                <s.SelectItem value="pie">Kreis</s.SelectItem>
-              </s.SelectGroup>
-            </s.SelectContent>
-          </s.Select>
-        </div>
-      </div>
-      <div className="xl:hidden flex">
-        <ReactChart type={diagramType} width={`${window.innerWidth/2}px`} height={`${window.innerHeight/2}px/`} data={GraphData} options={{...options,indexAxis:'y' as const}} />
-      </div>
-      <div className="hidden xl:flex">
-        {diagramValueX!="Eine Kategorie auswählen"&&<ReactChart type={diagramType} width={`${window.innerWidth/5}px`} height={`${window.innerHeight/5}px/`} data={GraphData} options={{...options,plugins:{legend:{position:(diagramType=='bar')?"bottom":"right"}}}}/>}
-      </div>
-    </div>
+      </t.TooltipTrigger>
+      <t.TooltipContent>
+      </t.TooltipContent>
+    </t.Tooltip>
   )
 };
 

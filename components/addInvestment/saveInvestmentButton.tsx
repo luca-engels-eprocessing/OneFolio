@@ -29,7 +29,7 @@ export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>v
         }
     })
     return (<>
-            <button className='btn-nav w-full rounded-xl text-big font-semibold py-8' onClick={(e) => {
+            <button className='btn-nav w-full rounded-md text-big font-semibold py-8' onClick={(e) => {
                 setError("")
                 setSuccess("")
                 saveData(prepData).then((data)=> {

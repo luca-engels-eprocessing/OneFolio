@@ -52,7 +52,6 @@ type TransactionCardProps = {
     return (
       <div className="flex flex-col border-def bg-prim rounded-2xl p-4 text-primary-foreground" ref={toHideRef}>
         <div className="flex flex-row gap-2 w-full justify-end" >
-          <T.TooltipProvider>
             <T.Tooltip>
               <T.TooltipTrigger>
                 <Link href={{pathname:'/add',query:{data:JSON.stringify(props)}}}>
@@ -88,7 +87,6 @@ type TransactionCardProps = {
                 Ignoriere diese Transaktion
               </T.TooltipContent>
             </T.Tooltip>
-          </T.TooltipProvider>
         </div>
         <div className="xl:flex xl:flex-row grid grid-cols-2 xl:gap-8 gap-2 w-full justify-between xl:pr-8">
           <div className="flex flex-col basis-1/4">

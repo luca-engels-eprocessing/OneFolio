@@ -15,12 +15,12 @@ export default function Navbar() {
     return (
         <div className={"sticky top-0 flex flex-row xl:flex-col justify-center items-center xl:h-screen h-[10vh] sm:p-2 bg-sec xl:bg-transparent xl:border-0 border-t-accent border-t-2"}>
             {theme==="light"?
-            <Image priority src={"/OneFoliogo_blue.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute h-auto w-full xl:top-8 xl:left-8 hidden sm:flex"}/>:
-            <Image priority src={"/OneFoliogo_white.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute h-auto w-full xl:top-8 xl:left-8 hidden sm:flex"}/>
+            <Image priority src={"/OneFoliogo_blue.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute xl:h-auto xl:w-full xl:top-8 xl:left-0 h-full w-auto hidden sm:flex"}/>:
+            <Image priority src={"/OneFoliogo_white.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute xl:h-auto xl:w-full xl:top-8 xl:left-0 h-full w-auto hidden sm:flex"}/>
             }
             
             <div
-                className="border-def transition-colors bg-secondary flex xl:flex-col justify-center gap-2 items-center p-4 rounded-3xl">
+                className="border-def transition-colors bg-secondary flex xl:flex-col justify-center gap-2 items-center xl:p-4 p-2 rounded-3xl">
                 <Link href={"/"} onClick={()=>setCurrNav("home")} className={cn("btn-nav text-center md:p-4 p-1 rounded-3xl w-full",currNav=="home"&&"text-accent")}>
                     <IconHome size={32} />
                 </Link>

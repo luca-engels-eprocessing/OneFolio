@@ -34,7 +34,7 @@ async function Home() {
         <div>
           <h1 className={"h1"}>Dein Portfolio im Überblick</h1>
         </div>
-        <div className="flex xl:flex-row-reverse flex-col gap-8 w-full xl:w-[80vw] ">
+        <div className="flex xl:flex-row-reverse flex-col gap-8 w-full xl:w-[80vw] justify-between">
           <div className="p-4 xl:w-[10vw] w-auto border-def rounded-xl bg-sec flex flex-col justify-between">
             <p className="text-small">Das könnte sie interessieren</p>
             <p>Werbung</p>

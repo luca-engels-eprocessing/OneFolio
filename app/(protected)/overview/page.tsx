@@ -1,6 +1,8 @@
 "use server"
 import { auth } from '@/auth'
-import InvestmentCard from '@/components/InvestmentCard'
+import InvestmentCard from '@/components/overview/InvestmentCard'
+import { columns } from '@/components/overview/colums'
+import { DataTable } from '@/components/overview/data-table'
 import { Button } from '@/components/ui/button'
 import { investment } from '@/models/model'
 import { deleteInvestmentById, getInvestmentsByUserId } from '@/utils/db'
@@ -10,11 +12,11 @@ import React from 'react'
 
 type Props = {}
 
-const data = {
-  investments: [
+const data = [
     {
       date: '01.01.2025',
       title: 'Global Solar Fund',
+      id:"a",
       details: {
         Branche: 'Energie',
         Summe: '400€',
@@ -27,6 +29,7 @@ const data = {
     {
       date: '01.01.2025',
       title: 'Bitcoin Depot',
+      id:"s",
       details: {
         Branche: 'Kryptowährung',
         Summe: '1000€',
@@ -40,6 +43,7 @@ const data = {
     {
       date: '01.01.2026',
       title: 'Real Estate Investment Trust',
+      id:"d",
       details: {
         Branche: 'Immobilien',
         Summe: '2000€',
@@ -52,6 +56,7 @@ const data = {
     {
       date: '01.01.2026',
       title: 'Tech Startups',
+      id:"f",
       details: {
         Branche: 'Technologie',
         Summe: '1500€',
@@ -62,8 +67,7 @@ const data = {
         Betrag: '100€'
       },
     }
-  ],
-}
+  ]
 
 const View = async (props: Props) => {
   const session = await auth()
@@ -74,7 +78,7 @@ const View = async (props: Props) => {
   if(!investmentData){
     return  <p>ERROR</p>
   }
-  const list = investmentData.map((data:any)=>{
+  const list:{id:string,title:string,date:string,details:{}}[] = investmentData.map((data:any)=>{
     const id = data._id
     const {title,date,data:det} = data.data
     let details = {}
@@ -97,8 +101,9 @@ const View = async (props: Props) => {
           //TODO expand the investment card on click of the card
           //TODO add functionality to the Anpassen button 
         */}
-      <div className={"w-full xl:w-[80vw] flex gap-2 border-def bg-sec p-4 flex-col rounded-md overflow-y-auto"}>
-        {(Array.isArray(list) && list.length === 0)?
+      <div className={"w-full xl:w-[80vw] flex gap-2 flex-col overflow-y-auto"}>
+        <DataTable columns={columns} data={list}/>
+        {/* {(Array.isArray(list) && list.length === 0)?
         <div className='flex flex-col justify-center'>
           <h1 className={"text-4xl text-center"}>Keine Investments vorhanden</h1>
           
@@ -115,9 +120,9 @@ const View = async (props: Props) => {
             revalidatePath('/overview')
             revalidatePath('/')
           }}/>
-        ))}
+        ))} */}
       </div>
-        </main>
+    </main>
   )
 }
 
