@@ -3,6 +3,7 @@
   import { AppRouterContext, AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import {jest} from '@jest/globals';
 import React from 'react';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
   
   export type AppRouterContextProviderMockProps = {
     router: Partial<AppRouterInstance>;
@@ -24,7 +25,9 @@ import React from 'react';
     };
     return (
       <AppRouterContext.Provider value={mockedRouter}>
-        {children}
+        <TooltipProvider>
+          {children}
+        </TooltipProvider>
       </AppRouterContext.Provider>
     );
   };

@@ -90,7 +90,7 @@ describe('Check Gradient calculation', () => {
         Pie: () => null,
       }));
     test('should render the list with sum', () => {
-        const data = [[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"},{key:"Summe",value:"300"}],[{key:"Data",value:"TESTING"},{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"}],[{key:"Data",value:"TEST"},{key:"Summe",value:"300"}],[{key:"Data",value:"TEST"}],[{key:"Data2",value:"Stuff"}],[{key:"Summe",value:"300"}],[]]
+        const data:{[key:string]:string}[] = [{Data:"Test",Data2:"Test",Summe:"300"},{Data:"TESTING",Data2:"MORE STUFF",Summe:"600"},{Data2:"MORE STUFF",Summe:"600"},{Data:"TEST",Data2:"Stuff"},{Data:"TEST",Summe:"300"},{"Data":"TEST"},{"Data2":"Stuff"},{"Summe":"300"}]
         const {getByText} = render(<MarketChart data={data} type={'bar'} forKey={'sum'}/>)
         // wait for useEffect to complete befor getting text
         waitFor(() => {
@@ -99,7 +99,8 @@ describe('Check Gradient calculation', () => {
         });
     });
     test('should render the list with return', () => {
-        const data = [[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"},{key:"Summe",value:"300"}],[{key:"Data",value:"TESTING"},{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"}],[{key:"Data",value:"TEST"},{key:"Summe",value:"300"}],[{key:"Data",value:"TEST"}],[{key:"Data2",value:"Stuff"}],[{key:"Summe",value:"300"}],[]]
+
+        const data:{[key:string]:string}[] = [{Data:"Test",Data2:"Test",Summe:"300"},{Data:"TESTING",Data2:"MORE STUFF",Summe:"600"},{Data2:"MORE STUFF",Summe:"600"},{Data:"TEST",Data2:"Stuff"},{Data:"TEST",Summe:"300"},{"Data":"TEST"},{"Data2":"Stuff"},{"Summe":"300"}]
         const {getByText} = render(<MarketChart data={data} type={'bar'} forKey={'ret'}/>)
         // wait for useEffect to complete befor getting text
         waitFor(() => {
@@ -108,7 +109,7 @@ describe('Check Gradient calculation', () => {
         });
     });
     test('should render the list with risk', () => {
-        const data = [[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"},{key:"Summe",value:"300"}],[{key:"Data",value:"TESTING"},{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data2",value:"MORE STUFF"},{key:"Summe",value:"600"}],[{key:"Data",value:"TEST"},{key:"Data2",value:"Stuff"}],[{key:"Data",value:"TEST"},{key:"Summe",value:"300"}],[{key:"Data",value:"TEST"}],[{key:"Data2",value:"Stuff"}],[{key:"Summe",value:"300"}],[]]
+        const data:{[key:string]:string}[] = [{Data:"Test",Data2:"Test",Summe:"300"},{Data:"TESTING",Data2:"MORE STUFF",Summe:"600"},{Data2:"MORE STUFF",Summe:"600"},{Data:"TEST",Data2:"Stuff"},{Data:"TEST",Summe:"300"},{"Data":"TEST"},{"Data2":"Stuff"},{"Summe":"300"}]
         const {getByText} = render(<MarketChart data={data} type={'bar'} forKey={'sum'}/>)
         // wait for useEffect to complete befor getting text
         waitFor(() => {

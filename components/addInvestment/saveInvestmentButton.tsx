@@ -69,7 +69,6 @@ export const SaveCSVButton = ({data,onClick}:{data:{}[],onClick:()=>void}) => {
             <button className='btn-nav w-full rounded-xl text-big font-semibold py-8' onClick={(e) => {
                 setError("")
                 setSuccess("")
-                console.log(prepDataList)
                 saveMultipleData(prepDataList).then((datas)=> {
                     setError(datas.error)
                     setSuccess(datas.success)

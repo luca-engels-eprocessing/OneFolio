@@ -223,7 +223,7 @@ describe('SaveInvestmentButton', () => {
     });
 
     test('SaveButton displays error message on failed save', async () => {
-        const errorMessage = "Bitte füge einen Titel für dein Investment ein";
+        const errorMessage = "Dein Investment hat keine Daten. Füge mehr Informationen hinzu";
         
         const { getByText } = render(createRender(<SaveButton data={{}} onClick={() => {}} />));
         const button = getByText('Speichern');
@@ -234,11 +234,30 @@ describe('SaveInvestmentButton', () => {
         expect(errorDisplay).toBeTruthy();
     });
 
+
+    test('2.4 NO SUM: SaveButton displays no sum message on save', async () => {
+        fetchMock.reset() .post(BACKEND_URL+"/investments/",201)
+        const successMessage = "Bitte füge eine Investmentsumme für das Investment ein";
+        
+        const { getByText } = render(createRender(<SaveButton data={{"Titel": "Test","Startdatum des Investments":"01.01.2020","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />));
+        const button = getByText('Speichern');
+        const mockSession = {
+            expires: new Date(Date.now() + 2 * 86400).toISOString(),
+            user: { id: "1" }
+        };
+        (auth as jest.Mock).mockReturnValue(mockSession); // Mocking auth to return the session data and authenticated status
+        await act(async () => {
+            fireEvent.click(button);
+        });
+        const successDisplay = await getByText(successMessage, { exact: false })
+        expect(successDisplay).toBeTruthy();
+    });
+
     test('2.1 SUCESSFUL SAVE: SaveButton displays success message on successful save', async () => {
         fetchMock.reset() .post(BACKEND_URL+"/investments/",201)
         const successMessage = "Investment erfolgreich gespeichert!";
         
-        const { getByText } = render(createRender(<SaveButton data={{"Titel": "Test","Startdatum des Investments":"2023-01-01","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />));
+        const { getByText } = render(createRender(<SaveButton data={{"Titel": "Test","Startdatum des Investments":"01.01.2020","Summe":"300","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />));
         const button = getByText('Speichern');
         const mockSession = {
             expires: new Date(Date.now() + 2 * 86400).toISOString(),
@@ -256,7 +275,7 @@ describe('SaveInvestmentButton', () => {
         fetchMock.reset() .post(BACKEND_URL+"/investments/",500)
         const successMessage = "Es gab ein Problem auf der Serverseite";
         
-        const { getByText } = render(createRender(<SaveButton data={{"Titel": "Test","Startdatum des Investments":"2023-01-01","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />));
+        const { getByText } = render(createRender(<SaveButton data={{"Titel": "Test","Startdatum des Investments":"2023-01-01","Summe":"300","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />));
         const button = getByText('Speichern');
         const mockSession = {
             expires: new Date(Date.now() + 2 * 86400).toISOString(),
@@ -273,13 +292,13 @@ describe('SaveInvestmentButton', () => {
         expect(lastCall[1]!.body).toContain('"userId":"1"')
         expect(lastCall[1]!.body).toContain('"title":"Test"')
         expect(lastCall[1]!.body).toContain('"date":"2023-01-01"')
-        expect(lastCall[1]!.body).toContain('{\"key\":\"Daten\",\"value\":\"Test\"}')
+        expect(lastCall[1]!.body).toContain('"Daten":"Test"')
     });
 
     test('SaveButton displays error if no UserID', async () => {
         const errorMessage = "Es gab einen Fehler beim laden der Nutzerdaten";
         
-        const { getByText } = render(createRender(<SaveButton data={{"Titel": "Test","Startdatum des Investments":"2023-01-01","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />));
+        const { getByText } = render(createRender(<SaveButton data={{"Titel": "Test","Summe":"300","Startdatum des Investments":"2023-01-01","Daten": "Test","Daten2": "Test"}} onClick={() => {}} />));
         const button = getByText('Speichern');
         const mockSession = {
             expires: new Date(Date.now() + 2 * 86400).toISOString(),
@@ -326,7 +345,7 @@ describe('Table rendering and fuctionality', () => {
         await act(async () => {
             fireEvent.click(button)
         })
-        const value = getByText("Bitte füge einen Titel für dein Investment ein")
+        const value = getByText("Dein Investment hat keine Daten. Füge mehr Informationen hinzu")
         expect(value).toBeTruthy()
     })
     test('test category button to open values', async () => {
