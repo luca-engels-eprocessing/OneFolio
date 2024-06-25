@@ -42,7 +42,7 @@ async function Home() {
             <p className="text-small">Das könnte sie interessieren</p>
             <p>Werbung</p>
           </div>
-          <div className="xl:w-[60vw] border-def rounded-xl bg-sec p-8 xl:grid grid-flow-row-dense xl:grid-rows-2 xL:grid-cols-2 flex flex-col gap-16 items-center content-center justify-around">
+          <div className="xl:w-[60vw] border-def rounded-md bg-sec p-8 xl:grid grid-flow-row-dense xl:grid-rows-2 xL:grid-cols-2 flex flex-col gap-16 items-center content-center justify-around">
             <div className={"row-start-1 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
               Gesamtinvestition: {totalSum}€<br/>
               Durchschnittsrendite: ~{averageRendite}% über {amountRendite} {amountRendite!=1?" Investments ":" Investment "}verteilt
