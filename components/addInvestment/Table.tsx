@@ -271,7 +271,7 @@ export const Table = (props: Props) => {
                     <SaveButton data={selectionList} onClick={clearList}/>
                         <T.Tooltip>
                             <T.TooltipTrigger>
-                                <Input type="file" placeholder='Eine CSV mit Investments hochladen' accept=".csv" className='text-medium bg-primary border-border border-2' onChange={(e) => {
+                                <Input type="file" placeholder='Eine CSV mit Investments hochladen' accept=".csv" className='text-medium bg-primary text-primary-foreground border-border border-2' onChange={(e) => {
                                     handleFileUpload(e,setCSVList);
                                 }} />
                             </T.TooltipTrigger>
