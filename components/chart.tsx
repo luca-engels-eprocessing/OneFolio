@@ -21,18 +21,21 @@ ChartJS.register(...registerables);
 interface LineProps {
   data: {[key:string]:string}[];
   type: "bar"|"pie"|"radar",
-  forKey:"sum"|"ret"|"risk"
+  forKey:"sum"|"ret"|"risk",
+  startX?:string
 }
 
-export const MarketChart = ({type,data,forKey}:LineProps) => {
-  const [diagramValueX,setDiagramValueX] = useState<string>("Eine Kategorie auswählen");
+export const MarketChart = ({type,data,forKey,startX}:LineProps) => {
+  const [diagramValueX,setDiagramValueX] = useState<string>(startX||"Eine Kategorie auswählen");
   const {theme} = useTheme()
   const diagramValueY = forKey=="sum"?"Summe":forKey=="ret"?"Rendite":"Risikoklasse";
   const [diagramType,setDiagramType] = useState<"bar"|"pie"|"radar">(type);
   const [chartData, setChartData] = useState<any[][]>();
   const [open, setOpen] = React.useState(false)
+  const saveRef = React.useRef<HTMLButtonElement>(null)
 
   const onChange=(e:string,direction:"x"|"y"|"type") => {
+    if(saveRef&&saveRef.current)saveRef.current.classList.remove("hidden")
     if(direction=="x"){
       setDiagramValueX(e)
     }
@@ -179,6 +182,11 @@ export const MarketChart = ({type,data,forKey}:LineProps) => {
           <div className="hidden xl:flex">
             {diagramValueX!="Eine Kategorie auswählen"&&<ReactChart type={diagramType} width={`${window.innerWidth/5}px`} height={`${window.innerHeight/5}px/`} data={GraphData} options={{...options,plugins:{legend:{position:(diagramType=='bar')?"bottom":"right"}}}}/>}
           </div>
+          <Button ref={saveRef} className="hidden" onClick={()=>{
+            if(saveRef&&saveRef.current)saveRef.current.classList.add("hidden")
+          }}>
+            Änderungen speichern
+          </Button>
         </div>
   )
 };
@@ -192,7 +200,6 @@ export const options = {
     },
   },
 };
-
 
 export function generateGradientHexList(startColor: string, endColor: string, steps: number,alpha?:boolean): string[] {
   const start = {
