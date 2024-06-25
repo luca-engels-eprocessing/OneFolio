@@ -56,7 +56,7 @@ type TransactionCardProps = {
                   params.set('data',JSON.stringify(props))
                   router.push("/add"+'?'+params.toString())
                 }}>
-                  <IconVariablePlus />
+                  <IconVariablePlus size={16} />
                 </Button>
               </T.TooltipTrigger>
               <T.TooltipContent>
@@ -70,7 +70,7 @@ type TransactionCardProps = {
                   params.set('data',JSON.stringify(props))
                   router.push("/overview"+'?'+params.toString())
                 }}>
-                  <IconIndentIncrease />
+                  <IconIndentIncrease size={16} />
                 </Button>
               </T.TooltipTrigger>
               <T.TooltipContent>
@@ -85,7 +85,7 @@ type TransactionCardProps = {
                     toHideRef.current.style.display="none"
                   }
                 }}>
-                  <IconEyeOff />
+                  <IconEyeOff size={16} />
                 </Button>
               </T.TooltipTrigger>
               <T.TooltipContent>
