@@ -127,8 +127,6 @@ export const MarketChart = ({type,data,forKey}:LineProps) => {
   listKeys.sort((a,b)=>a.localeCompare(b))
 
   return(
-    <t.Tooltip>
-      <t.TooltipTrigger>
         <div className="xl:w-full max-w-[70vw] flex flex-col justify-center items-start gap-y-4">
           <p className={"text-big font-medium"}>{"Deine "}{forKey=="sum"?"Investitionssummen":forKey=="ret"?"Durchschnitsrendite":"Risikoklassenverteilung"}</p>
           <div className="flex xl:flex-row flex-col gap-2">
@@ -182,10 +180,6 @@ export const MarketChart = ({type,data,forKey}:LineProps) => {
             {diagramValueX!="Eine Kategorie auswählen"&&<ReactChart type={diagramType} width={`${window.innerWidth/5}px`} height={`${window.innerHeight/5}px/`} data={GraphData} options={{...options,plugins:{legend:{position:(diagramType=='bar')?"bottom":"right"}}}}/>}
           </div>
         </div>
-      </t.TooltipTrigger>
-      <t.TooltipContent>
-      </t.TooltipContent>
-    </t.Tooltip>
   )
 };
 
@@ -239,10 +233,6 @@ export const createPatternArray = (n:number,a:string,b:string) => {
   return res
 }
 
-export const isKeyInList = (key: string, list: {[key:string]:any}[]): boolean => {
-  return list.some((item) => (item.key as string).toLowerCase().includes(key.toLowerCase()));
-}
-
 export const getIndexFromKey = (key: string, list: any[][]): number => {
   for (let i = 0; i < list.length; i++) {
     if (list[i][0] === key) {
@@ -251,8 +241,3 @@ export const getIndexFromKey = (key: string, list: any[][]): number => {
   }
   return -1; // Return -1 if the key is not found
 }
-
-export const getKeyFromList = (key: string, list: {[key:string]:any}[]): string => {
-  return list.find((item) => (item.key as string).toLowerCase().includes(key.toLowerCase()))?.value;
-}
-
