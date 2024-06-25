@@ -37,7 +37,7 @@ export const AddButton = ({node,onSubmit,inputType}:{node?:string,onSubmit:(e:Fo
                 </div>
                 }
                 <div className='flex flex-row text-big gap-8 items-center text-center w-full xl:w-auto'>
-                    <button type='submit'  aria-label='add-button' className='w-full btn-nav p-4 rounded-lg flex flex-row justify-center gap-2 content-center items-center'>
+                    <button type='submit' aria-label='add-button' className='w-full btn-nav p-4 rounded-lg flex flex-row justify-center gap-2 content-center items-center'>
                         <p className="text-medium h-full">Hinzufügen</p> <IconPlus size={32} />
                     </button>
                 </div>

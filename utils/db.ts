@@ -118,6 +118,23 @@ export const deleteInvestmentById = async (id:string) => {
   }
 }
 
+export const updateInvestmentById = async (id:string,update:{}) => {
+  try {
+    const response = await fetch(BACKEND_URL+"/investments/"+id+"/",{
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(update)
+    })
+    return response
+  } catch (e) {
+    console.error(e)
+    return null
+    
+  }
+}
+
 
 export const getLatestCursorOrUndefined = async (userId:string): Promise<string | undefined> => {
   try {

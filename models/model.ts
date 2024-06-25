@@ -21,7 +21,8 @@ export type investment = {
     userId: string,
     data:{
         title:string,
-        date?: string,
-        data:{key:string,value:string}[]
+        date:string,
+        Summe:string,
+        [key:string]:string
     }
 }

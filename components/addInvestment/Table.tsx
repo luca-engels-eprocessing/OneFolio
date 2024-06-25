@@ -7,6 +7,8 @@ import { KeyButton } from '@/components/addInvestment/keyButton';
 import { ValueButton } from '@/components/addInvestment/valueButton';
 import { Button } from '../ui/button';
 import { IconEdit,IconTrash,IconDeviceFloppy } from '@tabler/icons-react';
+import { Input } from '../ui/input';
+import * as T from "@/components/ui/tooltip"
 type Props = {
     items: {},
     startSelection?:{},
@@ -134,7 +136,13 @@ export const Table = (props: Props) => {
                 return;
             }
             deleteFromSelection(node,modifyableList,selectionList)
-            const newCat = (e.target as HTMLFormElement)['newCategory'].value as string;
+            var newCat = (e.target as HTMLFormElement)['newCategory'].value as string;
+            if(/[1-9][0-9][0-9]{2}-([0][1-9]|[1][0-2])-([1-2][0-9]|[0][1-9]|[3][0-1])/.test(newCat)){
+                const split = newCat.split("-")
+                console.log(split)
+                newCat = split[2]+"."+split[1]+"."+split[0]
+                console.log(newCat)
+            }
             const type = e.target['inputType']?e.target['inputType'].value as string:undefined
             if(newCat == ''){
                 return
@@ -260,10 +268,17 @@ export const Table = (props: Props) => {
         <div className='xl:w-[80vw] w-full flex xl:flex-row flex-col xl:gap-8 gap-2 overflow-hidden'>
                 <div className={cn(displayed && " max-h-[calc(50%-32px)]", " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-auto scroll-light dark:scroll-dark rounded-md xl:w-[calc(50%-32px)] items-center xl:max-h-full xl:h-fit",props.className)}>
                     {keyButtonList}
-                    <SaveButton data={selectionList} onClick={clearList} />
-                    <input type="file" accept=".csv" className='text-medium' onChange={(e) => {
-                        handleFileUpload(e,setCSVList);
-                    }} />
+                    <SaveButton data={selectionList} onClick={clearList}/>
+                        <T.Tooltip>
+                            <T.TooltipTrigger>
+                                <Input type="file" placeholder='Eine CSV mit Investments hochladen' accept=".csv" className='text-medium bg-primary border-border border-2' onChange={(e) => {
+                                    handleFileUpload(e,setCSVList);
+                                }} />
+                            </T.TooltipTrigger>
+                            <T.TooltipContent>
+                                Hier kannst du eine CSV Datei hochladen um schnell Investments hinzuzufügen.<br/> Denk daran deiner CSV Datei eine Überschrift zu geben und eine Reihe mit Titeln zu haben.
+                            </T.TooltipContent>
+                        </T.Tooltip>
                 </div>
                 {displayed && 
                     <div className={cn("flex-col flex gap-2 bg-sec border-def p-4 overflow-y-auto scroll-light dark:scroll-dark rounded-md xl:w-1/2 items-center xl:max-h-full xl:h-fit h-fit max-h-[50%]",props.className)}>

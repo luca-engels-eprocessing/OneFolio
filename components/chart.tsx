@@ -13,12 +13,13 @@ import * as c from "@/components/ui/command"
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
+import * as t from "@/components/ui/tooltip"
 
 // Register ChartJS components using ChartJS.register
 ChartJS.register(...registerables);
 
 interface LineProps {
-  data: {key:string,value:string}[][];
+  data: {[key:string]:string}[];
   type: "bar"|"pie"|"radar",
   forKey:"sum"|"ret"|"risk"
 }
@@ -26,7 +27,7 @@ interface LineProps {
 export const MarketChart = ({type,data,forKey}:LineProps) => {
   const [diagramValueX,setDiagramValueX] = useState<string>("Eine Kategorie auswählen");
   const {theme} = useTheme()
-  const diagramValueY = forKey=="sum"?"summe":forKey=="ret"?"rendite":"risiko";
+  const diagramValueY = forKey=="sum"?"Summe":forKey=="ret"?"Rendite":"Risikoklasse";
   const [diagramType,setDiagramType] = useState<"bar"|"pie"|"radar">(type);
   const [chartData, setChartData] = useState<any[][]>();
   const [open, setOpen] = React.useState(false)
@@ -43,29 +44,31 @@ export const MarketChart = ({type,data,forKey}:LineProps) => {
   }
   useEffect(() => {
     let tempCharData:any[][] = []
-
+    console.log(data)
     //! ONLY WORKS FOR BAR AND PIE Graphs and SUM
-    data.forEach((item) => {
+    data.forEach((item:{[key:string]:string}) => {
       //check if SUM,RETURN or RISK is present in investment
-      if(isKeyInList(diagramValueY,item)){
+      console.log(diagramValueY)
+      console.log(item)
+      if(item[diagramValueY]){
         // gets the value of the Category
-        let x = getKeyFromList(diagramValueX,item)
+        let x = item[diagramValueX]
         // if the category is not present in the investment add as Sonstige...
         if (!x) x="Sonstige..."
         // gets the value of SUM,RETURN or RISK
-        const y = Number.parseInt(getKeyFromList(diagramValueY,item))
+        const y = Number.parseInt(item[diagramValueY])
           // gets the index if category is already present in the list
         const index = getIndexFromKey(x,tempCharData)
         if(index >=0){
           // Overrides current entry for Category
           switch (diagramValueY) {
-            case "summe":
+            case "Summe":
                 tempCharData[index] = [x,tempCharData[index][1]+y]
               break;
-            case "rendite":
+            case "Rendite":
                 tempCharData[index] = [x,tempCharData[index][1]+y,tempCharData[index][2]+1]
               break;
-            case "risiko":
+            case "Risikoklasse":
               tempCharData[index] = [x,tempCharData[index][1]+1]
               break;
           }
@@ -73,20 +76,20 @@ export const MarketChart = ({type,data,forKey}:LineProps) => {
         else{
           // Adds the Category and value to the templist
           switch (diagramValueY) {
-            case "summe":
+            case "Summe":
               tempCharData.push([x,y])
               break;
-            case "rendite":
+            case "Rendite":
               tempCharData.push([x,y,1])
               break;
-            case "risiko":
+            case "Risikoklasse":
               tempCharData.push([x,1])
               break;
           }
         }
       } 
     });
-    if(diagramValueY=="rendite"){
+    if(diagramValueY=="Rendite"){
       tempCharData=tempCharData.map(data=>{return [data[0],(data[1]/data[2])]})
     }
     setChartData(tempCharData)
@@ -113,69 +116,76 @@ export const MarketChart = ({type,data,forKey}:LineProps) => {
     ],
   };
   const listKeys:string[] = []
-  data.forEach(item => {
-    item.forEach(keys => {
-      if(!listKeys.includes(keys.key)&&keys.key.toLowerCase()!="summe"){
-        listKeys.push(keys.key)
+  data.forEach((item:{[key:string]:string}) => {
+    Object.keys(item).forEach((key) => {
+      if(key=="date") {key="Startdatum"}
+      if(!listKeys.includes(key)&&key.toLowerCase()!="summe"&&key.toLowerCase()!="title"){
+        listKeys.push(key)
       }
     })
   })
   listKeys.sort((a,b)=>a.localeCompare(b))
 
   return(
-    <div className="xl:w-full max-w-[70vw] flex flex-col justify-center items-start gap-y-4">
-      <p className={"text-big font-medium"}>{"Deine "}{forKey=="sum"?"Investitionssummen":forKey=="ret"?"Durchschnitsrendite":"Risikoklassenverteilung"}</p>
-      <div className="flex xl:flex-row flex-col gap-2">
-        <div>
-          <p.Popover open={open} onOpenChange={setOpen}>
-            <p.PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={open}
-                className="w-[200px] justify-between"
-              >
-                {diagramValueX}
-              </Button>
-            </p.PopoverTrigger>
-            <p.PopoverContent>
-              <c.Command>
-                <c.CommandInput placeholder="Nach Kategorie suchen" />
-                <c.CommandList>
-                  <c.CommandEmpty>Noch keine Investmens erstellt</c.CommandEmpty>
-                  <c.CommandGroup>
-                    {listKeys.map((valueKey,index)=>{
-                      return(<c.CommandItem key={index} value={valueKey} onSelect={(e)=>{onChange(e,'x');setOpen(false)}}><Check className={cn("mr-2 h-4 w-4",diagramValueX==valueKey?"opacity-100":"opacity-0")} />{valueKey}</c.CommandItem>)
-                    })}
-                  </c.CommandGroup>
-                </c.CommandList>
-              </c.Command>
+    <t.Tooltip>
+      <t.TooltipTrigger>
+        <div className="xl:w-full max-w-[70vw] flex flex-col justify-center items-start gap-y-4">
+          <p className={"text-big font-medium"}>{"Deine "}{forKey=="sum"?"Investitionssummen":forKey=="ret"?"Durchschnitsrendite":"Risikoklassenverteilung"}</p>
+          <div className="flex xl:flex-row flex-col gap-2">
+            <div>
+              <p.Popover open={open} onOpenChange={setOpen}>
+                <p.PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-[200px] justify-between"
+                  >
+                    {diagramValueX}
+                  </Button>
+                </p.PopoverTrigger>
+                <p.PopoverContent>
+                  <c.Command>
+                    <c.CommandInput placeholder="Nach Kategorie suchen" />
+                    <c.CommandList>
+                      <c.CommandEmpty>Noch keine Investmens erstellt</c.CommandEmpty>
+                      <c.CommandGroup>
+                        {listKeys.map((valueKey,index)=>{
+                          return(<c.CommandItem key={index} value={valueKey} onSelect={(e)=>{onChange(e,'x');setOpen(false)}}><Check className={cn("mr-2 h-4 w-4",diagramValueX==valueKey?"opacity-100":"opacity-0")} />{valueKey}</c.CommandItem>)
+                        })}
+                      </c.CommandGroup>
+                    </c.CommandList>
+                  </c.Command>
 
-            </p.PopoverContent>
-          </p.Popover>
+                </p.PopoverContent>
+              </p.Popover>
+            </div>
+            <p className="text-medium">Diagramm:</p>
+            <div>
+              <s.Select onValueChange={(e)=>onChange(e,'type')} defaultValue="pie">
+                <s.SelectTrigger>
+                  <s.SelectValue/>
+                </s.SelectTrigger>
+                <s.SelectContent>
+                  <s.SelectGroup>
+                    <s.SelectItem value="bar">Säulen</s.SelectItem>
+                    <s.SelectItem value="pie">Kreis</s.SelectItem>
+                  </s.SelectGroup>
+                </s.SelectContent>
+              </s.Select>
+            </div>
+          </div>
+          <div className="xl:hidden flex">
+            {diagramValueX!="Eine Kategorie auswählen"&&<ReactChart type={diagramType} width={`${window.innerWidth/2}px`} height={`${window.innerHeight/2}px/`} data={GraphData} options={{...options,indexAxis:'y' as const}} />}
+          </div>
+          <div className="hidden xl:flex">
+            {diagramValueX!="Eine Kategorie auswählen"&&<ReactChart type={diagramType} width={`${window.innerWidth/5}px`} height={`${window.innerHeight/5}px/`} data={GraphData} options={{...options,plugins:{legend:{position:(diagramType=='bar')?"bottom":"right"}}}}/>}
+          </div>
         </div>
-        <p className="text-medium">Diagramm:</p>
-        <div>
-          <s.Select onValueChange={(e)=>onChange(e,'type')} defaultValue="pie">
-            <s.SelectTrigger>
-              <s.SelectValue/>
-            </s.SelectTrigger>
-            <s.SelectContent>
-              <s.SelectGroup>
-                <s.SelectItem value="bar">Säulen</s.SelectItem>
-                <s.SelectItem value="pie">Kreis</s.SelectItem>
-              </s.SelectGroup>
-            </s.SelectContent>
-          </s.Select>
-        </div>
-      </div>
-      <div className="xl:hidden flex">
-        <ReactChart type={diagramType} width={`${window.innerWidth/2}px`} height={`${window.innerHeight/2}px/`} data={GraphData} options={{...options,indexAxis:'y' as const}} />
-      </div>
-      <div className="hidden xl:flex">
-        {diagramValueX!="Eine Kategorie auswählen"&&<ReactChart type={diagramType} width={`${window.innerWidth/5}px`} height={`${window.innerHeight/5}px/`} data={GraphData} options={{...options,plugins:{legend:{position:(diagramType=='bar')?"bottom":"right"}}}}/>}
-      </div>
-    </div>
+      </t.TooltipTrigger>
+      <t.TooltipContent>
+      </t.TooltipContent>
+    </t.Tooltip>
   )
 };
 
