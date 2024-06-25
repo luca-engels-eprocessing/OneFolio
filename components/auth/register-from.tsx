@@ -56,7 +56,7 @@ export const RegisterForm = () => {
                                 <div className="grid grid-cols-2 gap-x-4">
                                     <FormField control={form.control} name="firstname" render={({field})=>(
                                     <FormItem>
-                                        <FormLabel className="p-2 pb-1 flex flex-row gap-2">Vorname <p className="text-red-500">*</p></FormLabel>
+                                        <FormLabel className="p-2 pb-1 flex flex-row gap-2">Vorname <p className="text-destructive">*</p></FormLabel>
                                         <FormControl className=" border-def rounded-lg">
                                             <Input {...field} disabled={isPending} placeholder="Max" className="text-black" />
                                         </FormControl>
@@ -64,7 +64,7 @@ export const RegisterForm = () => {
                                     </FormItem>)} />
                                     <FormField control={form.control} name="lastname" render={({field})=>(
                                     <FormItem>
-                                    <FormLabel className="p-2 pb-1 flex flex-row gap-2">Nachname <p className="text-red-500">*</p></FormLabel>
+                                    <FormLabel className="p-2 pb-1 flex flex-row gap-2">Nachname <p className="text-destructive">*</p></FormLabel>
                                         <FormControl className=" border-def rounded-lg">
                                             <Input {...field} disabled={isPending} placeholder="Mustermann" className="text-black" />
                                         </FormControl>
@@ -73,7 +73,7 @@ export const RegisterForm = () => {
                                 </div>
                                 <FormField control={form.control} name="email" render={({field})=>(
                                 <FormItem>
-                                <FormLabel className="p-2 pb-1 flex flex-row gap-2">E-Mail <p className="text-red-500">*</p></FormLabel>
+                                <FormLabel className="p-2 pb-1 flex flex-row gap-2">E-Mail <p className="text-destructive">*</p></FormLabel>
                                     <FormControl className=" border-def rounded-lg">
                                         <Input {...field} disabled={isPending} placeholder="Mustermann@example.com" type="email" className="text-black" />
                                     </FormControl>
@@ -81,7 +81,7 @@ export const RegisterForm = () => {
                                 </FormItem>)} />
                                 <FormField control={form.control} name="password" render={({field})=>(
                                 <FormItem>
-                                <FormLabel className="p-2 pb-1 flex flex-row gap-2">Password <p className="text-red-500">*</p></FormLabel>
+                                <FormLabel className="p-2 pb-1 flex flex-row gap-2">Password <p className="text-destructive">*</p></FormLabel>
                                     <FormControl className=" border-def rounded-lg">
                                         <Input {...field} disabled={isPending} placeholder="********" type="password" className="text-black" />
                                     </FormControl>
@@ -89,7 +89,7 @@ export const RegisterForm = () => {
                                 </FormItem>)} />
                                 <FormField control={form.control} name="passwordConfirm" render={({field})=>(
                                 <FormItem>
-                                <FormLabel className="p-2 pb-1 flex flex-row gap-2">Password bestätigen <p className="text-red-500">*</p></FormLabel>
+                                <FormLabel className="p-2 pb-1 flex flex-row gap-2">Password bestätigen <p className="text-destructive">*</p></FormLabel>
                                     <FormControl className=" border-def rounded-lg">
                                         <Input {...field} disabled={isPending} placeholder="********" type="password" className="text-black" />
                                     </FormControl>

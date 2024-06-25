@@ -42,7 +42,7 @@ return (
             </h1>
                 {props.date&&
                 <div className='pb-8'>
-                    <p className={"text-small font-light"}>Start Datum des Investments:</p>
+                    <p className={"text-small text-muted group-hover:text-muted-foreground font-light"}>Start Datum des Investments:</p>
                     <p className={"text-big font-normal"}>{props.date}</p>
                 </div>
                 }
@@ -56,13 +56,13 @@ return (
             <div className={"grid gap-4  items-center text-start xl:grid-rows-2 xl:grid-cols-2 grid-cols-1 w-full"} ref={gridRef}>
                 {Object.entries(props.details).slice(0, 3).map(([key, value], index) => (
                     <div key={index} className={index >= 3 ? 'hidden' : ''}>
-                        <p className={"text-small font-light"}>{key}</p>
+                        <p className={"text-small text-muted group-hover:text-muted-foreground font-light"}>{key}</p>
                         <p className={"text-big font-normal"}>{value as string}</p>
                     </div>
                 ))}
                 {Object.entries(props.details).slice(3).map(([key, value], index) => (
                     <div key={index + 3} className='hidden'>
-                        <p className={"text-small font-light"}>{key}</p>
+                        <p className={"text-small text-muted group-hover:text-muted-foreground font-light"}>{key}</p>
                         <p className={"text-big font-normal"}>{value as string}</p>
                     </div>
                 ))}

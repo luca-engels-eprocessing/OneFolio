@@ -51,7 +51,7 @@ const Plaid = (props: Props) => {
     });
 
   return (
-    <div className=' rounded-2xl p-4 flex flex-row justify-center btn-nav'>
+    <div className=' rounded-2xl p-4 flex flex-row justify-center btn-nav group'>
       {props.accessToken?
         <div className='flex flex-row justify-evenly items-center w-full'>
           <button onClick={()=>{
@@ -62,19 +62,19 @@ const Plaid = (props: Props) => {
               router.refresh()
             }
             }}>
-              <p className='text-medium text-primary-foreground/70 dark:text-primary-foreground/50'>Sie sind mit ihrem Bankkonto verbunden</p>
-              <p className='text-big text-primary-foreground dark:text-primary-foreground/70'> Bankverbindung wieder auflösen?</p>
+              <p className='text-medium text-muted group-hover:text-muted-foreground'>Sie sind mit ihrem Bankkonto verbunden</p>
+              <p className='text-big text-primary-foreground'> Bankverbindung wieder auflösen?</p>
           </button>
           {props.children}
         </div>
         :
         <button className='w-full' onClick={() =>{open()}} disabled={!ready}>
-            <p className='text-medium text-primary-foreground/70 dark:text-primary-foreground/50'>Noch keine Bankdaten vorhanden</p>
-            <p className='text-big underline text-green-500/50'> Jetzt Bankkonto verbinden</p>
-            <p className='text-tiny'>Sandbox-Daten:</p>
-            <p className='text-tiny'>username: &apos;user_good&apos;</p>
-            <p className='text-tiny'>password: &apos;pass_good&apos;</p>
-            <p className='text-tiny'>auth_code: &apos;1234&apos;</p>
+            <p className='text-medium text-muted'>Noch keine Bankdaten vorhanden</p>
+            <p className='text-big underline text-accent'> Jetzt Bankkonto verbinden</p>
+            <p className='text-tiny text-muted-foreground'>Sandbox-Daten:</p>
+            <p className='text-tiny text-muted-foreground'>username: &apos;user_good&apos;</p>
+            <p className='text-tiny text-muted-foreground'>password: &apos;pass_good&apos;</p>
+            <p className='text-tiny text-muted-foreground'>auth_code: &apos;1234&apos;</p>
         </button>
       }
     </div>

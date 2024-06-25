@@ -1,14 +1,11 @@
 "use client"
 import { cn } from "@/lib/utils";
-import { getLatestCursorOrUndefined, removeFromUser, updateUser } from "@/utils/db";
-import { removeAccessToken, transactionSync } from "@/utils/plaid_API";
 import { useRouter } from "next/navigation";
-import { RemovedTransaction, Transaction, TransactionCounterparty } from "plaid";
+import { TransactionCounterparty } from "plaid";
 import { ReactNode, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {IconIndentIncrease,IconVariablePlus,IconEyeOff} from "@tabler/icons-react"
 import * as T from "@/components/ui/tooltip"
-import Link from "next/link";
 
 
 
@@ -102,7 +99,7 @@ type TransactionCardProps = {
           <div className="flex flex-col basis-1/4 w-full">
               <p className="text-small text-primary-foreground/70 dark:text-primary-foreground/50">Umsatz: </p>
               <div className="flex flex-row gap-1 items-end">
-                  <p className={cn("text-medium",props.amount<0?"text-red-500":"text-green-500")}>{props.amount>0?"+":""}{props.amount.toLocaleString()}</p>
+                  <p className={cn("text-medium",props.amount<0?"text-destructive":"text-green-500")}>{props.amount>0?"+":""}{props.amount.toLocaleString()}</p>
                   <p className="text-small ">{props.currency}</p>
               </div>
           </div>

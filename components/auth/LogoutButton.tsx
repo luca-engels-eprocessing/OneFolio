@@ -20,8 +20,8 @@ export const LogoutButton = (props:Props) => {
     if (status === "authenticated" && session && session.user) {
         return (
             <div className="flex flex-col my-2" key={"-1"}>
-                <button className="lg:p-4 p-2 btn-nav xl:my-2 my-1 font-light text-small xl:rounded-2xl rounded-md" onClick={() => signOut()}>
-                    <p className="text-primary-foreground/70">Sie sind eingeloggt.</p>
+                <button className="lg:p-4 p-2 btn-nav xl:my-2 my-1 font-light group text-small xl:rounded-2xl rounded-md" onClick={() => signOut()}>
+                    <p className="text-muted group-hover:text-muted-foreground">Sie sind eingeloggt.</p>
                     <span className="font-normal text-big">Ausloggen?</span>
                 </button>
             </div>
@@ -30,7 +30,7 @@ export const LogoutButton = (props:Props) => {
     return (
         <span onClick={onClick} className="cursor-pointer">
             <div className="flex flex-col">
-                <button className="lg:p-4 p-0 btn-nav font-normal text-big rounded-2xl text-center">Laden...</button>
+                <button className="lg:p-4 p-0 btn-nav font-normal text-big rounded-2xl text-center">Nutzerdaten werden geladen...</button>
               </div>
         </span>
     )
@@ -114,7 +114,7 @@ const LiItem = ({name:key,value:value,index:index}:{name: string,value:any,index
             value = value.substring(0,14)+"..."
         }
     return (
-        <div className='lg:p-4 p-2 btn-nav xl:my-2 my-1 font-light text-small xl:rounded-2xl rounded-md'><p className="text-primary-foreground/70" key={index}>{key + ":"}</p>
+        <div className='lg:p-4 p-2 btn-nav xl:my-2 my-1 font-light text-small xl:rounded-2xl rounded-md group'><p className="text-muted group-hover:text-muted-foreground" key={index}>{key + ":"}</p>
             <span className={cn(value?'text-primary-foreground':'text-primary-foreground/50','font-normal text-medium')}>{value?value:(
                 (size?.width && size.width < 410)?"Jetzt +":"Jetzt Hinzufügen!"
             )}</span>
