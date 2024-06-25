@@ -9,6 +9,7 @@ import { signOut, useSession } from 'next-auth/react'
 type Props = {
     className?:string,
     title?:boolean
+    iconClass?:string
 }
 
 export const LoginButton = (props: Props) => {
@@ -29,7 +30,7 @@ export const LoginButton = (props: Props) => {
                 {status === "authenticated" ? "Ausloggen" : "Einloggen"}
             </p>
         )}
-        {status === "authenticated" ? <IconLogout size={32} /> : <IconLogin size={32} />}
+        {status === "authenticated" ? <IconLogout className={cn(props.iconClass)} /> : <IconLogin className={cn(props.iconClass)} />}
     </button>
   )
 }

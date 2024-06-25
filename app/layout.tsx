@@ -38,7 +38,7 @@ export default function RootLayout({
           <body className={inter.className}>
             <Providers>
                 <LoginButton className={"xl:flex hidden absolute z-10 top-10 right-10 btn-nav p-4 rounded-lg h-16 w-auto gap-2"} title={true}/>
-                <ModeToggle className={"absolute z-10 top-10 right-52 w-fit"} />
+                <ModeToggle className={"absolute z-10 top-10 right-52 btn-nav p-4 xl:rounded-lg w-fit hidden xl:flex"} iconClass="h-7 w-7"/>
                 <div className={"flex xl:flex-row-reverse sm:flex-col flex-col xl:justify-evenly justify-between h-[calc(100dvh)]"}>
                   <div className={"w-full xl:h-full xl:pb-8 h-[90dvh] pt-16 overflow-y-auto"}>
                     {children}

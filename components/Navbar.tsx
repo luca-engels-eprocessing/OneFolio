@@ -6,6 +6,7 @@ import {IconHome,IconSquarePlus,IconClipboardList,IconUserCircle} from "@tabler/
 import { LoginButton } from "@/components/auth/LoginButton";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
+import { ModeToggle } from "./themeButton";
 
 export default function Navbar() {
 
@@ -20,20 +21,21 @@ export default function Navbar() {
             }
             
             <div
-                className="border-def transition-colors bg-secondary flex xl:flex-col justify-center gap-2 items-center xl:p-4 p-2 rounded-3xl">
-                <Link href={"/"} onClick={()=>setCurrNav("home")} className={cn("btn-nav text-center md:p-4 p-1 rounded-3xl w-full",currNav=="home"&&"text-accent")}>
-                    <IconHome size={32} />
+                className="border-def transition-colors bg-secondary flex xl:flex-col justify-center gap-2 items-center xl:p-4 py-1 px-2 rounded-3xl">
+                <Link href={"/"} onClick={()=>setCurrNav("home")} className={cn("btn-nav text-center xl:p-4 p-2 xl:rounded-3xl rounded-xl h-fit w-full",currNav=="home"&&"text-accent")}>
+                    <IconHome className="w-6 md:w-8 h-6 md:h-8" />
                 </Link>
-                <Link href={"/add"} onClick={()=>setCurrNav("add")} className={cn("btn-nav text-center md:p-4 p-1 rounded-3xl w-full",currNav=="add"&&"text-accent")}>
-                    <IconSquarePlus size={32} />
+                <Link href={"/add"} onClick={()=>setCurrNav("add")} className={cn("btn-nav text-center xl:p-4 p-2 xl:rounded-3xl rounded-xl h-fit w-full",currNav=="add"&&"text-accent")}>
+                    <IconSquarePlus className="w-6 md:w-8 h-6 md:h-8"/>
                 </Link>
-                <Link href={"/overview"} onClick={()=>setCurrNav("overview")} className={cn("btn-nav text-center md:p-4 p-1 rounded-3xl w-full",currNav=="overview"&&"text-accent")}>
-                    <IconClipboardList size={32} />
+                <Link href={"/overview"} onClick={()=>setCurrNav("overview")} className={cn("btn-nav text-center xl:p-4 p-2 xl:rounded-3xl rounded-xl h-fit w-full",currNav=="overview"&&"text-accent")}>
+                    <IconClipboardList className="w-6 md:w-8 h-6 md:h-8" />
                 </Link>
-                <Link href={"/settings"} onClick={()=>setCurrNav("settings")} className={cn("btn-nav text-center md:p-4 p-1 rounded-3xl w-full",currNav=="settings"&&"text-accent")}>
-                    <IconUserCircle size={32} />
+                <Link href={"/settings"} onClick={()=>setCurrNav("settings")} className={cn("btn-nav text-center xl:p-4 p-2 xl:rounded-3xl rounded-xl h-fit w-full",currNav=="settings"&&"text-accent")}>
+                    <IconUserCircle className="w-6 md:w-8 h-6 md:h-8"/>
                 </Link>
-                <LoginButton className={" btn-nav text-center md:p-4 p-1 rounded-3xl w-full flex xl:hidden"}/>
+                <LoginButton className={" btn-nav text-center mxl:p-4 p-2 xl:rounded-3xl rounded-xl  w-full flex xl:hidden"} iconClass={"w-6 md:w-8 h-6 md:h-8"}/>
+                <ModeToggle className={" btn-nav text-center mxl:p-4 p-2 xl:rounded-3xl rounded-xl  w-full xl:hidden flex"} iconClass={"w-6 md:w-8 h-6 md:h-8"}/>
             </div>
         </div>
     );

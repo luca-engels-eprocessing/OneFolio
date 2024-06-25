@@ -66,7 +66,7 @@ export function DataTable<TData, TValue>({
     })
 
   return (
-    <div>
+    <div className="overflow-y-hidden">
         <div className="flex flex-row justify-between items-center pb-4">
             <div className="flex flex-row gap-2 w-full justify-start">
                 <Input
@@ -77,34 +77,6 @@ export function DataTable<TData, TValue>({
                     }
                     className="max-w-md"
                 />
-                {/* <D.DropdownMenu>
-                    <D.DropdownMenuTrigger asChild>
-                        <Button variant="outline">
-                            Spalten ausblenden
-                        </Button>
-                    </D.DropdownMenuTrigger>
-                    <D.DropdownMenuContent align="end">
-                        {table
-                        .getAllColumns()
-                        .filter(
-                            (column) => column.getCanHide()
-                        )
-                        .map((column) => {
-                            return (
-                            <D.DropdownMenuCheckboxItem
-                                key={column.id}
-                                className="capitalize"
-                                checked={column.getIsVisible()}
-                                onCheckedChange={(value) =>
-                                column.toggleVisibility(!!value)
-                                }
-                            >
-                                {column.id}
-                            </D.DropdownMenuCheckboxItem>
-                            )
-                        })}
-                    </D.DropdownMenuContent>
-                </D.DropdownMenu> */}
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="flex w-[100px] items-center justify-center text-sm font-medium">
@@ -149,11 +121,11 @@ export function DataTable<TData, TValue>({
             </Button>
             </div>
         </div>
-        <div className="rounded-md border-2 border-border bg-secondary">
+        <div className="rounded-md border-2 border-border bg-secondary overflow-y-auto h-auto max-h-[60vh]">
             <Table>
                 <TableHeader className="bg-secondary">
                 {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id}>
+                    <TableRow key={headerGroup.id} className={"hover:bg-secondary"}>
                     {headerGroup.headers.map((header) => {
                         return (
                         <TableHead key={header.id} className="p-0 m-0">
@@ -172,7 +144,7 @@ export function DataTable<TData, TValue>({
                 <TableBody className="bg-primary">
                 {table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className="hover:bg-accent group">
+                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className="text-primary-foreground hover:bg-accent group">
                         {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id} className="p-0 m-0 ">
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
