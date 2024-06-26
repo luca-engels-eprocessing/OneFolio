@@ -115,7 +115,7 @@ export const columns: ColumnDef<Investment>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="text-center justify-center items-center flex w-full"
         >
-          Statdatum
+          Startdatum
           <IconArrowsUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

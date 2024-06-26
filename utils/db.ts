@@ -119,6 +119,7 @@ export const deleteInvestmentById = async (id:string) => {
 }
 
 export const updateInvestmentById = async (id:string,update:{}) => {
+  console.log(BACKEND_URL)
   try {
     const response = await fetch(BACKEND_URL+"/investments/"+id+"/",{
       method: "PUT",
