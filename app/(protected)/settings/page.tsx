@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react'
 import  {LogoutButton,UserInformaiton} from '@/components/auth/LogoutButton'
 import {auth} from "@/auth"
 import { getLatestCursorOrUndefined, getUserById, removeFromUser, updateUser } from '@/utils/db'
-import Plaid from '@/components/plaid/plaid'
+import Plaid,{DisconnectButton} from '@/components/plaid/plaid'
 import { createLinkToken, exchangeToken, removeAccessToken, transactionSync} from '@/utils/plaid_API'
 import { TransactionCard } from '@/components/plaid/transactionList'
 import { revalidatePath, revalidateTag } from 'next/cache'
@@ -67,36 +67,38 @@ async function Settings({}: Props) {
             <div className=' rounded-2xl p-4 flex flex-row justify-center btn-nav group'>
 
             {accessToken?
-              <div className='flex flex-row justify-evenly items-center w-full'>
-                <button onClick={()=>{
-                  "use server"
-                  removeAccess(accessToken,session.user!.id as string)
-                  }}>
-                    <p className='text-medium text-muted group-hover:text-muted-foreground'>Sie sind mit ihrem Bankkonto verbunden</p>
-                    <p className='text-big text-primary-foreground'> Bankverbindung wieder auflösen?</p>
-                </button>
-              </div>
+              <DisconnectButton removeAccess={async()=>{
+                "use server"
+                console.log("Test")
+                await removeAccess(accessToken,session.user!.id as string);
+              }
+            } />
+              // <DisconnectButton removeAccess={async ()=>{"use server"; await removeAccess(accessToken,session.user!.id as string)}} />
             :
-              <Plaid user={{id:session.user.id,name,address}} token={linkToken!} convertToken={convertToken} accessToken={accessToken} />}                  
-            </div>
+              <Plaid user={{id:session.user.id,name,address}} token={linkToken!} convertToken={convertToken} />}    
+
+              </div>
+              {accessToken&&
                 <div className='flex flex-row justify-center items-center gap-4'>
-                    <form action={async()=>{"use server";await refreshTransactions(id,accessToken,true);}} >
-                      <button className='btn-nav text-small text-muted p-4 rounded-xl basis-1/2'>Bereits überprüfte Transaktionen laden</button>
-                    </form>
-                    <form action={async()=>{"use server";await refreshTransactions(id,accessToken,false); }} >
-                      <button className='btn-nav text-small text-muted p-4 rounded-xl basis-1/2'>Neue Transaktionen laden</button>
-                    </form>
-                  </div>
+                  <form action={async()=>{"use server";await refreshTransactions(id,accessToken,true);}} >
+                    <button className='btn-nav text-small text-muted p-4 rounded-xl basis-1/2'>Bereits überprüfte Transaktionen laden</button>
+                  </form>
+                  <form action={async()=>{"use server";await refreshTransactions(id,accessToken,false); }} >
+                    <button className='btn-nav text-small text-muted p-4 rounded-xl basis-1/2'>Neue Transaktionen laden</button>
+                  </form>
+                </div>
+              }
               {accessToken&&globalThis.TransactionData}
               {globalThis.TransactionData&&globalThis.TransactionData.length>0&& 
-              <div className="flex flex-col border-def bg-prim rounded-2xl p-4 ">
-                <div className="flex flex-col">
+                <div className="flex flex-col border-def bg-prim rounded-2xl p-4 ">
+                  <div className="flex flex-col">
                     <p className="text-tiny text-primary-foreground/70 ">Kategorie & Parteien zu % richtig: </p>
                     <div className="flex flex-row gap-4">
                       <p className='text-small text-green-200'>Grün: {'>'}90%</p> <p className='text-small text-red-200'>Rot: {'<'}90%</p> 
                     </div>
                   </div>
-              </div>}
+                </div>
+              }
             </ul>
           </div>
         </div>
@@ -107,7 +109,7 @@ export default Settings
 
 const removeAccess= async (accessToken:string,userId:string) =>{
   "use server"
-  removeAccessToken(accessToken)
+  await removeAccessToken(accessToken)
   await removeFromUser(userId,{"accessToken":""})
   await removeFromUser(userId,{"cursor":""})
   globalThis.TransactionData = []

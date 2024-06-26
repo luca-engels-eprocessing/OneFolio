@@ -9,7 +9,6 @@ import { usePlaidLink, PlaidLinkOnSuccess, PlaidLinkOnExit, PlaidLinkOnEvent } f
 type Props = {
   user:{id:string,name:{firstname: string; lastname: string},address:{}},
   token:string,
-  accessToken:string|undefined,
   convertToken:(publicToken: string,id:string) => Promise<string>
   children?: ReactNode;
 }
@@ -49,17 +48,27 @@ const Plaid = (props: Props) => {
     });
 
   return (
-    <div className=' rounded-2xl p-4 flex flex-row justify-center btn-nav group'>
-        <button className='w-full' onClick={() =>{open()}} disabled={!ready}>
-            <p className='text-medium text-muted'>Noch keine Bankdaten vorhanden</p>
-            <p className='text-big underline text-accent'> Jetzt Bankkonto verbinden</p>
-            <p className='text-tiny text-muted-foreground'>Sandbox-Daten:</p>
-            <p className='text-tiny text-muted-foreground'>username: &apos;user_good&apos;</p>
-            <p className='text-tiny text-muted-foreground'>password: &apos;pass_good&apos;</p>
-            <p className='text-tiny text-muted-foreground'>auth_code: &apos;1234&apos;</p>
-        </button>
-    </div>
+    <button className='w-full' onClick={() =>{open()}} disabled={!ready}>
+      <p className='text-medium text-muted group-hover:text-muted-foreground'>Noch keine Bankdaten vorhanden</p>
+      <p className='text-big underline text-accent group-hover:text-accent-foreground'> Jetzt Bankkonto verbinden</p>
+      <p className='text-tiny text-muted-foreground'>Sandbox-Daten:</p>
+      <p className='text-tiny text-muted-foreground'>username: &apos;user_good&apos;</p>
+      <p className='text-tiny text-muted-foreground'>password: &apos;pass_good&apos;</p>
+      <p className='text-tiny text-muted-foreground'>auth_code: &apos;1234&apos;</p>
+    </button>
   )
+}
+
+export const DisconnectButton = ({removeAccess}:{removeAccess:()=>Promise<void>}) => {
+  return (
+    <div className='flex flex-row justify-evenly items-center w-full'>
+      <button onClick={()=>{
+        removeAccess()
+        }}>
+        <p className='text-medium text-muted group-hover:text-muted-foreground'>Sie sind mit ihrem Bankkonto verbunden</p>
+        <p className='text-big text-primary-foreground'> Bankverbindung wieder auflösen?</p>
+      </button>
+    </div>)
 }
 
 export default Plaid
