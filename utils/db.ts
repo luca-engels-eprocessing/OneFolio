@@ -140,7 +140,6 @@ export const getLatestCursorOrUndefined = async (userId:string): Promise<string 
   try {
     const response = await fetch(BACKEND_URL+"/users/"+userId+"/cursor")
     const data = await response.json()
-    console.log(data)
     if(data)return data
     return undefined
   } catch (e){

@@ -63,9 +63,22 @@ async function Settings({}: Props) {
           <div className='xl:w-1/2 w-full px-16 py-8 xl:overflow-y-auto basis-1/2'>
             <h2 className='text-accent h2 font-semibold'>Bankdaten</h2>
             <ul className='flex flex-col gap-4'>
-              
-              <Plaid user={{id:session.user.id,name,address}} token={linkToken!} removeAccessToken={removeAccess } convertToken={convertToken} accessToken={accessToken} />
-                
+
+            <div className=' rounded-2xl p-4 flex flex-row justify-center btn-nav group'>
+
+            {accessToken?
+              <div className='flex flex-row justify-evenly items-center w-full'>
+                <button onClick={()=>{
+                  "use server"
+                  removeAccess(accessToken,session.user!.id as string)
+                  }}>
+                    <p className='text-medium text-muted group-hover:text-muted-foreground'>Sie sind mit ihrem Bankkonto verbunden</p>
+                    <p className='text-big text-primary-foreground'> Bankverbindung wieder auflösen?</p>
+                </button>
+              </div>
+            :
+              <Plaid user={{id:session.user.id,name,address}} token={linkToken!} convertToken={convertToken} accessToken={accessToken} />}                  
+            </div>
                 <div className='flex flex-row justify-center items-center gap-4'>
                     <form action={async()=>{"use server";await refreshTransactions(id,accessToken,true);}} >
                       <button className='btn-nav text-small text-muted p-4 rounded-xl basis-1/2'>Bereits überprüfte Transaktionen laden</button>
@@ -92,16 +105,19 @@ async function Settings({}: Props) {
 }
 export default Settings
 
-const removeAccess= (accessToken:string) =>{
+const removeAccess= async (accessToken:string,userId:string) =>{
   "use server"
   removeAccessToken(accessToken)
+  await removeFromUser(userId,{"accessToken":""})
+  await removeFromUser(userId,{"cursor":""})
   globalThis.TransactionData = []
   revalidateTag("settings")
 }
 
-const convertToken = async (publicToken:string) => {
+const convertToken = async (publicToken:string,userId:string) => {
   "use server"
   const response = await exchangeToken(publicToken)
+  await updateUser(userId,{accessToken:response.access_token})
   return response.access_token
 }
 
@@ -116,23 +132,25 @@ const deleteAccount = async (userId:string) => {
 }
 
 const getTransactionCards = async(token:string,userId:string) => {
+  "use server"
   let added: Array<Transaction> = [];
   let modified: Array<Transaction> = [];
   let addedCard: ReactNode[] = []
   let removed: Array<RemovedTransaction> = [];
   let hasMore = true;
+  let length = 0
   let cursor = await getLatestCursorOrUndefined(userId);
   while(hasMore){
-  const data = await transactionSync(token,userId,cursor)
+    const data = await transactionSync(token,userId,cursor)
     added = added.concat(data.added);
     modified = modified.concat(data.modified);
     removed = removed.concat(data.removed);  
     hasMore = data.has_more;
     cursor = data.next_cursor;
-    data.added.forEach((data,index)=>{
+    data.added.forEach((data)=>{
       addedCard.push(
           <TransactionCard
-              key={index}
+              key={length}
               counterParties={data.counterparties}
               amount={-data.amount}
               currency={data.iso_currency_code}
@@ -142,8 +160,9 @@ const getTransactionCards = async(token:string,userId:string) => {
               date={data.date}
           />
       );
+      length +=1;
     })
   }
-  updateUser(userId,{"cursor":cursor})
+  await updateUser(userId,{"cursor":cursor})
   return addedCard
 }
