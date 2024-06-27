@@ -32,6 +32,8 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "dotenv": "^16.4.5",
+    "embla-carousel-autoplay": "^8.1.5",
+    "embla-carousel-react": "^8.1.5",
     "fetch-mock": "^9.11.0",
     "lucide-react": "^0.378.0",
     "mongoose": "^8.3.2",

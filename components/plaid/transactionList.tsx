@@ -12,17 +12,21 @@ import * as T from "@/components/ui/tooltip"
 
 
 
+
+
+
 type TransactionCardProps = {
     amount: number;
-    currency: string | null;
     categoryConfidence?: string| null;
     categoryDetailed?: string;
-    description?: string | null;
     counterParties?:TransactionCounterparty[];
+    currency: string | null;
     date?: string | null;
+    description?: string | null;
+    removeFromDisplayList: () => void;
   };
   
- export const TransactionCard = (props: TransactionCardProps) => {
+export const TransactionCard = (props: TransactionCardProps) => {
     var width=1000
     if(typeof window != "undefined"&&window&&window.innerWidth){
       width=window.innerWidth;
@@ -51,10 +55,15 @@ type TransactionCardProps = {
         <div className="flex flex-row gap-2 w-full justify-end" >
             <T.Tooltip>
               <T.TooltipTrigger>
-                <Button onClick={()=>{
+                <Button onClick={(e)=>{
+                  e.preventDefault()
+                  props.removeFromDisplayList();
                   const params=new URLSearchParams()
                   params.set('data',JSON.stringify(props))
                   router.push("/add"+'?'+params.toString())
+                  if(toHideRef.current){
+                    toHideRef.current.style.display="none"
+                  }
                 }}>
                   <IconVariablePlus size={16} />
                 </Button>
@@ -65,10 +74,15 @@ type TransactionCardProps = {
             </T.Tooltip>
             <T.Tooltip>
               <T.TooltipTrigger>
-                <Button onClick={()=>{
+                <Button onClick={(e)=>{
+                  e.preventDefault()
+                  props.removeFromDisplayList();
                   const params=new URLSearchParams()
                   params.set('data',JSON.stringify(props))
                   router.push("/overview"+'?'+params.toString())
+                  if(toHideRef.current){
+                    toHideRef.current.style.display="none"
+                  }
                 }}>
                   <IconIndentIncrease size={16} />
                 </Button>
@@ -95,19 +109,19 @@ type TransactionCardProps = {
         </div>
         <div className="xl:flex xl:flex-row grid grid-cols-2 xl:gap-8 gap-2 w-full justify-between">
           <div className="flex flex-col basis-1/4 w-full">
-              <p className="text-small text-primary-foreground/70 dark:text-primary-foreground/50">Umsatz: </p>
+              <p className="text-small text-muted">Umsatz: </p>
               <div className="flex flex-row gap-1 items-end">
                   <p className={cn("text-medium",props.amount<0?"text-destructive":"text-green-500")}>{props.amount>0?"+":""}{props.amount.toLocaleString()}</p>
                   <p className="text-small ">{props.currency}</p>
               </div>
           </div>
           <div className="flex flex-col basis-1/2 w-full">
-              <p className="text-small text-primary-foreground/70 dark:text-primary-foreground/50">Bescheibung: </p>
+              <p className="text-small text-muted">Bescheibung: </p>
               <p className="text-medium">{props.description}</p>
           </div>
           <div className="flex flex-col basis-1/4 w-full">
 
-              {parties.length>0&&<><p className="text-small text-primary-foreground/70 dark:text-primary-foreground/50">Von/An: </p>
+              {parties.length>0&&<><p className="text-small text-muted">Von/An: </p>
               <div className="flex flex-row gap-4 xl:justify-start">
               {parties}
               </div></>}
@@ -115,13 +129,13 @@ type TransactionCardProps = {
         </div>
         <div className="xl:flex xl:flex-row grid grid-cols-2 xl:gap-8 gap-2 w-full justify-start">
           <div className="flex flex-col basis-3/4 w-full">
-            <p className="text-small text-primary-foreground/70 dark:text-primary-foreground/50">Kategorie: </p>
+            <p className="text-small text-muted0">Kategorie: </p>
             <div className="flex flex-row gap-4">
                 {categoryDetailElement}
             </div>
           </div>
           <div className="flex flex-col basis-1/4 w-full">
-            <p className="text-small text-primary-foreground/70 dark:text-primary-foreground/50">Datum: </p>
+            <p className="text-small text-muted">Datum: </p>
             <div className="flex flex-row gap-4 text-large">
                 {props.date}
             </div>

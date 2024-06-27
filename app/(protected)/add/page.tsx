@@ -1,5 +1,6 @@
 'use server'
 import {Table} from '@/components/addInvestment/Table'
+import { Metadata } from 'next'
 import React from 'react'
 
 
@@ -48,6 +49,12 @@ const sList = {
   ]
 }
 
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "OneFolio | Hinzufügen",
+    description: "Fügen sie jetzt ihre Investments manuell, mittels Excel oder simple über ihre Bank hinzu",
+  }
+}
 
 async function AddNew(props:{params:{},searchParams:{[key:string]:any}}) {
   //* useful props to automatically implement in the list are: Summe, Währung, Name, Beschreibung, date

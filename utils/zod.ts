@@ -39,7 +39,7 @@ export const investmentSchema = z.object({
   title: z.string({ required_error: "Bitte füge einen Titel für das Investment ein" })
     .min(1,"Bitte füge einen Titel für das Investment ein"),
   date: z.any(),
-  Summe: z.string({ required_error: "Bitte füge eine Investmentsumme für das Investment ein" })
+  Summe: z.number({ required_error: "Bitte füge eine Investmentsumme für das Investment ein" })
   .min(1,"Bitte füge eine Investmentsumme für das Investment ein"),
 }).catchall(z.any())
 .refine(data => Object.keys(data).length > 0, {

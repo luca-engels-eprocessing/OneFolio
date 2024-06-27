@@ -11,13 +11,14 @@ import { ModeToggle } from "./themeButton";
 export default function Navbar() {
 
     const [currNav, setCurrNav] = useState("home")
-    const {theme} = useTheme()
+    const {theme,systemTheme} = useTheme()
+    console.log(systemTheme)
 
     return (
-        <div className={"sticky top-0 flex flex-row xl:flex-col justify-center items-center xl:h-screen h-[10vh] sm:p-2 bg-sec xl:bg-transparent xl:border-0 border-t-accent border-t-2"}>
-            {theme==="light"?
-            <Image priority src={"/OneFoliogo_blue.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute xl:h-auto xl:w-full xl:top-8 xl:left-0 h-full w-auto hidden sm:flex"}/>:
-            <Image priority src={"/OneFoliogo_white.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute xl:h-auto xl:w-full xl:top-8 xl:left-0 h-full w-auto hidden sm:flex"}/>
+        <div className={"ml-8 flex flex-row xl:flex-col justify-center items-center xl:h-screen h-[10vh] bg-sec xl:bg-transparent xl:border-0 border-t-accent border-t-2"}>
+            {theme==="light"||(theme==="system"&&systemTheme==="light")?
+            <Image priority src={"/OneFoliogo_blue.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute xl:h-auto xl:w-48 xl:top-8 xl:left-0 h-full w-auto hidden sm:flex z-10"}/>:
+            <Image priority src={"/OneFoliogo_white.png"} alt={"One Folio"} width={0} height={0} sizes="50vh" className={"xl:absolute xl:h-auto xl:w-48 xl:top-8 xl:left-0 h-full w-auto hidden sm:flex z-10"}/>
             }
             
             <div

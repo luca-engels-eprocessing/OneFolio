@@ -26,7 +26,7 @@ const configuration_production = new Configuration({
 });
 
 const plaidClient = globalThis.plaidClient || new PlaidApi(configuration_sandbox); 
-// const plaidClient = globalThis.plaidClient || (process.env.NODE_ENV == "production")? new PlaidApi(configuration_production): new PlaidApi(configuration_sandbox);
+// const plaidClient = globalThis.plaidClient || (process.env.NODE_ENV !== "production")? new PlaidApi(configuration_production): new PlaidApi(configuration_sandbox);
 
 if (process.env.NODE_ENV !== "production") globalThis.plaidClient = plaidClient;
 

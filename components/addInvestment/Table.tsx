@@ -265,7 +265,7 @@ export const Table = (props: Props) => {
         setkeyButtonList([])
     }
     return (
-        <div className='xl:w-[80vw] w-full flex xl:flex-row flex-col xl:gap-8 gap-2 overflow-hidden'>
+        <div className='w-full h-full flex xl:flex-row flex-col xl:gap-8 gap-2 overflow-hidden'>
                 <div className={cn(displayed && " max-h-[calc(50%-32px)]", " flex-col flex gap-2 bg-sec border-def p-4 overflow-y-auto scroll-light dark:scroll-dark rounded-md xl:w-[calc(50%-32px)] items-center xl:max-h-full xl:h-fit",props.className)}>
                     {keyButtonList}
                     <SaveButton data={selectionList} onClick={clearList}/>

@@ -6,6 +6,7 @@ import React from "react";
 import Providers from "@/components/auth/provider";
 import {LoginButton} from "@/components/auth/LoginButton"
 import { ModeToggle } from "@/components/themeButton";
+import { AdvertBar } from "@/components/addsBar/AdvertBar";
 
 const inter = Roboto({ subsets: ["latin"], weight: ["100","300","400","500","700","900"]});
 
@@ -13,7 +14,7 @@ const inter = Roboto({ subsets: ["latin"], weight: ["100","300","400","500","700
 
 export const metadata: Metadata = {
   title: "OneFolio",
-  description: "OneFolio ermöglicht das einfache Managen ihrer Investment über alle platformen. So halten sie den Überblick",
+  description: "OneFolio ermöglicht das einfache Managen ihrer Investment über alle Platformen. So halten sie den Überblick",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default"
@@ -37,14 +38,15 @@ export default function RootLayout({
           </head>
           <body className={inter.className}>
             <Providers>
-                <LoginButton className={"xl:flex hidden absolute z-10 top-10 right-10 btn-nav p-4 rounded-lg h-16 w-auto gap-2"} title={true}/>
-                <ModeToggle className={"absolute z-10 top-10 right-52 btn-nav p-4 xl:rounded-lg w-fit hidden xl:flex"} iconClass="h-7 w-7"/>
-                <div className={"flex xl:flex-row-reverse sm:flex-col flex-col xl:justify-evenly justify-between h-[calc(100dvh)]"}>
-                  <div className={"w-full xl:h-full xl:pb-8 h-[90dvh] pt-16 overflow-y-auto"}>
-                    {children}
-                  </div>
-                  <Navbar/>
+              <LoginButton className={"xl:flex hidden absolute z-10 top-8 right-8 btn-nav p-4 rounded-lg h-16 w-auto gap-2"} title={true}/>
+              <ModeToggle className={"absolute z-10 top-8 right-52 btn-nav p-4 xl:rounded-lg w-fit hidden xl:flex"} iconClass="h-7 w-7"/>
+              <div className={"flex xl:flex-row-reverse sm:flex-col flex-col justify-between h-[calc(100dvh)]"}>
+                <AdvertBar />
+                <div className={"w-[70vw] xl:h-full xl:pb-8 h-[90dvh] pt-12 overflow-y-auto"}>
+                  {children}
                 </div>
+                <Navbar/>
+              </div>
             </Providers>
           </body>
         </html>

@@ -6,18 +6,27 @@ import { getLatestCursorOrUndefined, getUserById, removeFromUser, updateUser } f
 import Plaid,{DisconnectButton} from '@/components/plaid/plaid'
 import { createLinkToken, exchangeToken, removeAccessToken, transactionSync} from '@/utils/plaid_API'
 import { TransactionCard } from '@/components/plaid/transactionList'
-import { revalidatePath, revalidateTag } from 'next/cache'
+import { revalidateTag } from 'next/cache'
 import { RemovedTransaction, Transaction } from 'plaid'
+import { Metadata } from 'next'
+ 
 
 
 declare global{
   var TransactionData:ReactNode[]
 }
 
-type Props = {}
+type Props = {
+  params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
 
-
-
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "OneFolio | Einstellungen",
+    description: "Melden sie sich an und fangen sie an ihre Bankinformationen zu tracken und ihre Investments aktuell zu halten.",
+  }
+}
 
 
 async function Settings({}: Props) {
@@ -46,15 +55,19 @@ async function Settings({}: Props) {
     }
   }
   else{
-    const data = await getTransactionCards(accessToken,id);
-    globalThis.TransactionData = data
+    if(!globalThis.TransactionData||globalThis.TransactionData.length==0){
+      console.log(globalThis.TransactionData)
+      const data = await getTransactionCards(accessToken,id);
+      globalThis.TransactionData = data
+    }
   }
   return (
+
     <main className="h-full w-full flex flex-col gap-8 items-center justify-start pb-2 px-4 xl:px-0">
         <div>
           <h1 className={"h1"}>Ihre Einstellungen</h1>
         </div>
-        <div className="flex w-full xl:w-[80vw] h-[100%] border-def bg-sec xl:flex-row gap-y-4 flex-col rounded-md xl:overflow-hidden overflow-y-auto">
+        <div className="flex w-full h-[100%] border-def bg-sec xl:flex-row gap-y-4 flex-col rounded-md xl:overflow-hidden overflow-y-auto">
           <div className='xl:w-1/2 w-full px-16 py-8 xl:overflow-y-auto basis-1/2'>
             <h2 className='text-accent h2 font-semibold'>Nutzer Informationen</h2>
               <UserInformaiton info={user} key={1}/>
@@ -69,7 +82,6 @@ async function Settings({}: Props) {
             {accessToken?
               <DisconnectButton removeAccess={async()=>{
                 "use server"
-                console.log("Test")
                 await removeAccess(accessToken,session.user!.id as string);
               }
             } />
@@ -126,6 +138,7 @@ const convertToken = async (publicToken:string,userId:string) => {
 const refreshTransactions = async (userId:string,accessToken:string,dontIncludeCursor:boolean) => {
   "use server"
   if(dontIncludeCursor) await removeFromUser(userId,{"cursor":""})
+  globalThis.TransactionData=[]
   revalidateTag("settings")
 }
 
@@ -135,34 +148,44 @@ const deleteAccount = async (userId:string) => {
 
 const getTransactionCards = async(token:string,userId:string) => {
   "use server"
+  let cursor = await getLatestCursorOrUndefined(userId);
   let added: Array<Transaction> = [];
   let modified: Array<Transaction> = [];
-  let addedCard: ReactNode[] = []
   let removed: Array<RemovedTransaction> = [];
   let hasMore = true;
-  let length = 0
-  let cursor = await getLatestCursorOrUndefined(userId);
+  let addedCard: ReactNode[] = []
+  let key = 0
   while(hasMore){
+    console.log(token,userId,cursor)
     const data = await transactionSync(token,userId,cursor)
     added = added.concat(data.added);
     modified = modified.concat(data.modified);
-    removed = removed.concat(data.removed);  
+    removed = removed.concat(data.removed); 
     hasMore = data.has_more;
-    cursor = data.next_cursor;
+    cursor = data.next_cursor; 
+    console.log(modified.length)
+    console.log(removed.length)
+    console.log(added.length)
+    console.log(hasMore)
+    console.log(cursor)
     data.added.forEach((data)=>{
       addedCard.push(
           <TransactionCard
-              key={length}
-              counterParties={data.counterparties}
-              amount={-data.amount}
-              currency={data.iso_currency_code}
-              categoryDetailed={data.personal_finance_category?.detailed}
-              categoryConfidence={data.personal_finance_category?.confidence_level}
-              description={data.original_description}
-              date={data.date}
-          />
+          key={key}
+          counterParties={data.counterparties}
+          amount={-data.amount}
+          currency={data.iso_currency_code}
+          categoryDetailed={data.personal_finance_category?.detailed}
+          categoryConfidence={data.personal_finance_category?.confidence_level}
+          description={data.original_description}       
+          date={data.date}
+          removeFromDisplayList={()=>{
+            "use server";
+            globalThis.TransactionData[key]=<></>
+          }}         
+           />
       );
-      length +=1;
+      key +=1;
     })
   }
   await updateUser(userId,{"cursor":cursor})

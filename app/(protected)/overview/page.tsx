@@ -6,6 +6,7 @@ import { DataTable } from '@/components/overview/data-table'
 import { Button } from '@/components/ui/button'
 import { investment } from '@/models/model'
 import { deleteInvestmentById, getInvestmentsByUserId } from '@/utils/db'
+import { Metadata } from 'next'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import React from 'react'
@@ -68,6 +69,13 @@ const data = [
       },
     }
   ]
+  
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "OneFolio | Investmentübersicht",
+    description: "Jetzt können sie ihre Investments leicht im Überblick halten",
+  }
+}
 
 const View = async (props:{params:{},searchParams:{[key:string]:any}}) => {
   const session = await auth()
@@ -95,7 +103,7 @@ const View = async (props:{params:{},searchParams:{[key:string]:any}}) => {
   return (
     <main className="h-full w-full flex flex-col gap-8 items-center justify-start px-4 xl:px-0 pb-2">
         <h1 className={"h1"}>Ihre Investments im Überblick</h1>
-      <div className={"w-full xl:w-[80vw] flex gap-2 flex-col overflow-y-auto"}>
+      <div className={"w-full flex gap-2 flex-col overflow-y-auto"}>
         <DataTable columns={columns} data={list} displayAddSum={props.searchParams.data?true:false} />
       </div>
     </main>

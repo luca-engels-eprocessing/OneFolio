@@ -5,7 +5,7 @@ import { BACKEND_URL } from "@/routes";
 
 export const getUserByEmail = async (email:string) => {
   try {
-    const response = await fetch(BACKEND_URL+"/users/email/"+email)
+    const response = await fetch(BACKEND_URL+"/users/email/"+email.toLowerCase())
     const user = await response.json()
     return user
   } catch (e){
