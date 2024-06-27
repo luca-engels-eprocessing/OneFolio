@@ -40,8 +40,8 @@ async function Home() {
         <div className="flex xl:flex-row flex-col gap-8 w-full h-full justify-between">
           <div className="w-full border-def rounded-md bg-sec p-8 xl:grid grid-flow-row-dense xl:grid-rows-2 xL:grid-cols-2 flex flex-col gap-16 items-center content-center justify-around">
             <div className={"row-start-1 col-start-1 flex flex-col p-4 content-center justify-center text-center"}>
-              Gesamtinvestition: {totalSum}€<br/>
-              {averageRendite>0&&"Durchschnittsrendite: \~"+averageRendite+"% über" +amountRendite + (amountRendite!=1?" Investments ":" Investment ")+"verteilt"}
+              Gesamtinvestition: {totalSum}€<br/> 
+              {averageRendite>0&&"Durchschnittsrendite: \~"+averageRendite+"% über " +amountRendite + (amountRendite!=1?" Investments ":" Investment ")+"verteilt"}
             </div>
             <div className={"row-start-1 col-start-2 flex flex-col p-4 content-center justify-center text-center"}>
               <MarketChart type="pie" forKey={"ret"} data={investments}/>
