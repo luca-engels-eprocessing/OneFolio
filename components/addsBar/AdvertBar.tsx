@@ -9,7 +9,7 @@ type Props = {}
 
 export const AdvertBar = (props: Props) => {
   return (
-  <div className="p-4 xl:w-[15vw] w-auto border-def rounded-xl bg-sec flex flex-col justify-between mr-8 mb-8 mt-32">
+  <div className="p-4 xl:w-[15vw] w-auto border-def rounded-xl xl:h-fit h-1/5 bg-sec flex flex-col justify-between xl:mr-8 xl:mb-8 xl:mt-32">
     <C.Carousel className="flex flex-col justify-between w-full h-full" orientation='vertical' opts={{loop:true}} delay={5000}>
       <C.CarouselContent className='h-full'>
         {Array.from({ length: 5 }).map((_, index) => (

@@ -42,7 +42,7 @@ export default function RootLayout({
               <ModeToggle className={"absolute z-10 top-8 right-52 btn-nav p-4 xl:rounded-lg w-fit hidden xl:flex"} iconClass="h-7 w-7"/>
               <div className={"flex xl:flex-row-reverse sm:flex-col flex-col justify-between h-[calc(100dvh)]"}>
                 <AdvertBar />
-                <div className={"w-[70vw] xl:h-full xl:pb-8 h-[90dvh] pt-12 overflow-y-auto"}>
+                <div className={"xl:w-[70vw] xl:h-full xl:pb-8 h-[90dvh] xl:pt-12 pt-8 overflow-y-auto"}>
                   {children}
                 </div>
                 <Navbar/>
