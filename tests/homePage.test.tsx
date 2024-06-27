@@ -1,7 +1,16 @@
 import {describe, expect,test,jest} from '@jest/globals';
 import { MarketChart, createPatternArray, generateGradientHexList, getIndexFromKey } from '@/components/chart';
-import { render, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
+import { AppRouterContextProviderMock } from '@/mocks/app-router-context-provider-mock';
+import fetchMock from 'fetch-mock';
+import { BACKEND_URL } from '@/routes';
+import Home from '@/app/page';
 
+const createRender= (node:React.JSX.Element) => {
+    const refresh = jest.fn();
+    return <AppRouterContextProviderMock router={{ refresh }}>{node}</AppRouterContextProviderMock>
+}
+  
 
 
 describe('Check Gradient calculation', () => {
@@ -94,11 +103,33 @@ describe('Check Gradient calculation', () => {
     });
     test('should render the list with risk', () => {
         const data:{[key:string]:string}[] = [{Data:"Test",Data2:"Test",Summe:"300"},{Data:"TESTING",Data2:"MORE STUFF",Summe:"600"},{Data2:"MORE STUFF",Summe:"600"},{Data:"TEST",Data2:"Stuff"},{Data:"TEST",Summe:"300"},{"Data":"TEST"},{"Data2":"Stuff"},{"Summe":"300"}]
-        const {getByText} = render(<MarketChart data={data} type={'bar'} forKey={'sum'}/>)
+        const {getByText} = render(<MarketChart data={data} type={'bar'} forKey={'risk'}/>)
         // wait for useEffect to complete befor getting text
         waitFor(() => {
             const text = getByText("Deine Risikoklassenverteilung");
             expect(text).toBeTruthy();
         });
     });
+    test('Should remove Title and Date', () => {
+        const data:{[key:string]:string}[] = [{date:"19.02.2000",title:"Test",Data:"TESTING",Summe:"300"},{Data:"TESTING",Data2:"MORE STUFF",Summe:"600"},{Data2:"MORE STUFF",Summe:"600"},{Data:"TEST",Data2:"Stuff"},{Data:"TEST",Summe:"300"},{"Data":"TEST"},{"Data2":"Stuff"},{"Summe":"300"}]
+        const {getByText} = render(<MarketChart data={data} type={'bar'} forKey={'risk'}/>)
+        // wait for useEffect to complete befor getting text
+        waitFor(async () => {
+            const selectCategory = getByText("Eine Kategorie auswählen");
+            await act(async() => {
+                fireEvent.click(selectCategory);
+            });
+            const text = getByText("Data");
+            const Title = getByText("title");
+            expect(text).toBeTruthy();
+            expect(Title).toBeFalsy();
+            await act(async() => {
+                fireEvent.click(text);
+            });
+            const selectCategoryFalse = getByText("Eine Kategorie auswählen");
+            expect(selectCategoryFalse).toBeFalsy();
+        });
+    });
+
+
 });

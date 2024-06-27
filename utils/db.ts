@@ -119,7 +119,6 @@ export const deleteInvestmentById = async (id:string) => {
 }
 
 export const updateInvestmentById = async (id:string,update:{}) => {
-  console.log(BACKEND_URL)
   try {
     const response = await fetch(BACKEND_URL+"/investments/"+id+"/",{
       method: "PUT",
@@ -140,6 +139,7 @@ export const updateInvestmentById = async (id:string,update:{}) => {
 export const getLatestCursorOrUndefined = async (userId:string): Promise<string | undefined> => {
   try {
     const response = await fetch(BACKEND_URL+"/users/"+userId+"/cursor")
+    console.log(response)
     const data = await response.json()
     if(data)return data
     return undefined

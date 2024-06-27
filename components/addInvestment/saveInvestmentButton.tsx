@@ -20,7 +20,7 @@ export const SaveButton= ({data,onClick}:{data:{[key: string]:any},onClick:()=>v
             prepData = {...prepData, date: value}
         }
         else{
-            prepData = {...prepData, [key]:value}
+            prepData = {...prepData, [key]:String(value)}
         }
     })
     return (<>

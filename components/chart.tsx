@@ -47,12 +47,9 @@ export const MarketChart = ({type,data,forKey,startX}:LineProps) => {
   }
   useEffect(() => {
     let tempCharData:any[][] = []
-    console.log(data)
     //! ONLY WORKS FOR BAR AND PIE Graphs and SUM
     data.forEach((item:{[key:string]:string}) => {
       //check if SUM,RETURN or RISK is present in investment
-      console.log(diagramValueY)
-      console.log(item)
       if(item[diagramValueY]){
         // gets the value of the Category
         let x = item[diagramValueX]
@@ -128,6 +125,9 @@ export const MarketChart = ({type,data,forKey,startX}:LineProps) => {
     })
   })
   listKeys.sort((a,b)=>a.localeCompare(b))
+
+  console.log("KeyList:",listKeys)
+  console.log("Data:",data)
 
   return(
         <div className="xl:w-full max-w-[70vw] flex flex-col justify-center items-start gap-y-4">
