@@ -15,12 +15,12 @@ const AdvertCard = (props: Props) => {
   return (
     <div className="w-full h-full">
       <Link href={"https://www.google.com"}>
-        <Card className='h-full w-full'>
-          <CardHeader className="flex items-center justify-center p-6">
+        <Card className='h-full w-full flex flex-col'>
+          <CardHeader className="flex items-center justify-center xl:p-6 p-0 pt-2">
             <CardTitle >{props.name}</CardTitle>
           </CardHeader>
-          <CardContent className="flex items-center justify-center">
-            <Image src={imgUrl} width={0} height={0} alt={props.name} sizes="50vh" className='w-full h-auto' />
+          <CardContent className="flex justify-center p-0 h-full">
+            <Image src={imgUrl} width={0} height={0} alt={props.name} sizes="50vh" className='object-cover z-0 w-full h-full' />
           </CardContent>
           <CardFooter>
             <p>Werbung</p>
