@@ -13,9 +13,9 @@ export const AdvertBar = (props: Props) => {
       <div className="p-4 xl:w-[15vw] w-auto border-def rounded-xl h-full bg-sec flex flex-col justify-between ">
         <C.Carousel className="flex flex-col justify-between w-full h-full" orientation='vertical' opts={{loop:true}} delay={0}>
           <C.CarouselContent className='h-full w-[100%] '>
-            {Array.from({ length: 5 }).map((_, index) => (
+            {Array.from({ length: 50 }).map((_, index) => (
               <C.CarouselItem key={index} className='w-full h-full'>
-                <AdvertCard name={"Werbung "+(index+1)} imageUrl={''} index={0} />
+                <AdvertCard name={"Werbung "+(index+1)} imageUrl={"/adverts/"+(index+1)+".png"} index={8000} />
               </C.CarouselItem>
             ))}
           </C.CarouselContent>

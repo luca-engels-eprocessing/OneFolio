@@ -14,16 +14,16 @@ const AdvertCard = (props: Props) => {
   if(!imgUrl) imgUrl="/OneFolio.png"
   return (
     <div className="w-full h-full">
-      <Link href={"https://www.google.com"}>
+      <Link href={"https://www.google.com"} className='w-full h-full relative'>
         <Card className='h-full w-full flex flex-col'>
-          <CardHeader className="flex items-center justify-center xl:p-6 p-0 pt-2">
-            <CardTitle >{props.name}</CardTitle>
+          <CardHeader className="flex items-center justify-center mt-2 z-10 p-0 absolute top-0 right-1/2 transform translate-x-1/2">
+            <CardTitle className='bg-primary/50 xl:py-2 py-1 px-4' >{props.name}</CardTitle>
           </CardHeader>
-          <CardContent className="flex justify-center p-0 h-full">
-            <Image src={imgUrl} width={0} height={0} alt={props.name} sizes="50vh" className='object-cover z-0 w-full h-full' />
+          <CardContent className="flex justify-center p-0 xl:h-full h-full">
+            <Image src={imgUrl} width={0} height={0} alt={props.name} sizes="50vh" className='object-cover z-0 w-full h-full rounded-md' />
           </CardContent>
-          <CardFooter>
-            <p>Werbung</p>
+          <CardFooter className='z-10 w-fit p-0 absolute bottom-0'>
+            <p className='bg-primary/50 xl:p1 py-0 px-2 text-xs'>Werbung</p>
           </CardFooter>
         </Card>
       </Link>
